@@ -23,8 +23,8 @@
 
                                     <div class="hero-btns d-flex align-items-center gap-3 gap-sm-5 flex-wrap">
                                         <a href="{{ $slider->link }}"
-                                            class="btn btn-secondary">{{ localize('Explore Now') }}<span
-                                                class="ms-2"><i class="fa-solid fa-arrow-right"></i></span></a>
+                                            class="btn btn-secondary">{{ localize('Explore Now') }}<span class="ms-2"><i
+                                                    class="fa-solid fa-arrow-right"></i></span></a>
                                         <a href="{{ route('home.pages.aboutUs') }}"
                                             class="btn btn-primary">{{ localize('About Us') }}<span class="ms-2"><i
                                                     class="fa-solid fa-arrow-right"></i></span></a>
@@ -47,7 +47,7 @@
             </div>
         </div>
     </div>
-    @if(getSetting('facebook_link') || getSetting('twitter_link') || getSetting('linkedin_link') || getSetting('youtube_link'))
+    @if(getSetting('facebook_link') || getSetting('twitter_link') || getSetting('linkedin_link') || getSetting('youtube_link') || getSetting('instagram_link'))
         <div class="gs-hero-social">
             <ul class="list-unstyled">
                 @if(getSetting('facebook_link'))
@@ -61,6 +61,9 @@
                 @endif
                 @if(getSetting('youtube_link'))
                     <li><a href="{{ getSetting('youtube_link') }}"><i class="fab fa-youtube"></i></a></li>
+                @endif
+                @if(getSetting('instagram_link'))
+                    <li><a href="{{ getSetting('instagram_link') }}"><i class="fab fa-instagram"></i></a></li>
                 @endif
 
             </ul>

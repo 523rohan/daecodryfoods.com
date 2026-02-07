@@ -89,6 +89,13 @@
                                         value="{{ getSetting('youtube_link') }}">
                                 </div>
 
+                                <div class="mb-3">
+                                    <label for="instagram_link" class="form-label">{{ localize('Instagram Link') }}</label>
+                                    <input type="hidden" name="types[]" value="instagram_link">
+                                    <input type="url" name="instagram_link" id="instagram_link" class="form-control"
+                                        placeholder="https://instagram.com/example"
+                                        value="{{ getSetting('instagram_link') }}">
+                                </div>
 
                                 <div class="mb-3">
                                     <label for="about_us" class="form-label">{{ localize('About Us') }}</label>

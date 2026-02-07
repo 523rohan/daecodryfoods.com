@@ -30,8 +30,7 @@
                             <ul>
                                 @foreach ($activeThemes as $key => $theme)
                                     <li>
-                                        <a href="{{ route('theme.change', $theme->code) }}"
-                                            class="d-flex align-items-center">
+                                        <a href="{{ route('theme.change', $theme->code) }}" class="d-flex align-items-center">
                                             <span>{{ localize($theme->name) }}</span>
                                         </a>
                                     </li>
@@ -87,8 +86,7 @@
                             <li><a href="{{ route('home.pages.aboutUs') }}">{{ localize('About Us') }}</a></li>
                             <li><a href="{{ route('home.pages.contactUs') }}">{{ localize('Contact Us') }}</a></li>
                             @foreach ($pages as $navbarPage)
-                                <li><a
-                                        href="{{ route('home.pages.show', $navbarPage->slug) }}">{{ $navbarPage->title }}</a>
+                                <li><a href="{{ route('home.pages.show', $navbarPage->slug) }}">{{ $navbarPage->title }}</a>
                                 </li>
                             @endforeach
                         </ul>
@@ -102,7 +100,7 @@
                         $locale = env('DEFAULT_LANGUAGE');
                     }
                     $currentLanguage = \App\Models\Language::where('code', $locale)->first();
-                    
+
                     if ($currentLanguage == null) {
                         $currentLanguage = \App\Models\Language::where('code', 'en')->first();
                     }
@@ -133,7 +131,7 @@
                         $currency_code = env('DEFAULT_CURRENCY');
                     }
                     $currentCurrency = \App\Models\Currency::where('code', $currency_code)->first();
-                    
+
                     if ($currentCurrency == null) {
                         $currentCurrency = \App\Models\Currency::where('code', 'usd')->first();
                     }
@@ -146,8 +144,8 @@
                     <ul>
                         @foreach (\App\Models\Currency::where('is_active', 1)->get() as $key => $currency)
                             <li>
-                                <a class="text-uppercase" href="javascript:void(0);"
-                                    onclick="changeLocaleCurrency(this)" data-currency="{{ $currency->code }}">
+                                <a class="text-uppercase" href="javascript:void(0);" onclick="changeLocaleCurrency(this)"
+                                    data-currency="{{ $currency->code }}">
                                     {{ $currency->symbol }} {{ $currency->code }}
                                 </a>
                             </li>
@@ -182,11 +180,11 @@
     <div class="offcanvas-contact social-contact mt-4">
         <a href="{{ getSetting('facebook_link') }}" target="_blank" class="social-btn"><i
                 class="fab fa-facebook-f"></i></a>
-        <a href="{{ getSetting('twitter_link') }}" target="_blank" class="social-btn"><i
-                class="fab fa-twitter"></i></a>
+        <a href="{{ getSetting('twitter_link') }}" target="_blank" class="social-btn"><i class="fab fa-twitter"></i></a>
         <a href="{{ getSetting('linkedin_link') }}" target="_blank" class="social-btn"><i
                 class="fab fa-linkedin"></i></a>
-        <a href="{{ getSetting('youtube_link') }}" target="_blank" class="social-btn"><i
-                class="fab fa-youtube"></i></a>
+        <a href="{{ getSetting('youtube_link') }}" target="_blank" class="social-btn"><i class="fab fa-youtube"></i></a>
+        <a href="{{ getSetting('instagram_link') }}" target="_blank" class="social-btn"><i
+                class="fab fa-instagram"></i></a>
     </div>
 </div>

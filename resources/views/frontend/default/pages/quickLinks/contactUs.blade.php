@@ -71,6 +71,8 @@
                                             class="fab fa-linkedin"></i></a>
                                     <a href="{{ getSetting('youtube_link') }}" target="_blank"><i
                                             class="fab fa-youtube"></i></a>
+                                    <a href="{{ getSetting('instagram_link') }}" target="_blank"><i
+                                            class="fab fa-instagram"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -87,24 +89,21 @@
                                 <div class="col-sm-12">
                                     <div class="label-input-field">
                                         <label>{{ localize('Name') }}</label>
-                                        <input type="text" name="name" placeholder="{{ localize('Your name') }}"
-                                            required>
+                                        <input type="text" name="name" placeholder="{{ localize('Your name') }}" required>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-6">
                                     <div class="label-input-field">
                                         <label>{{ localize('Email') }}</label>
-                                        <input type="email" name="email" placeholder="{{ localize('You email') }}"
-                                            required>
+                                        <input type="email" name="email" placeholder="{{ localize('You email') }}" required>
                                     </div>
                                 </div>
 
                                 <div class="col-sm-6">
                                     <div class="label-input-field">
                                         <label>{{ localize('Phone') }}</label>
-                                        <input type="text" name="phone" placeholder="{{ localize('You phone') }}"
-                                            required>
+                                        <input type="text" name="phone" placeholder="{{ localize('You phone') }}" required>
                                     </div>
                                 </div>
 
@@ -136,7 +135,8 @@
                                 <div class="col-12">
                                     <div class="label-input-field">
                                         <label>{{ localize('Messages') }}</label>
-                                        <textarea name="message" placeholder="{{ localize('Write your message') }}" rows="6" required></textarea>
+                                        <textarea name="message" placeholder="{{ localize('Write your message') }}" rows="6"
+                                            required></textarea>
                                     </div>
                                 </div>
                             </div>

@@ -51,7 +51,10 @@
                                 <h5 class="mb-4">{{ localize('Basic Information') }}</h5>
 
 
-                                <div class="mb-4">
+
+
+                                {{-- THEMES FIELD HIDDEN --}}
+                                {{-- <div class="mb-4">
                                     @php
                                         $checkThemes = $category->themes()->pluck('theme_id');
                                     @endphp
@@ -66,7 +69,8 @@
                                                 {{ $theme->name }}</option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div> --}}
+
 
 
                                 <div class="mb-4">

@@ -32,7 +32,9 @@
                             <div class="card-body">
                                 <h5 class="mb-4">{{ localize('Basic Information') }}</h5>
 
-                                <div class="mb-4">
+
+                                {{-- THEMES FIELD HIDDEN --}}
+                                {{-- <div class="mb-4">
                                     <label for="category_id" class="form-label">{{ localize('Themes') }} <span
                                             class="text-danger">*</span> </label>
                                     <select class="form-control select2" name="theme_ids[]"
@@ -43,7 +45,7 @@
                                                 {{ $theme->name }}</option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div> --}}
 
                                 <div class="mb-4">
                                     <label for="name" class="form-label">{{ localize('Category Name') }}</label>

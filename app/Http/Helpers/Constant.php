@@ -146,7 +146,7 @@ if (!function_exists('getRender')) {
     # get view of theme with render
     function getRender($path, $data = [])
     {
-        return view('frontend.default'. '.' . $path, $data)->render();
+        return view('frontend.default' . '.' . $path, $data)->render();
     }
 }
 
@@ -193,7 +193,7 @@ if (!function_exists('paginationNumber')) {
     # return number of data per page
     function paginationNumber($value = null)
     {
-        $number = is_int(getSetting('pagination')) && getSetting('pagination') > 9 ? getSetting('pagination') : env('DEFAULT_PAGINATION');        
+        $number = is_int(getSetting('pagination')) && getSetting('pagination') > 9 ? getSetting('pagination') : env('DEFAULT_PAGINATION');
         return $value != null ? $value : $number;
     }
 }
@@ -203,7 +203,8 @@ if (!function_exists('areActiveRoutes')) {
     function areActiveRoutes(array $routes, $output = "active")
     {
         foreach ($routes as $route) {
-            if (Route::currentRouteName() == $route) return $output;
+            if (Route::currentRouteName() == $route)
+                return $output;
         }
         return '';
     }
@@ -224,10 +225,7 @@ if (!function_exists('staticAsset')) {
     # return path for static assets
     function staticAsset($path, $secure = null)
     {
-        if (str_contains(url('/'), '.test') || str_contains(url('/'), 'http://127.0.0.1:')) {
-            return app('url')->asset('' . $path, $secure) . '?v=' . env('APP_VERSION');
-        }
-        return app('url')->asset('public/' . $path, $secure) . '?v=' . env('APP_VERSION');
+        return app('url')->asset($path, $secure) . '?v=' . env('APP_VERSION');
     }
 }
 
@@ -235,10 +233,7 @@ if (!function_exists('staticAssetApi')) {
     # return path for static assets
     function staticAssetApi($path, $secure = null)
     {
-        if (str_contains(url('/'), '.test') || str_contains(url('/'), 'http://127.0.0.1:')) {
-            return app('url')->asset('' . $path, $secure);
-        }
-        return app('url')->asset('public/' . $path, $secure);
+        return app('url')->asset($path, $secure);
     }
 }
 
@@ -248,10 +243,7 @@ if (!function_exists('uploadedAsset')) {
     {
         $mediaFile = MediaManager::find($fileId);
         if (!is_null($mediaFile)) {
-            if (str_contains(url('/'), '.test') || str_contains(url('/'), 'http://127.0.0.1:')) {
-                return app('url')->asset('' . $mediaFile->media_file);
-            }
-            return app('url')->asset('public/' . $mediaFile->media_file);
+            return app('url')->asset($mediaFile->media_file);
         }
         return noImage();
     }
@@ -267,12 +259,8 @@ if (!function_exists('uploadedAssetes')) {
         $mediaFiles = MediaManager::whereIn('id', $ids)->get();
 
         if ($mediaFiles) {
-
             foreach ($mediaFiles as $file) {
-                if (str_contains(url('/'), '.test') || str_contains(url('/'), 'http://127.0.0.1:')) {
-                    $assets[] = app('url')->asset('' . $file->media_file);
-                }
-                $assets[] = app('url')->asset('public/' . $file->media_file);
+                $assets[] = app('url')->asset($file->media_file);
             }
         }
         return $assets;
@@ -349,8 +337,10 @@ if (!function_exists('newLocalization')) {
 if (!function_exists('writeToEnvFile')) {
     # write To Env File
     function
-    writeToEnvFile($type, $val)
-    {
+        writeToEnvFile(
+        $type,
+        $val
+    ) {
         if (env('DEMO_MODE') != 'On') {
             $path = base_path('.env');
             if (file_exists($path)) {
@@ -375,48 +365,48 @@ if (!function_exists('getFileType')) {
     {
         $fileTypeArray = [
             // audio
-            "mp3"       =>  "audio",
-            "wma"       =>  "audio",
-            "aac"       =>  "audio",
-            "wav"       =>  "audio",
+            "mp3" => "audio",
+            "wma" => "audio",
+            "aac" => "audio",
+            "wav" => "audio",
 
             // video
-            "mp4"       =>  "video",
-            "mpg"       =>  "video",
-            "mpeg"      =>  "video",
-            "webm"      =>  "video",
-            "ogg"       =>  "video",
-            "avi"       =>  "video",
-            "mov"       =>  "video",
-            "flv"       =>  "video",
-            "swf"       =>  "video",
-            "mkv"       =>  "video",
-            "wmv"       =>  "video",
+            "mp4" => "video",
+            "mpg" => "video",
+            "mpeg" => "video",
+            "webm" => "video",
+            "ogg" => "video",
+            "avi" => "video",
+            "mov" => "video",
+            "flv" => "video",
+            "swf" => "video",
+            "mkv" => "video",
+            "wmv" => "video",
 
             // image
-            "png"       =>  "image",
-            "svg"       =>  "image",
-            "gif"       =>  "image",
-            "jpg"       =>  "image",
-            "jpeg"      =>  "image",
-            "webp"      =>  "image",
+            "png" => "image",
+            "svg" => "image",
+            "gif" => "image",
+            "jpg" => "image",
+            "jpeg" => "image",
+            "webp" => "image",
 
             // document
-            "doc"       =>  "document",
-            "txt"       =>  "document",
-            "docx"      =>  "document",
-            "pdf"       =>  "document",
-            "csv"       =>  "document",
-            "xml"       =>  "document",
-            "ods"       =>  "document",
-            "xlr"       =>  "document",
-            "xls"       =>  "document",
-            "xlsx"      =>  "document",
+            "doc" => "document",
+            "txt" => "document",
+            "docx" => "document",
+            "pdf" => "document",
+            "csv" => "document",
+            "xml" => "document",
+            "ods" => "document",
+            "xlr" => "document",
+            "xls" => "document",
+            "xlsx" => "document",
 
             // archive
-            "zip"       =>  "archive",
-            "rar"       =>  "archive",
-            "7z"        =>  "archive"
+            "zip" => "archive",
+            "rar" => "archive",
+            "7z" => "archive"
         ];
         return isset($fileTypeArray[$type]) ? $fileTypeArray[$type] : null;
     }
@@ -432,12 +422,12 @@ if (!function_exists('fileDelete')) {
     }
 }
 
-if(!function_exists('isGreater')) {
+if (!function_exists('isGreater')) {
     function isGreater($currentVersion, $upcomingVersion, $isNumberConversion = false, $replaceValue = ["."], $replaceWith = "")
     {
 
-        if($isNumberConversion) {
-            $currentVersion  = intval(str_replace($replaceValue, $replaceWith, $currentVersion));
+        if ($isNumberConversion) {
+            $currentVersion = intval(str_replace($replaceValue, $replaceWith, $currentVersion));
             $upcomingVersion = intval(str_replace($replaceValue, $replaceWith, $upcomingVersion));
         }
 
@@ -446,7 +436,7 @@ if(!function_exists('isGreater')) {
 }
 
 
-if(!function_exists('getNumberFromString')) {
+if (!function_exists('getNumberFromString')) {
     function getNumberFromString($str, $replaceValue = ["."], $replaceWith = "")
     {
         return intval(str_replace($replaceValue, $replaceWith, $str));
@@ -454,17 +444,17 @@ if(!function_exists('getNumberFromString')) {
 }
 
 
-if(!function_exists('currentVersion')) {
+if (!function_exists('currentVersion')) {
     function currentVersion($isNumber = false)
     {
         # need to check bcz of setup route
-        if(Schema::hasTable('system_settings')) {
+        if (Schema::hasTable('system_settings')) {
             $settings = SystemSetting::where('entity', 'software_version')->first();
-            if($settings) {
+            if ($settings) {
                 $version = $settings->value;
             }
         }
-        if(empty($version)){
+        if (empty($version)) {
             $version = env('APP_VERSION') ? str_replace('v', '', env('APP_VERSION')) : null;
         }
 
@@ -498,7 +488,7 @@ if (!function_exists('renderStarRating')) {
         $fullStar = "<i data-feather='star' width='16' height='16' class='text-primary'></i>";
 
         $rating = $rating <= $maxRating ? $rating : $maxRating;
-        $fullStarCount = (int)$rating;
+        $fullStarCount = (int) $rating;
 
         $html = str_repeat($fullStar, $fullStarCount);
         echo $html;
@@ -510,14 +500,14 @@ if (!function_exists('renderStarRatingFront')) {
     function renderStarRatingFront($rating, $maxRating = 5)
     {
         $fullStar = '<li><i class="fas fa-star"></i></li>';
-        if(getTheme() == "halal"){
+        if (getTheme() == "halal") {
             $fullStar = '<li><span class="d-inline-block fs-14 clr-warning">
                 <i class="fas fa-star"></i>
             </span></li>';
         }
 
         $rating = $rating <= $maxRating ? $rating : $maxRating;
-        $fullStarCount = (int)$rating;
+        $fullStarCount = (int) $rating;
 
         $html = str_repeat($fullStar, $fullStarCount);
         echo $html;
@@ -529,14 +519,14 @@ if (!function_exists('renderStarRatingFrontOrganic')) {
     function renderStarRatingFrontOrganic($rating, $maxRating = 5)
     {
         $fullStar = '<li><i class="fas fa-star"></i></li>';
-        if(getTheme() == "organic"){
+        if (getTheme() == "organic") {
             $fullStar = '<li><span class="d-inline-block fs-14 clr-warning">
                 <i class="fas fa-star"></i>
             </span></li>';
         }
 
         $rating = $rating <= $maxRating ? $rating : $maxRating;
-        $fullStarCount = (int)$rating;
+        $fullStarCount = (int) $rating;
 
         $html = str_repeat($fullStar, $fullStarCount);
         echo $html;
@@ -547,7 +537,6 @@ if (!function_exists('formatPrice')) {
 
     //formats price - truncate price to 1M, 2K if activated by admin
     function formatPrice($price, $truncate = false, $forceTruncate = false, $addSymbol = true, $numberFormat = true)
-
     {
         // convert amount equal to local currency
         if (request()->hasHeader('Currency-Code')) {
@@ -586,11 +575,11 @@ if (!function_exists('formatPrice')) {
         if ($addSymbol) {
             // currency symbol
             if (request()->hasHeader('Currency-Code')) {
-                $symbol             =   ApiCurrencyMiddleWare::currencyData()->symbol;
-                $symbolAlignment    =    ApiCurrencyMiddleWare::currencyData()->alignment;
+                $symbol = ApiCurrencyMiddleWare::currencyData()->symbol;
+                $symbolAlignment = ApiCurrencyMiddleWare::currencyData()->alignment;
             } else {
-                $symbol             = Session::has('currency_symbol')           ? Session::get('currency_symbol')           : env('DEFAULT_CURRENCY_SYMBOL');
-                $symbolAlignment    = Session::has('currency_symbol_alignment') ? Session::get('currency_symbol_alignment') : env('DEFAULT_CURRENCY_SYMBOL_ALIGNMENT');
+                $symbol = Session::has('currency_symbol') ? Session::get('currency_symbol') : env('DEFAULT_CURRENCY_SYMBOL');
+                $symbolAlignment = Session::has('currency_symbol_alignment') ? Session::get('currency_symbol_alignment') : env('DEFAULT_CURRENCY_SYMBOL_ALIGNMENT');
             }
             if ($symbolAlignment == 0) {
                 return $symbol . $price;
@@ -601,7 +590,7 @@ if (!function_exists('formatPrice')) {
                 return $symbol . ' ' . $price;
             } else {
                 # space
-                return $price . ' ' .  $symbol;
+                return $price . ' ' . $symbol;
             }
         }
         return $price;
@@ -816,7 +805,7 @@ if (!function_exists('generateVariationOptions')) {
             foreach ($values as $value) {
                 $variationValue = VariationValue::find($value);
                 $val = array(
-                    'id'   => $value,
+                    'id' => $value,
                     'name' => $variationValue->collectLocalization('name'),
                     'code' => $variationValue->color_code
                 );
@@ -824,14 +813,14 @@ if (!function_exists('generateVariationOptions')) {
             }
             $data['id'] = $id;
 
-            if($withTrash == true) {
+            if ($withTrash == true) {
                 $data['name'] = Variation::withTrashed()->find($id)->collectLocalization('name');
-            }else{
+            } else {
                 $data['name'] = Variation::find($id) ? Variation::find($id)->collectLocalization('name') : null;
             }
-            if( $data['name']){
+            if ($data['name']) {
                 $data['values'] = $variationValues;
-            }else{
+            } else {
                 $data['values'] = $variationValues;
             }
 
@@ -957,7 +946,7 @@ if (!function_exists('variationTaxAmount')) {
     function variationTaxAmount($product, $variation)
     {
         $price = $variation->price;
-        $tax   = 0;
+        $tax = 0;
 
         $discount_applicable = false;
 
@@ -998,8 +987,8 @@ if (!function_exists('getSubTotal')) {
         $amount = 0;
         if (count($carts) > 0) {
             foreach ($carts as $cart) {
-                $product    = $cart->product_variation->product;
-                $variation  = $cart->product_variation;
+                $product = $cart->product_variation->product;
+                $variation = $cart->product_variation;
 
                 $discountedVariationPriceWithTax = variationDiscountedPrice($product, $variation, $addTax);
                 $price += (float) $discountedVariationPriceWithTax * $cart->qty;
@@ -1122,19 +1111,19 @@ if (!function_exists('checkCouponValidityForCheckout')) {
                     # coupon usage limit reached
                     removeCoupon();
                     return [
-                        'status'    => false,
-                        'message'   => localize('Total usage limit has been reached for the coupon')
+                        'status' => false,
+                        'message' => localize('Total usage limit has been reached for the coupon')
                     ];
                 }
 
                 # coupon usage by user
                 $couponUsageByUser = CouponUsage::where('user_id', auth()->user()->id)->where('coupon_code', $coupon->code)->first();
                 if (!is_null($couponUsageByUser)) {
-                    if ($couponUsageByUser->usage_count ==  $coupon->customer_usage_limit) {
+                    if ($couponUsageByUser->usage_count == $coupon->customer_usage_limit) {
                         removeCoupon();
                         return [
-                            'status'    => false,
-                            'message'   => localize('You have used this coupon for maximum time')
+                            'status' => false,
+                            'message' => localize('You have used this coupon for maximum time')
                         ];
                     }
                 }
@@ -1149,51 +1138,51 @@ if (!function_exists('checkCouponValidityForCheckout')) {
                                 # coupon not valid for your cart items
                                 removeCoupon();
                                 return [
-                                    'status'    => false,
-                                    'message'   => localize('Coupon is not valid for the products')
+                                    'status' => false,
+                                    'message' => localize('Coupon is not valid for the products')
                                 ];
                             }
 
                             return [
-                                'status'    => true,
-                                'message'   => ''
+                                'status' => true,
+                                'message' => ''
                             ];
                         }
 
                         return [
-                            'status'    => true,
-                            'message'   => ''
+                            'status' => true,
+                            'message' => ''
                         ];
                     } else {
                         # min amount not reached
                         removeCoupon();
                         return [
-                            'status'    => false,
-                            'message'   => localize('Minimum order amount is not reached to use this coupon')
+                            'status' => false,
+                            'message' => localize('Minimum order amount is not reached to use this coupon')
                         ];
                     }
                 } else {
                     # expired
                     removeCoupon();
                     return [
-                        'status'    => false,
-                        'message'   => localize('Coupon has been expired')
+                        'status' => false,
+                        'message' => localize('Coupon has been expired')
                     ];
                 }
             } else {
                 # coupon not found
                 removeCoupon();
                 return [
-                    'status'    => false,
-                    'message'   => localize('Coupon is not valid')
+                    'status' => false,
+                    'message' => localize('Coupon is not valid')
                 ];
             }
         }
 
         // coupon not set - so return true
         return [
-            'status'    => true,
-            'message'   => ''
+            'status' => true,
+            'message' => ''
         ];
     }
 }
@@ -1206,8 +1195,8 @@ if (!function_exists('getTotalTax')) {
         if ($carts) {
 
             foreach ($carts as $cart) {
-                $product    = $cart->product_variation->product;
-                $variation  = $cart->product_variation;
+                $product = $cart->product_variation->product;
+                $variation = $cart->product_variation;
 
                 $variationTaxAmount = variationTaxAmount($product, $variation);
                 $tax += (float) $variationTaxAmount * $cart->qty;
@@ -1301,7 +1290,7 @@ if (!function_exists('recaptchaValidation')) {
     function recaptchaValidation($request)
     {
         $score = 1;
-        if (getSetting('enable_recaptcha') == 1){
+        if (getSetting('enable_recaptcha') == 1) {
             $score = RecaptchaV3::verify($request->get('g-recaptcha-response'), 'recaptcha_token');
         }
         return $score;
@@ -1310,50 +1299,53 @@ if (!function_exists('recaptchaValidation')) {
 
 
 if (!function_exists('allMonths')) {
-    function allMonths(){
+    function allMonths()
+    {
         $month = [];
 
-        for ($m=1; $m<=12; $m++) {
-             $month[] = date('F', mktime(0,0,0,$m, 1, date('Y')));
+        for ($m = 1; $m <= 12; $m++) {
+            $month[] = date('F', mktime(0, 0, 0, $m, 1, date('Y')));
         }
 
         return $month;
     }
 }
 
- # module check
- if(!function_exists('isModuleActive')){
-    function isModuleActive($name) {
+# module check
+if (!function_exists('isModuleActive')) {
+    function isModuleActive($name)
+    {
 
         $module = Module::find($name);
-        if($module) {
+        if ($module) {
             $status = $module->isEnabled();
-            if($status == true) {
-                $modulePath = $module->getPath() .'/Providers/RouteServiceProvider.php';
-                if(file_exists($modulePath)) {
+            if ($status == true) {
+                $modulePath = $module->getPath() . '/Providers/RouteServiceProvider.php';
+                if (file_exists($modulePath)) {
                     $module = EnmartModule::where('name', $name)->first();
-                    if($module) {
-                        if($module->is_default == 1) {
+                    if ($module) {
+                        if ($module->is_default == 1) {
                             $status = true;
                         }
-                        if($module->is_paid == 1) {
-                            $status = $module->purchase_code && $module->domain  ? true : false;
+                        if ($module->is_paid == 1) {
+                            $status = $module->purchase_code && $module->domain ? true : false;
                         }
-                    }else{
+                    } else {
                         $status = false;
                     }
-                }else{
+                } else {
                     $status = false;
                 }
             }
         }
         return $status;
     }
- }
+}
 
- # text to a slug.
-if(!function_exists('convertToSlug')) {
-    function convertToSlug($text) {
+# text to a slug.
+if (!function_exists('convertToSlug')) {
+    function convertToSlug($text)
+    {
 
         $text = mb_strtolower(trim(preg_replace('~[^\pL\d]+~u', ' ', $text)));
 
@@ -1365,7 +1357,7 @@ if(!function_exists('convertToSlug')) {
 
         // Remove leading and trailing dashes
         $slug = trim($slug, '-');
-        if($slug == '') {
+        if ($slug == '') {
             $normalize = new SlugNormalizer;
             $slug = $normalize->normalize($text);
         }
@@ -1374,30 +1366,93 @@ if(!function_exists('convertToSlug')) {
 }
 
 # This function removes diacritics from Vietnamese text.
-if(!function_exists('removeDiacritics')) {
-    function removeDiacritics($text) {
+if (!function_exists('removeDiacritics')) {
+    function removeDiacritics($text)
+    {
         $diacritics = array(
-            'à' => 'a', 'á' => 'a', 'ạ' => 'a', 'ả' => 'a', 'ã' => 'a', 'â' => 'a', 'ầ' => 'a', 'ấ' => 'a', 'ậ' => 'a', 'ẩ' => 'a', 'ẫ' => 'a', 'ă' => 'a', 'ằ' => 'a', 'ắ' => 'a', 'ặ' => 'a', 'ẳ' => 'a', 'ẵ' => 'a',
-            'è' => 'e', 'é' => 'e', 'ẹ' => 'e', 'ẻ' => 'e', 'ẽ' => 'e', 'ê' => 'e', 'ề' => 'e', 'ế' => 'e', 'ệ' => 'e', 'ể' => 'e', 'ễ' => 'e',
-            'ì' => 'i', 'í' => 'i', 'ị' => 'i', 'ỉ' => 'i', 'ĩ' => 'i',
-            'ò' => 'o', 'ó' => 'o', 'ọ' => 'o', 'ỏ' => 'o', 'õ' => 'o', 'ô' => 'o', 'ồ' => 'o', 'ố' => 'o', 'ộ' => 'o', 'ổ' => 'o', 'ỗ' => 'o', 'ơ' => 'o', 'ờ' => 'o', 'ớ' => 'o', 'ợ' => 'o', 'ở' => 'o', 'ỡ' => 'o',
-            'ù' => 'u', 'ú' => 'u', 'ụ' => 'u', 'ủ' => 'u', 'ũ' => 'u', 'ư' => 'u', 'ừ' => 'u', 'ứ' => 'u', 'ự' => 'u', 'ử' => 'u', 'ữ' => 'u',
-            'ỳ' => 'y', 'ý' => 'y', 'ỵ' => 'y', 'ỷ' => 'y', 'ỹ' => 'y',
+            'à' => 'a',
+            'á' => 'a',
+            'ạ' => 'a',
+            'ả' => 'a',
+            'ã' => 'a',
+            'â' => 'a',
+            'ầ' => 'a',
+            'ấ' => 'a',
+            'ậ' => 'a',
+            'ẩ' => 'a',
+            'ẫ' => 'a',
+            'ă' => 'a',
+            'ằ' => 'a',
+            'ắ' => 'a',
+            'ặ' => 'a',
+            'ẳ' => 'a',
+            'ẵ' => 'a',
+            'è' => 'e',
+            'é' => 'e',
+            'ẹ' => 'e',
+            'ẻ' => 'e',
+            'ẽ' => 'e',
+            'ê' => 'e',
+            'ề' => 'e',
+            'ế' => 'e',
+            'ệ' => 'e',
+            'ể' => 'e',
+            'ễ' => 'e',
+            'ì' => 'i',
+            'í' => 'i',
+            'ị' => 'i',
+            'ỉ' => 'i',
+            'ĩ' => 'i',
+            'ò' => 'o',
+            'ó' => 'o',
+            'ọ' => 'o',
+            'ỏ' => 'o',
+            'õ' => 'o',
+            'ô' => 'o',
+            'ồ' => 'o',
+            'ố' => 'o',
+            'ộ' => 'o',
+            'ổ' => 'o',
+            'ỗ' => 'o',
+            'ơ' => 'o',
+            'ờ' => 'o',
+            'ớ' => 'o',
+            'ợ' => 'o',
+            'ở' => 'o',
+            'ỡ' => 'o',
+            'ù' => 'u',
+            'ú' => 'u',
+            'ụ' => 'u',
+            'ủ' => 'u',
+            'ũ' => 'u',
+            'ư' => 'u',
+            'ừ' => 'u',
+            'ứ' => 'u',
+            'ự' => 'u',
+            'ử' => 'u',
+            'ữ' => 'u',
+            'ỳ' => 'y',
+            'ý' => 'y',
+            'ỵ' => 'y',
+            'ỷ' => 'y',
+            'ỹ' => 'y',
             'đ' => 'd',
         );
         return strtr($text, $diacritics);
     }
 }
 
-if(!function_exists('active_themes_array')){
-    function active_themes_array(){
-       return json_decode(getSetting('active_themes')) ?? [1];
+if (!function_exists('active_themes_array')) {
+    function active_themes_array()
+    {
+        return json_decode(getSetting('active_themes')) ?? [1];
     }
 }
 
-if(!function_exists('current_theme')){
-    function current_theme($code = null){
-        if($code){
+if (!function_exists('current_theme')) {
+    function current_theme($code = null)
+    {
+        if ($code) {
             return $theme = Theme::where('code', $code)->first();
         }
         $code = session()->get('theme') ?? 'default';
@@ -1409,8 +1464,9 @@ if(!function_exists('current_theme')){
 }
 
 
-if(!function_exists('appStatic')){
-    function appStatic(){
+if (!function_exists('appStatic')) {
+    function appStatic()
+    {
 
         return new \App\Utils\AppStatic();
 
@@ -1418,8 +1474,7 @@ if(!function_exists('appStatic')){
 }
 
 
-if(!function_exists('getCategoriesByIds'))
-{
+if (!function_exists('getCategoriesByIds')) {
 
     function getCategoriesByIds($category_ids)
     {
@@ -1428,8 +1483,7 @@ if(!function_exists('getCategoriesByIds'))
 }
 
 
-if(!function_exists('getProductsByIds'))
-{
+if (!function_exists('getProductsByIds')) {
     function getProductsByIds($product_ids)
     {
         return Product::whereIn('id', $product_ids)->get();
@@ -1437,8 +1491,7 @@ if(!function_exists('getProductsByIds'))
 }
 
 
-if(!function_exists('getThemeId'))
-{
+if (!function_exists('getThemeId')) {
     function getThemeId($code)
     {
         return Theme::where('code', $code)->first()?->id;
@@ -1448,9 +1501,8 @@ if(!function_exists('getThemeId'))
 
 
 
-if(!function_exists('CountProductsByCategoryAndThemeId'))
-{
-    function CountProductsByCategoryAndThemeId($themeId, $categoryId )
+if (!function_exists('CountProductsByCategoryAndThemeId')) {
+    function CountProductsByCategoryAndThemeId($themeId, $categoryId)
     {
         // ProductTheme.php 
         $query = ProductTheme::selectRaw("count(products.id) as total_product")
@@ -1462,7 +1514,7 @@ if(!function_exists('CountProductsByCategoryAndThemeId'))
             ->groupBy("product_themes.theme_id")
             ->value('total_product') ?? 0;
 
-      
+
         return $query;
     }
 }

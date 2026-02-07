@@ -71,7 +71,7 @@
                                 </div>
 
                                 <div class="mb-4">
-                                    <label class="form-label">{{ localize('Center Banner Image') }}</label>
+                                    <label class="form-label">{{ localize('Center Banner Image') }} <small class="text-muted">(Recommended: 400x600px)</small></label>
                                     <input type="hidden" name="types[]" value="featured_center_banner">
                                     <div class="tt-image-drop rounded">
                                         <span class="fw-semibold">{{ localize('Choose Banner Image') }}</span>

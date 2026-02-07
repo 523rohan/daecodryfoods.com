@@ -103,7 +103,7 @@
                             <div class="card-body">
                                 <h5 class="mb-4">{{ localize('Images') }}</h5>
                                 <div class="mb-4">
-                                    <label class="form-label">{{ localize('Thumbnail') }}</label>
+                                    <label class="form-label">{{ localize('Thumbnail') }} <small class="text-muted">(Recommended: 400x400px)</small></label>
                                     <div class="tt-image-drop rounded">
                                         <span class="fw-semibold">{{ localize('Choose Category Thumbnail') }}</span>
                                         <!-- choose media -->

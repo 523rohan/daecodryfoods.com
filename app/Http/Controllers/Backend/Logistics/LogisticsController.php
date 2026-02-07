@@ -81,14 +81,14 @@ class LogisticsController extends Controller
     # update status 
     public function updateStatus(Request $request)
     {
-        $blog = Logistic::findOrFail($request->id);
-        if($request->type == 'is_active'){
-            $blog->is_active = $request->is_active;
+        $logistic = Logistic::findOrFail($request->id);
+        if ($request->type == 'is_active') {
+            $logistic->is_active = $request->status;
         }
-        if($request->type == 'is_published'){
-            $blog->is_published = $request->is_published;
+        if ($request->type == 'is_published') {
+            $logistic->is_published = $request->status;
         }
-        if ($blog->save()) {
+        if ($logistic->save()) {
             return 1;
         }
         return 0;

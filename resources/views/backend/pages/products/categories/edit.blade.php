@@ -52,9 +52,7 @@
 
 
 
-
-                                {{-- THEMES FIELD HIDDEN --}}
-                                {{-- <div class="mb-4">
+                                <div class="mb-4">
                                     @php
                                         $checkThemes = $category->themes()->pluck('theme_id');
                                     @endphp
@@ -69,7 +67,7 @@
                                                 {{ $theme->name }}</option>
                                         @endforeach
                                     </select>
-                                </div> --}}
+                                </div>
 
 
 

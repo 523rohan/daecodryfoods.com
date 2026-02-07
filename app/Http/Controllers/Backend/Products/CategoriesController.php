@@ -46,7 +46,9 @@ class CategoriesController extends Controller
             ->with('childrenCategories')
             ->get();
         $brands = Brand::isActive()->get();
-        return view('backend.pages.products.categories.create', compact('categories', 'brands'));
+        // Only show Grocery theme
+        $themes = \App\Models\Theme::where('name', 'Grocery')->get();
+        return view('backend.pages.products.categories.create', compact('categories', 'brands', 'themes'));
     }
 
     # add new data
@@ -118,7 +120,9 @@ class CategoriesController extends Controller
             ->get();
 
         $brands = Brand::isActive()->get();
-        return view('backend.pages.products.categories.edit', compact('category', 'categories', 'brands', 'lang_key'));
+        // Only show Grocery theme
+        $themes = \App\Models\Theme::where('name', 'Grocery')->get();
+        return view('backend.pages.products.categories.edit', compact('category', 'categories', 'brands', 'lang_key', 'themes'));
     }
 
     # update category
@@ -127,7 +131,7 @@ class CategoriesController extends Controller
         $category = Category::findOrFail($request->id);
         if ($request->lang_key == env("DEFAULT_LANGUAGE")) {
             $category->name = $request->name;
-        $category->description = $request->description;
+            $category->description = $request->description;
             $category->thumbnail_image = $request->image;
             $category->meta_image = $request->meta_image;
 
@@ -250,7 +254,7 @@ class CategoriesController extends Controller
         if (!empty($children)) {
             foreach ($children as $child) {
                 $dataArray[] = $child;
-                $dataArray   = $this->subChildren($child['id'], $includeDeleted, $dataArray);
+                $dataArray = $this->subChildren($child['id'], $includeDeleted, $dataArray);
             }
         }
         return $dataArray;

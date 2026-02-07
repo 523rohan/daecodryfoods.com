@@ -17,29 +17,31 @@
                         }
                     @endphp
 
-                    <ul class="timing-countdown countdown-timer d-flex align-items-center gap-2"
-                        data-date="{{ $best_deal_end_date }}">
-                        <li
-                            class="position-relative z-1 d-flex align-items-center justify-content-center flex-column rounded-2">
-                            <h5 class="mb-0 days">00</h5>
-                            <span class="gshop-subtitle fs-xxs d-block">{{ localize('Days') }}</span>
-                        </li>
-                        <li
-                            class="position-relative z-1 d-flex align-items-center justify-content-center flex-column rounded-2">
-                            <h5 class="mb-0 hours">00</h5>
-                            <span class="gshop-subtitle fs-xxs d-block">{{ localize('Hours') }}</span>
-                        </li>
-                        <li
-                            class="position-relative z-1 d-flex align-items-center justify-content-center flex-column rounded-2">
-                            <h5 class="mb-0 minutes">00</h5>
-                            <span class="gshop-subtitle fs-xxs d-block">{{ localize('Min') }}</span>
-                        </li>
-                        <li
-                            class="position-relative z-1 d-flex align-items-center justify-content-center flex-column rounded-2">
-                            <h5 class="mb-0 seconds">00</h5>
-                            <span class="gshop-subtitle fs-xxs d-block">{{ localize('Sec') }}</span>
-                        </li>
-                    </ul>
+                    @if($best_deal_end_date)
+                        <ul class="timing-countdown countdown-timer d-flex align-items-center gap-2"
+                            data-date="{{ $best_deal_end_date }}">
+                            <li
+                                class="position-relative z-1 d-flex align-items-center justify-content-center flex-column rounded-2">
+                                <h5 class="mb-0 days">00</h5>
+                                <span class="gshop-subtitle fs-xxs d-block">{{ localize('Days') }}</span>
+                            </li>
+                            <li
+                                class="position-relative z-1 d-flex align-items-center justify-content-center flex-column rounded-2">
+                                <h5 class="mb-0 hours">00</h5>
+                                <span class="gshop-subtitle fs-xxs d-block">{{ localize('Hours') }}</span>
+                            </li>
+                            <li
+                                class="position-relative z-1 d-flex align-items-center justify-content-center flex-column rounded-2">
+                                <h5 class="mb-0 minutes">00</h5>
+                                <span class="gshop-subtitle fs-xxs d-block">{{ localize('Min') }}</span>
+                            </li>
+                            <li
+                                class="position-relative z-1 d-flex align-items-center justify-content-center flex-column rounded-2">
+                                <h5 class="mb-0 seconds">00</h5>
+                                <span class="gshop-subtitle fs-xxs d-block">{{ localize('Sec') }}</span>
+                            </li>
+                        </ul>
+                    @endif
                 </div>
                 <div class="mt-4">
                     <div class="row g-4">

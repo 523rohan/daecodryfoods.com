@@ -1,49 +1,50 @@
 <?php
-echo "<h3>Server/File Debug Info</h3>";
+echo "<h3>Server/File Debug Info (Update)</h3>";
 echo "Current File Path: " . __FILE__ . "<br>";
 echo "Current Dir: " . __DIR__ . "<br>";
 
 $path = __DIR__ . '/uploads/media';
-echo "Expected Upload Path: " . $path . "<br>";
+echo "Target Upload Path: " . $path . "<br>";
 
-if (is_dir($path)) {
-    echo "<strong>Directory Exists: YES</strong><br>";
-    echo "Permissions: " . substr(sprintf('%o', fileperms($path)), -4) . "<br>";
-
-    $files = scandir($path);
-    $files = array_diff($files, array('.', '..'));
-
-    echo "<strong>File Count: " . count($files) . "</strong><br>";
-    echo "Last 5 files:<br><pre>";
-    print_r(array_slice($files, -5));
-    echo "</pre>";
-
-    // Check if the specific file mentioned by user exists
-    // URL was .../ju28De6HDW2JOlODLPTUFW1KWoB7BfqD103ItFOd.jpg
-    // Let's check for any file starting with ju28
-    echo "<strong>Checking for 'ju28...' files:</strong><br>";
-    $found = false;
-    foreach ($files as $f) {
-        if (strpos($f, 'ju28') === 0) {
-            echo "Found: " . $f . " (Size: " . filesize($path . '/' . $f) . " bytes)<br>";
-            $found = true;
-        }
+if (!is_dir($path)) {
+    echo "Directory does not exist. Creating...<br>";
+    if (mkdir($path, 0755, true)) {
+        echo "Created directory successfully.<br>";
+    } else {
+        echo "Failed to create directory.<br>";
+        exit;
     }
-    if (!$found)
-        echo "File starting with 'ju28' NOT found.<br>";
-
-} else {
-    echo "<strong>Directory Exists: NO</strong><br>";
-    echo "Trying to find where 'local' disk points to...<br>";
 }
 
-echo "<br><strong>Check 'storage/app/public' just in case:</strong><br>";
-$storagePath = __DIR__ . '/../storage/app/public/uploads/media';
-if (is_dir($storagePath)) {
-    echo "Found in storage/app/public: YES<br>";
-    $files = scandir($storagePath);
-    print_r(array_slice($files, -5));
+// 1. Check Permissions
+echo "Current Permissions: " . substr(sprintf('%o', fileperms($path)), -4) . "<br>";
+
+// 2. Try to Fix Permissions (chmod 0755)
+echo "Attempting to change permissions to 0755...<br>";
+if (chmod($path, 0755)) {
+    echo "chmod Success!<br>";
 } else {
-    echo "Found in storage/app/public: NO<br>";
+    echo "chmod Failed (Current user might not be owner).<br>";
 }
+echo "New Permissions: " . substr(sprintf('%o', fileperms($path)), -4) . "<br>";
+
+// 3. Try to Write a Test File
+$testFile = $path . '/test_write_' . time() . '.txt';
+echo "Attempting to write test file: $testFile<br>";
+if (file_put_contents($testFile, "This is a test write from PHP script.")) {
+    echo "<strong>Write Test: SUCCESS!</strong> File created.<br>";
+    echo "File Size: " . filesize($testFile) . " bytes<br>";
+} else {
+    echo "<strong>Write Test: FAILED!</strong> Could not write file.<br>";
+    $lastError = error_get_last();
+    echo "Error: " . $lastError['message'] . "<br>";
+}
+
+// 4. List Files Again
+$files = scandir($path);
+$files = array_diff($files, array('.', '..'));
+echo "<br><strong>File Count: " . count($files) . "</strong><br>";
+echo "Files found:<br><pre>";
+print_r($files);
+echo "</pre>";
 ?>

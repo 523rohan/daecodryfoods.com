@@ -43,7 +43,8 @@ class LogisticZonesController extends Controller
     public function create()
     {
         $logistics = Logistic::where('is_active', 1)->latest()->get();
-        return view('backend.pages.fulfillments.logisticZones.create', compact('logistics'));
+        $states = \App\Models\State::where('is_active', 1)->orderBy('name')->get();
+        return view('backend.pages.fulfillments.logisticZones.create', compact('logistics', 'states'));
     }
 
 
@@ -55,7 +56,7 @@ class LogisticZonesController extends Controller
 
         if (!is_null($logistic)) {
             $logisticCities = $logistic->cities()->pluck('city_id');
-            $cities =    City::isActive()->whereNotIn('id', $logisticCities)->latest()->get();
+            $cities = City::isActive()->whereNotIn('id', $logisticCities)->latest()->get();
 
             foreach ($cities as $city) {
                 $html .= '<option value="' . $city->id . '">' . $city->name . '</option>';
@@ -63,6 +64,17 @@ class LogisticZonesController extends Controller
         }
 
         echo json_encode($html);
+    }
+
+    # get cities by states
+    public function getStatesCities(Request $request)
+    {
+        $stateIds = $request->state_ids;
+        $cities = City::whereIn('state_id', $stateIds)
+            ->where('is_active', 1)
+            ->pluck('id')
+            ->toArray();
+        return response()->json($cities);
     }
 
     # zone store
@@ -79,10 +91,10 @@ class LogisticZonesController extends Controller
             LogisticZoneCity::where('logistic_id', $logisticZone->logistic_id)
                 ->where('city_id', $city_id)
                 ->delete();
-            $logisticZoneCity                   = new LogisticZoneCity;
-            $logisticZoneCity->logistic_id      = $logisticZone->logistic_id;
+            $logisticZoneCity = new LogisticZoneCity;
+            $logisticZoneCity->logistic_id = $logisticZone->logistic_id;
             $logisticZoneCity->logistic_zone_id = $logisticZone->id;
-            $logisticZoneCity->city_id          = $city_id;
+            $logisticZoneCity->city_id = $city_id;
             $logisticZoneCity->save();
         }
 
@@ -94,7 +106,7 @@ class LogisticZonesController extends Controller
     public function edit(Request $request, $id)
     {
         $logisticZone = LogisticZone::findOrFail($id);
-        $cities       = City::isActive()->latest()->get();
+        $cities = City::isActive()->latest()->get();
         return view('backend.pages.fulfillments.logisticZones.edit', compact('logisticZone', 'cities'));
     }
 
@@ -117,14 +129,14 @@ class LogisticZonesController extends Controller
         $logisticZone->save();
 
         LogisticZoneCity::where('logistic_id', $logisticZone->logistic_id)
-      
-        ->delete();
+
+            ->delete();
         foreach ($request->city_ids as $city_id) {
 
-            $logisticZoneCity                   = new LogisticZoneCity;
-            $logisticZoneCity->logistic_id      = $logisticZone->logistic_id;
+            $logisticZoneCity = new LogisticZoneCity;
+            $logisticZoneCity->logistic_id = $logisticZone->logistic_id;
             $logisticZoneCity->logistic_zone_id = $logisticZone->id;
-            $logisticZoneCity->city_id          = $city_id;
+            $logisticZoneCity->city_id = $city_id;
             $logisticZoneCity->save();
         }
 

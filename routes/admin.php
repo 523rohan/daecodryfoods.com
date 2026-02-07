@@ -88,27 +88,29 @@ Route::group(['prefix' => 'backend', 'middleware' => ['demo']], function () {
 });
 
 
-    // Feature which are allowed for demo mood
-    Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']],function () {
-        #pos
-        Route::get('/pos', [PosController::class, 'index'])->name('admin.pos.index');
-        Route::post('/pos-products', [PosController::class, 'products'])->name('admin.pos.products');
-        Route::post('/pos-customers', [PosController::class, 'customers'])->name('admin.pos.customers');
-        Route::post('/pos-customer-info', [PosController::class, 'customerInfo'])->name('admin.pos.customerInfo');
-        Route::post('/pos-new-customer', [PosController::class, 'newCustomer'])->name('admin.pos.newCustomer');
-        Route::post('/add-to-pos-cart', [PosController::class, 'addToList'])->name('admin.pos.addToList');
-        Route::post('/pos-product-info', [PosController::class, 'productInfo'])->name('admin.pos.productInfo');
-        Route::post('/delete-from-cart', [PosController::class, 'deleteFromCart'])->name('admin.pos.deleteFromCart');
-        Route::post('/handle-pos-cart-qty', [PosController::class, 'handleQty'])->name('admin.pos.handleQty');
-        Route::post('/get-variation-id', [PosController::class, 'getVariationId'])->name('admin.pos.getVariationId');
-        Route::post('/update-pos-summary', [PosController::class, 'updatePosSummary'])->name('admin.pos.updatePosSummary');
-        Route::post('/submit-pos-order', [PosController::class, 'completeOrder'])->name('admin.pos.completeOrder');
-        Route::get('/pos/invoice-download/{id}', [PosController::class, 'downloadInvoice'])->name('admin.pos.downloadInvoice');
-    });
+// Feature which are allowed for demo mood
+Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin']], function () {
+    #pos
+    Route::get('/pos', [PosController::class, 'index'])->name('admin.pos.index');
+    Route::post('/pos-products', [PosController::class, 'products'])->name('admin.pos.products');
+    Route::post('/pos-customers', [PosController::class, 'customers'])->name('admin.pos.customers');
+    Route::post('/pos-customer-info', [PosController::class, 'customerInfo'])->name('admin.pos.customerInfo');
+    Route::post('/pos-new-customer', [PosController::class, 'newCustomer'])->name('admin.pos.newCustomer');
+    Route::post('/add-to-pos-cart', [PosController::class, 'addToList'])->name('admin.pos.addToList');
+    Route::post('/pos-product-info', [PosController::class, 'productInfo'])->name('admin.pos.productInfo');
+    Route::post('/delete-from-cart', [PosController::class, 'deleteFromCart'])->name('admin.pos.deleteFromCart');
+    Route::post('/handle-pos-cart-qty', [PosController::class, 'handleQty'])->name('admin.pos.handleQty');
+    Route::post('/get-variation-id', [PosController::class, 'getVariationId'])->name('admin.pos.getVariationId');
+    Route::post('/update-pos-summary', [PosController::class, 'updatePosSummary'])->name('admin.pos.updatePosSummary');
+    Route::post('/submit-pos-order', [PosController::class, 'completeOrder'])->name('admin.pos.completeOrder');
+    Route::get('/pos/invoice-download/{id}', [PosController::class, 'downloadInvoice'])->name('admin.pos.downloadInvoice');
+});
 
 
-    //feature that not allowed for demo mood
-    Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'admin','demo']],function () {
+//feature that not allowed for demo mood
+Route::group(
+    ['prefix' => 'admin', 'middleware' => ['auth', 'admin', 'demo']],
+    function () {
         # dashboard
         Route::get('/', [DashboardController::class, 'index'])->name('admin.dashboard');
         Route::get('/profile', [DashboardController::class, 'profile'])->name('admin.profile');
@@ -116,7 +118,7 @@ Route::group(['prefix' => 'backend', 'middleware' => ['demo']], function () {
         // Route::group(['prefix' => 'affiliate'], function () {
         //         # affiliate
         //         Route::get('/configurations', [AffiliateConfigurationsController::class, 'index'])->name('admin.affiliate.configurations');
-
+    
         //         # withdraw
         //         Route::get('/withdraw-requests', [WithdrawRequestsController::class, 'index'])->name('affiliate.withdraw.index');
         //         Route::post('/withdraw-requests', [WithdrawRequestsController::class, 'store'])->name('affiliate.withdraw.store');
@@ -180,7 +182,7 @@ Route::group(['prefix' => 'backend', 'middleware' => ['demo']], function () {
             Route::post('/update-product', [ProductsController::class, 'update'])->name('admin.products.update');
             Route::post('/update-featured-product', [ProductsController::class, 'updateFeatured'])->name('admin.products.updateFeatureStatus');
             Route::post('/update-published-product', [ProductsController::class, 'updatePublishedStatus'])->name('admin.products.updatePublishedStatus');
-            
+
             Route::post('/update-is-featured-product', [ProductsController::class, 'updateIsFeatured'])
                 ->name('admin.products.isFeatured');
 
@@ -253,7 +255,7 @@ Route::group(['prefix' => 'backend', 'middleware' => ['demo']], function () {
         // Route::post('/update-pos-summary', [PosController::class, 'updatePosSummary'])->name('admin.pos.updatePosSummary');
         // Route::post('/submit-pos-order', [PosController::class, 'completeOrder'])->name('admin.pos.completeOrder');
         // Route::get('/pos/invoice-download/{id}', [PosController::class, 'downloadInvoice'])->name('admin.pos.downloadInvoice');
-
+    
 
 
         # orders
@@ -406,6 +408,7 @@ Route::group(['prefix' => 'backend', 'middleware' => ['demo']], function () {
             Route::post('/update-zone', [LogisticZonesController::class, 'update'])->name('admin.logisticZones.update');
             Route::get('/delete-zone/{id}', [LogisticZonesController::class, 'delete'])->name('admin.logisticZones.delete');
             Route::post('/logistic-cities', [LogisticZonesController::class, 'getLogisticCities'])->name('admin.logisticZones.getLogisticCities');
+            Route::post('/states-cities', [LogisticZonesController::class, 'getStatesCities'])->name('admin.logisticZones.getStatesCities');
 
             # countries
             Route::get('/countries', [CountriesController::class, 'index'])->name('admin.countries.index');
@@ -543,7 +546,7 @@ Route::group(['prefix' => 'backend', 'middleware' => ['demo']], function () {
             Route::post('/appearance/theme', [SettingsController::class, 'themeUpdate'])->name('admin.appearance.themeUpdate');
 
             #fonts for invoice
-
+    
             Route::get('/appearance/fonts', [SettingsController::class, 'fonts'])->name('admin.appearance.fonts');
             Route::post('/appearance/fonts', [SettingsController::class, 'fontsUpdate']);
         });
@@ -570,46 +573,46 @@ Route::group(['prefix' => 'backend', 'middleware' => ['demo']], function () {
 
             Route::get('/delivery-man/cancel-request', [DeliverymenController::class, 'cancelRequest'])->name('admin.deliverymen.cancel-request');
 
-            Route::get('payout-history',[DeliverymenController::class,'payoutHistory'])->name('admin.deliverymen.payout.history');
+            Route::get('payout-history', [DeliverymenController::class, 'payoutHistory'])->name('admin.deliverymen.payout.history');
 
-            Route::post('payout-request-accept/{payout}',[DeliverymenController::class,'acceptPayout'])->name('admin.deliverymen.payout.accept');
-            Route::post('payout-request-reject/{payout}',[DeliverymenController::class,'rejectPayout'])->name('admin.deliverymen.payout.reject');
+            Route::post('payout-request-accept/{payout}', [DeliverymenController::class, 'acceptPayout'])->name('admin.deliverymen.payout.accept');
+            Route::post('payout-request-reject/{payout}', [DeliverymenController::class, 'rejectPayout'])->name('admin.deliverymen.payout.reject');
 
-            Route::get('deliverman-configuraton',[DeliverymenController::class,'configuration'])->name('admin.deliveryman.config');
-            Route::post('deliverman-configuraton',[DeliverymenController::class,'configurationUpdate']);
+            Route::get('deliverman-configuraton', [DeliverymenController::class, 'configuration'])->name('admin.deliveryman.config');
+            Route::post('deliverman-configuraton', [DeliverymenController::class, 'configurationUpdate']);
 
-            Route::get('payroll-list',[DeliverymenController::class,'payrollList'])->name('admin.deliveryman.payroll.list');
-            Route::get('generate-payroll',[DeliverymenController::class,'payroll'])->name('admin.deliveryman.payroll');
+            Route::get('payroll-list', [DeliverymenController::class, 'payrollList'])->name('admin.deliveryman.payroll.list');
+            Route::get('generate-payroll', [DeliverymenController::class, 'payroll'])->name('admin.deliveryman.payroll');
 
-            Route::get('payroll/edit/{payroll}',[DeliverymenController::class,'payrollEdit'])->name('admin.deliveryman.payroll.edit');
-            Route::post('payroll/edit/{payroll}',[DeliverymenController::class,'payrollUpdate']);
+            Route::get('payroll/edit/{payroll}', [DeliverymenController::class, 'payrollEdit'])->name('admin.deliveryman.payroll.edit');
+            Route::post('payroll/edit/{payroll}', [DeliverymenController::class, 'payrollUpdate']);
 
-            Route::post('payroll/change-status',[DeliverymenController::class,'payrollChangeStatus'])->name('admin.deliveryman.payroll.changeStatus');
+            Route::post('payroll/change-status', [DeliverymenController::class, 'payrollChangeStatus'])->name('admin.deliveryman.payroll.changeStatus');
 
-            Route::post('generate-payroll',[DeliverymenController::class,'payrollStore']);
-            Route::get('get-salary',[DeliverymenController::class,'getSalary'])->name('admin.deliveryman.get-salary');
+            Route::post('generate-payroll', [DeliverymenController::class, 'payrollStore']);
+            Route::get('get-salary', [DeliverymenController::class, 'getSalary'])->name('admin.deliveryman.get-salary');
 
         });
         Route::post('update-status', [ConstantController::class, 'updateStatus'])->name('admin.update-status');
 
 
         // system Update
-         Route::get('/settings/update-system', [UpdateController::class, 'about'])->name('admin.about-update');
-         Route::post('/settings/update-system', [UpdateController::class, 'versionUpdateInstall'])->name('admin.system.update-version');
+        Route::get('/settings/update-system', [UpdateController::class, 'about'])->name('admin.about-update');
+        Route::post('/settings/update-system', [UpdateController::class, 'versionUpdateInstall'])->name('admin.system.update-version');
 
 
-         Route::get('/settings/update', [SystemUpdateController::class, 'index'])->name('system.update');
-         Route::get('/settings/checkServerConnection', [SystemUpdateController::class, 'checkServerConnection'])->name('system.checkServerConnection');
-         Route::get('/settings/healthCheck', [SystemUpdateController::class, 'healthCheck'])->name('system.healthCheck');
-         Route::get('/settings/file-permission', [FilePermissionController::class, 'index'])->name('system.file-permission')->middleware('admin');
+        Route::get('/settings/update', [SystemUpdateController::class, 'index'])->name('system.update');
+        Route::get('/settings/checkServerConnection', [SystemUpdateController::class, 'checkServerConnection'])->name('system.checkServerConnection');
+        Route::get('/settings/healthCheck', [SystemUpdateController::class, 'healthCheck'])->name('system.healthCheck');
+        Route::get('/settings/file-permission', [FilePermissionController::class, 'index'])->name('system.file-permission')->middleware('admin');
 
 
-         Route::post('/license-store', [LicenseController::class, 'store'])->name('admin.settings.license.store');
-         Route::post('/system/health-check', [LicenseController::class, 'healthCheck'])->name('system.heath-check');
+        Route::post('/license-store', [LicenseController::class, 'store'])->name('admin.settings.license.store');
+        Route::post('/system/health-check', [LicenseController::class, 'healthCheck'])->name('system.heath-check');
 
-         Route::get('/utilities', [UtilityController::class, 'index'])->name('admin.utilities');
-         Route::get('/clear-cache', [UtilityController::class, 'clearCache'])->name('admin.clear-cache');
-         Route::get('/clear-log', [UtilityController::class, 'clearLog'])->name('admin.clearLog');
-         Route::get('/debug', [UtilityController::class, 'debug'])->name('admin.debug');
+        Route::get('/utilities', [UtilityController::class, 'index'])->name('admin.utilities');
+        Route::get('/clear-cache', [UtilityController::class, 'clearCache'])->name('admin.clear-cache');
+        Route::get('/clear-log', [UtilityController::class, 'clearLog'])->name('admin.clearLog');
+        Route::get('/debug', [UtilityController::class, 'debug'])->name('admin.debug');
     }
 );

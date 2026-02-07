@@ -1,12 +1,12 @@
 <script>
     "use strict";
     // runs when the document is ready --> for media files
-    $(document).ready(function() {
+    $(document).ready(function () {
         getChosenFilesCount();
         showSelectedFilePreviewOnLoad();
     });
 
-    $('.themeChange').on('change', function(e) {
+    $('.themeChange').on('change', function (e) {
 
         e.preventDefault();
         $.ajax({
@@ -15,7 +15,7 @@
             data: {
                 ids: $(this).val()
             },
-            success: function(response) {
+            success: function (response) {
                 $('#appendCategory').html(response)
 
                 $('#appendCategory').trigger('change');
@@ -23,26 +23,37 @@
 
         })
     })
-    let options = $('.themeChange option:selected').val();
 
-    if(options !== undefined) {
+    // Load categories on page load (even if themes field is hidden)
+    $(document).ready(function () {
+        let options = $('.themeChange option:selected').val();
 
-        if(options.length > 0){
+        // If themes field exists and has value, use it
+        if (options !== undefined && options.length > 0) {
             $.ajax({
                 method: "GET",
                 url: "{{ url()->current() }}",
                 data: {
                     ids: options
                 },
-                success: function(response) {
+                success: function (response) {
                     $('#appendCategory').html(response)
-
                     $('#appendCategory').trigger('change');
                 }
-
+            })
+        } else {
+            // If no themes (field hidden), load all categories
+            $.ajax({
+                method: "GET",
+                url: "{{ url()->current() }}",
+                data: {},  // Empty data to trigger "show all" logic
+                success: function (response) {
+                    $('#appendCategory').html(response)
+                    $('#appendCategory').trigger('change');
+                }
             })
         }
-    }
+    });
     // swith markup based on selection
     function isVariantProduct(el) {
         $(".hasVariation").hide();
@@ -77,7 +88,7 @@
             },
             data: $('#product-form').serialize(),
             url: '{{ route('product.newVariation') }}',
-            success: function(data) {
+            success: function (data) {
                 if (data.count > 0) {
                     $('.chosen_variation_options').find('.variation-names').find('.select2').siblings(
                         '.dropdown-toggle').addClass("disabled");
@@ -100,7 +111,7 @@
                 variation_id: $(e).val()
             },
             url: '{{ route('product.getVariationValues') }}',
-            success: function(data) {
+            success: function (data) {
                 $(e).closest('.row').find('.variationvalues').html(data);
                 $('.select2').select2();
                 initFeather();
@@ -117,7 +128,7 @@
             },
             url: '{{ route('product.generateVariationCombinations') }}',
             data: $('#product-form').serialize(),
-            success: function(data) {
+            success: function (data) {
                 $('#variation_combination').html(data);
 
                 $('.table').footable();

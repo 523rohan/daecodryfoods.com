@@ -53,12 +53,12 @@ class ProductsController extends Controller
 
         if ($request->brand_id != null) {
             $products = $products->where('brand_id', $request->brand_id);
-            $brand_id    = $request->brand_id;
+            $brand_id = $request->brand_id;
         }
 
         if ($request->is_published != null) {
             $products = $products->where('is_published', $request->is_published);
-            $is_published    = $request->is_published;
+            $is_published = $request->is_published;
         }
 
         $brands = Brand::latest()->get();
@@ -71,9 +71,18 @@ class ProductsController extends Controller
     {
 
         if (request()->ajax()) {
-            $theme = CategoryTheme::whereIn('theme_id', (array)request()->ids)->pluck('category_id')->toArray();
-
-            return view('backend.pages.products.products.category')->with(['categories' => Category::find($theme)]);
+            // If theme IDs are provided, filter by theme
+            if (request()->has('ids') && !empty(request()->ids)) {
+                $theme = CategoryTheme::whereIn('theme_id', (array) request()->ids)->pluck('category_id')->toArray();
+                return view('backend.pages.products.products.category')->with(['categories' => Category::find($theme)]);
+            } else {
+                // If no theme IDs (themes field hidden), return all active categories
+                $categories = Category::where('parent_id', 0)
+                    ->orderBy('sorting_order_level', 'desc')
+                    ->with('childrenCategories')
+                    ->get();
+                return view('backend.pages.products.products.category')->with(['categories' => $categories]);
+            }
         }
 
         $categories = Category::where('parent_id', 0)
@@ -138,7 +147,7 @@ class ProductsController extends Controller
                     foreach ($variation_option_values as $item) {
                         array_push($value_ids, $item);
                     }
-                    $variations_and_values[$option] =  $value_ids;
+                    $variations_and_values[$option] = $value_ids;
                 }
             }
         }
@@ -168,34 +177,34 @@ class ProductsController extends Controller
             }
 
             DB::beginTransaction();
-            $product                    = new Product;
-            $product->shop_id           = getMyShopId();
-            $product->name              = $request->name;
-            $product->slug              = Str::slug($request->name, '-') . '-' . strtolower(Str::random(5));
-            $product->brand_id          = $request->brand_id;
-            $product->unit_id           = $request->unit_id;
-            $product->sell_target       = $request->sell_target;
+            $product = new Product;
+            $product->shop_id = getMyShopId();
+            $product->name = $request->name;
+            $product->slug = Str::slug($request->name, '-') . '-' . strtolower(Str::random(5));
+            $product->brand_id = $request->brand_id;
+            $product->unit_id = $request->unit_id;
+            $product->sell_target = $request->sell_target;
 
-            $product->thumbnail_image   = $request->image;
-            $product->gallery_images    = $request->images;
-            $product->size_guide        = $request->size_guide;
+            $product->thumbnail_image = $request->image;
+            $product->gallery_images = $request->images;
+            $product->size_guide = $request->size_guide;
 
-            $product->description       = $request->description;
+            $product->description = $request->description;
             $product->short_description = $request->short_description;
-            $product->vedio_link        = $request->vedio_link;
+            $product->vedio_link = $request->vedio_link;
 
             # min-max price
             if ($request->has('is_variant') && $request->has('variations')) {
-                $product->min_price =  priceToUsd(min(array_column($request->variations, 'price')));
-                $product->max_price =  priceToUsd(max(array_column($request->variations, 'price')));
+                $product->min_price = priceToUsd(min(array_column($request->variations, 'price')));
+                $product->max_price = priceToUsd(max(array_column($request->variations, 'price')));
             } else {
-                $product->min_price =  priceToUsd($request->price);
-                $product->max_price =  priceToUsd($request->price);
+                $product->min_price = priceToUsd($request->price);
+                $product->max_price = priceToUsd($request->price);
             }
 
             # discount
-            $product->discount_value    = $request->discount_value ?? 0;
-            $product->discount_type     = $request->discount_type;
+            $product->discount_value = $request->discount_value ?? 0;
+            $product->discount_type = $request->discount_type;
 
 
             if ($request->date_range != null) {
@@ -205,20 +214,20 @@ class ProductsController extends Controller
                     $date_var = [date("d-m-Y"), date("d-m-Y")];
                 }
                 $product->discount_start_date = strtotime($date_var[0]);
-                $product->discount_end_date   = strtotime($date_var[1]);
+                $product->discount_end_date = strtotime($date_var[1]);
             }
 
             # stock qty based on all variations / no variation 
-            $product->stock_qty   = ($request->has('is_variant') && $request->has('variations')) ? max(array_column($request->variations, 'stock')) : $request->stock;
+            $product->stock_qty = ($request->has('is_variant') && $request->has('variations')) ? max(array_column($request->variations, 'stock')) : $request->stock;
 
-            $product->is_published         = $request->is_published;
-            $product->has_variation        = ($request->has('is_variant') && $request->has('variations')) ? 1 : 0;
+            $product->is_published = $request->is_published;
+            $product->has_variation = ($request->has('is_variant') && $request->has('variations')) ? 1 : 0;
 
             # shipping info
-            $product->standard_delivery_hours    = $request->standard_delivery_hours;
-            $product->express_delivery_hours     = $request->express_delivery_hours;
-            $product->min_purchase_qty     = $request->min_purchase_qty;
-            $product->max_purchase_qty     = $request->max_purchase_qty;
+            $product->standard_delivery_hours = $request->standard_delivery_hours;
+            $product->express_delivery_hours = $request->express_delivery_hours;
+            $product->min_purchase_qty = $request->min_purchase_qty;
+            $product->max_purchase_qty = $request->max_purchase_qty;
 
 
             $product->meta_title = $request->meta_title;
@@ -258,40 +267,40 @@ class ProductsController extends Controller
 
             if ($request->has('is_variant') && $request->has('variations')) {
                 foreach ($request->variations as $variation) {
-                    $product_variation              = new ProductVariation;
-                    $product_variation->product_id  = $product->id;
-                    $product_variation->variation_key        = $variation['variation_key'];
-                    $product_variation->price       = priceToUsd($variation['price']);
-                    $product_variation->sku         = $variation['sku'];
-                    $product_variation->code         = $variation['code'];
+                    $product_variation = new ProductVariation;
+                    $product_variation->product_id = $product->id;
+                    $product_variation->variation_key = $variation['variation_key'];
+                    $product_variation->price = priceToUsd($variation['price']);
+                    $product_variation->sku = $variation['sku'];
+                    $product_variation->code = $variation['code'];
                     $product_variation->save();
 
-                    $product_variation_stock                              = new ProductVariationStock;
-                    $product_variation_stock->product_variation_id        = $product_variation->id;
-                    $product_variation_stock->location_id                 = $location->id;
-                    $product_variation_stock->stock_qty                   = $variation['stock'];
+                    $product_variation_stock = new ProductVariationStock;
+                    $product_variation_stock->product_variation_id = $product_variation->id;
+                    $product_variation_stock->location_id = $location->id;
+                    $product_variation_stock->stock_qty = $variation['stock'];
                     $product_variation_stock->save();
 
                     foreach (array_filter(explode("/", $variation['variation_key'])) as $combination) {
-                        $product_variation_combination                         = new ProductVariationCombination;
-                        $product_variation_combination->product_id             = $product->id;
-                        $product_variation_combination->product_variation_id   = $product_variation->id;
-                        $product_variation_combination->variation_id           = explode(":", $combination)[0];
-                        $product_variation_combination->variation_value_id     = explode(":", $combination)[1];
+                        $product_variation_combination = new ProductVariationCombination;
+                        $product_variation_combination->product_id = $product->id;
+                        $product_variation_combination->product_variation_id = $product_variation->id;
+                        $product_variation_combination->variation_id = explode(":", $combination)[0];
+                        $product_variation_combination->variation_value_id = explode(":", $combination)[1];
                         $product_variation_combination->save();
                     }
                 }
             } else {
-                $variation              = new ProductVariation;
-                $variation->product_id  = $product->id;
-                $variation->sku         = $request->sku;
-                $variation->code         = $request->code;
-                $variation->price       = priceToUsd($request->price);
+                $variation = new ProductVariation;
+                $variation->product_id = $product->id;
+                $variation->sku = $request->sku;
+                $variation->code = $request->code;
+                $variation->price = priceToUsd($request->price);
                 $variation->save();
-                $product_variation_stock                          = new ProductVariationStock;
-                $product_variation_stock->product_variation_id    = $variation->id;
-                $product_variation_stock->location_id             = $location->id;
-                $product_variation_stock->stock_qty               = $request->stock;
+                $product_variation_stock = new ProductVariationStock;
+                $product_variation_stock->product_variation_id = $variation->id;
+                $product_variation_stock->location_id = $location->id;
+                $product_variation_stock->stock_qty = $request->stock;
                 $product_variation_stock->save();
             }
 
@@ -314,14 +323,14 @@ class ProductsController extends Controller
 
         if (request()->ajax()) {
 
-            $theme = CategoryTheme::whereIn('theme_id', (array)$request->ids)->pluck('category_id')->toArray();
+            $theme = CategoryTheme::whereIn('theme_id', (array) $request->ids)->pluck('category_id')->toArray();
 
             return view('backend.pages.products.products.category')->with(['categories' => Category::find($theme), 'product' => $product]);
         }
 
 
         $location = Location::where('is_default', 1)->first();
-        $request->session()->put('stock_location_id',  $location?->id);
+        $request->session()->put('stock_location_id', $location?->id);
 
         $lang_key = $request->lang_key;
         $language = Language::where('is_active', 1)->where('code', $lang_key)->first();
@@ -358,39 +367,39 @@ class ProductsController extends Controller
                     return redirect()->back();
                 }
 
-                $product                    = Product::where('id', $request->id)->first();
-                $oldProduct                 = clone $product;
+                $product = Product::where('id', $request->id)->first();
+                $oldProduct = clone $product;
 
                 if ($product->shop_id != auth()->user()->shop_id) {
                     abort(403);
                 }
 
                 if ($request->lang_key == env("DEFAULT_LANGUAGE")) {
-                    $product->name              = $request->name;
-                    $product->slug              = (!is_null($request->slug)) ? Str::slug($request->slug, '-') : Str::slug($request->name, '-') . '-' . strtolower(Str::random(5));
-                    $product->description       = $request->description;
-                    $product->sell_target       = $request->sell_target;
-                    $product->brand_id          = $request->brand_id;
-                    $product->unit_id           = $request->unit_id;
+                    $product->name = $request->name;
+                    $product->slug = (!is_null($request->slug)) ? Str::slug($request->slug, '-') : Str::slug($request->name, '-') . '-' . strtolower(Str::random(5));
+                    $product->description = $request->description;
+                    $product->sell_target = $request->sell_target;
+                    $product->brand_id = $request->brand_id;
+                    $product->unit_id = $request->unit_id;
                     $product->short_description = $request->short_description;
 
-                    $product->thumbnail_image   = $request->image;
-                    $product->gallery_images   = $request->images;
-                    $product->size_guide        = $request->size_guide;
-                    $product->vedio_link        = $request->vedio_link;
+                    $product->thumbnail_image = $request->image;
+                    $product->gallery_images = $request->images;
+                    $product->size_guide = $request->size_guide;
+                    $product->vedio_link = $request->vedio_link;
 
                     # min-max price
                     if ($request->has('is_variant') && $request->has('variations')) {
-                        $product->min_price =  priceToUsd(min(array_column($request->variations, 'price')));
-                        $product->max_price =  priceToUsd(max(array_column($request->variations, 'price')));
+                        $product->min_price = priceToUsd(min(array_column($request->variations, 'price')));
+                        $product->max_price = priceToUsd(max(array_column($request->variations, 'price')));
                     } else {
-                        $product->min_price =  priceToUsd($request->price);
-                        $product->max_price =  priceToUsd($request->price);
+                        $product->min_price = priceToUsd($request->price);
+                        $product->max_price = priceToUsd($request->price);
                     }
 
                     # discount
-                    $product->discount_value    = $request->discount_value;
-                    $product->discount_type     = $request->discount_type;
+                    $product->discount_value = $request->discount_value;
+                    $product->discount_type = $request->discount_type;
                     if ($request->date_range != null) {
 
                         if (Str::contains($request->date_range, 'to')) {
@@ -400,20 +409,20 @@ class ProductsController extends Controller
                         }
 
                         $product->discount_start_date = strtotime($date_var[0]);
-                        $product->discount_end_date   = strtotime($date_var[1]);
+                        $product->discount_end_date = strtotime($date_var[1]);
                     }
 
                     # stock qty based on all variations / no variation 
-                    $product->stock_qty   = ($request->has('is_variant') && $request->has('variations')) ? max(array_column($request->variations, 'stock')) : $request->stock;
+                    $product->stock_qty = ($request->has('is_variant') && $request->has('variations')) ? max(array_column($request->variations, 'stock')) : $request->stock;
 
-                    $product->is_published         = $request->is_published;
-                    $product->has_variation        = ($request->has('is_variant') && $request->has('variations')) ? 1 : 0;
+                    $product->is_published = $request->is_published;
+                    $product->has_variation = ($request->has('is_variant') && $request->has('variations')) ? 1 : 0;
 
                     # shipping info
-                    $product->standard_delivery_hours    = $request->standard_delivery_hours;
-                    $product->express_delivery_hours     = $request->express_delivery_hours;
-                    $product->min_purchase_qty     = $request->min_purchase_qty;
-                    $product->max_purchase_qty     = $request->max_purchase_qty;
+                    $product->standard_delivery_hours = $request->standard_delivery_hours;
+                    $product->express_delivery_hours = $request->express_delivery_hours;
+                    $product->min_purchase_qty = $request->min_purchase_qty;
+                    $product->max_purchase_qty = $request->max_purchase_qty;
 
 
                     $product->meta_title = $request->meta_title;
@@ -468,17 +477,17 @@ class ProductsController extends Controller
 
                         # update old matched variations
                         foreach ($old_matched_variations as $variation) {
-                            $p_variation              = ProductVariation::where('product_id', $product->id)->where('variation_key', $variation['variation_key'])->first();
-                            $p_variation->price       = priceToUsd($variation['price']);
-                            $p_variation->sku         = $variation['sku'];
-                            $p_variation->code         = $variation['code'];
+                            $p_variation = ProductVariation::where('product_id', $product->id)->where('variation_key', $variation['variation_key'])->first();
+                            $p_variation->price = priceToUsd($variation['price']);
+                            $p_variation->sku = $variation['sku'];
+                            $p_variation->code = $variation['code'];
                             $p_variation->save();
 
                             # update stock of this variation
                             $productVariationStock = $p_variation->product_variation_stock_without_location()->where('location_id', $location->id)->first();
                             if (is_null($productVariationStock)) {
                                 $productVariationStock = new ProductVariationStock;
-                                $productVariationStock->product_variation_id    = $p_variation->id;
+                                $productVariationStock->product_variation_id = $p_variation->id;
                             }
                             $productVariationStock->stock_qty = $variation['stock'];
                             $productVariationStock->location_id = $location->id;
@@ -487,25 +496,25 @@ class ProductsController extends Controller
 
                         # store new requested variations
                         foreach ($new_variations as $variation) {
-                            $product_variation                      = new ProductVariation;
-                            $product_variation->product_id          = $product->id;
-                            $product_variation->variation_key       = $variation['variation_key'];
-                            $product_variation->price               = priceToUsd($variation['price']);
-                            $product_variation->sku                 = $variation['sku'];
-                            $product_variation->code                 = $variation['code'];
+                            $product_variation = new ProductVariation;
+                            $product_variation->product_id = $product->id;
+                            $product_variation->variation_key = $variation['variation_key'];
+                            $product_variation->price = priceToUsd($variation['price']);
+                            $product_variation->sku = $variation['sku'];
+                            $product_variation->code = $variation['code'];
                             $product_variation->save();
 
-                            $product_variation_stock                              = new ProductVariationStock;
-                            $product_variation_stock->product_variation_id        = $product_variation->id;
-                            $product_variation_stock->stock_qty                   = $variation['stock'];
+                            $product_variation_stock = new ProductVariationStock;
+                            $product_variation_stock->product_variation_id = $product_variation->id;
+                            $product_variation_stock->stock_qty = $variation['stock'];
                             $product_variation_stock->save();
 
                             foreach (array_filter(explode("/", $variation['variation_key'])) as $combination) {
-                                $product_variation_combination                         = new ProductVariationCombination;
-                                $product_variation_combination->product_id             = $product->id;
-                                $product_variation_combination->product_variation_id   = $product_variation->id;
-                                $product_variation_combination->variation_id           = explode(":", $combination)[0];
-                                $product_variation_combination->variation_value_id     = explode(":", $combination)[1];
+                                $product_variation_combination = new ProductVariationCombination;
+                                $product_variation_combination->product_id = $product->id;
+                                $product_variation_combination->product_variation_id = $product_variation->id;
+                                $product_variation_combination->variation_id = explode(":", $combination)[0];
+                                $product_variation_combination->variation_value_id = explode(":", $combination)[1];
                                 $product_variation_combination->save();
                             }
                         }
@@ -520,12 +529,12 @@ class ProductsController extends Controller
                             }
                         }
 
-                        $variation                       = $product->variations->first();
-                        $variation->product_id           = $product->id;
-                        $variation->variation_key        = null;
-                        $variation->sku                  = $request->sku;
-                        $variation->code                  = $request->code;
-                        $variation->price                = priceToUsd($request->price);
+                        $variation = $product->variations->first();
+                        $variation->product_id = $product->id;
+                        $variation->variation_key = null;
+                        $variation->sku = $request->sku;
+                        $variation->code = $request->code;
+                        $variation->price = priceToUsd($request->price);
                         $variation->save();
 
 
@@ -536,14 +545,14 @@ class ProductsController extends Controller
                                 $productVariationStock = new ProductVariationStock;
                             }
 
-                            $productVariationStock->product_variation_id    = $variation->id;
-                            $productVariationStock->stock_qty               = $request->stock;
+                            $productVariationStock->product_variation_id = $variation->id;
+                            $productVariationStock->stock_qty = $request->stock;
                             $productVariationStock->location_id = $location->id;
                             $productVariationStock->save();
                         } else {
-                            $product_variation_stock                          = new ProductVariationStock;
-                            $product_variation_stock->product_variation_id    = $variation->id;
-                            $product_variation_stock->stock_qty               = $request->stock;
+                            $product_variation_stock = new ProductVariationStock;
+                            $product_variation_stock->product_variation_id = $variation->id;
+                            $product_variation_stock->stock_qty = $request->stock;
                             $product_variation_stock->save();
                         }
                     }
@@ -625,7 +634,7 @@ class ProductsController extends Controller
     {
         try {
             $request->validate(['file' => 'required|mimes:xlsx, csv, xls'], ['file.mimes' => localize('Invalid Format, Only Support xlsx, csv, xls')]);
-            Excel::import(new ImportProducts,  $request->file('file'));
+            Excel::import(new ImportProducts, $request->file('file'));
             $importTemporaryProducts = TemporaryProductImportData::where('created_by', auth()->user()->id)->get();
             $location = Location::where('is_default', 1)->first();
 
@@ -634,84 +643,84 @@ class ProductsController extends Controller
 
                 if (!$exitProduct) {
 
-                    $product                    = new Product;
-                    $product->shop_id           = getMyShopId();
-                    $product->name              = $temporaryProduct->name;
-                    $product->slug              = $temporaryProduct->slug;
-                    $product->brand_id          = $temporaryProduct->brand_id;
-                    $product->unit_id           = $temporaryProduct->unit_id;
-                    $product->sell_target       = $temporaryProduct->sell_target;
+                    $product = new Product;
+                    $product->shop_id = getMyShopId();
+                    $product->name = $temporaryProduct->name;
+                    $product->slug = $temporaryProduct->slug;
+                    $product->brand_id = $temporaryProduct->brand_id;
+                    $product->unit_id = $temporaryProduct->unit_id;
+                    $product->sell_target = $temporaryProduct->sell_target;
 
-                    $product->thumbnail_image   = $temporaryProduct->image;
-                    $product->gallery_images    = $temporaryProduct->images;
-                    $product->size_guide        = $temporaryProduct->size_guide;
+                    $product->thumbnail_image = $temporaryProduct->image;
+                    $product->gallery_images = $temporaryProduct->images;
+                    $product->size_guide = $temporaryProduct->size_guide;
 
-                    $product->description       = $temporaryProduct->description;
+                    $product->description = $temporaryProduct->description;
                     $product->short_description = $temporaryProduct->short_description;
-                    $product->vedio_link        = $temporaryProduct->vedio_link;
+                    $product->vedio_link = $temporaryProduct->vedio_link;
 
                     # min-max price
-                 
-                    $product->min_price =  priceToUsd($temporaryProduct->price);
-                    $product->max_price =  priceToUsd($temporaryProduct->price);
-                    
+
+                    $product->min_price = priceToUsd($temporaryProduct->price);
+                    $product->max_price = priceToUsd($temporaryProduct->price);
+
 
                     # discount
-                    $product->discount_value    = $temporaryProduct->discount_value ?? 0;
-                    $product->discount_type     = $temporaryProduct->discount_type;
+                    $product->discount_value = $temporaryProduct->discount_value ?? 0;
+                    $product->discount_type = $temporaryProduct->discount_type;
 
 
-                
+
                     $product->discount_start_date = $temporaryProduct->discount_start_date;
-                    $product->discount_end_date   = $temporaryProduct->discount_end_date;
-                    
+                    $product->discount_end_date = $temporaryProduct->discount_end_date;
+
 
                     # stock qty based on all variations / no variation 
-                    $product->stock_qty   = $temporaryProduct->stock_qty;
+                    $product->stock_qty = $temporaryProduct->stock_qty;
 
-                    $product->is_published         = $temporaryProduct->is_published;
-                    $product->has_variation        = $temporaryProduct->has_variation;
+                    $product->is_published = $temporaryProduct->is_published;
+                    $product->has_variation = $temporaryProduct->has_variation;
 
                     # shipping info
                     $product->standard_delivery_hours = $temporaryProduct->standard_delivery_hours;
-                    $product->express_delivery_hours  = $temporaryProduct->express_delivery_hours;
-                    $product->min_purchase_qty        = $temporaryProduct->min_purchase_qty;
-                    $product->max_purchase_qty        = $temporaryProduct->max_purchase_qty;
+                    $product->express_delivery_hours = $temporaryProduct->express_delivery_hours;
+                    $product->min_purchase_qty = $temporaryProduct->min_purchase_qty;
+                    $product->max_purchase_qty = $temporaryProduct->max_purchase_qty;
 
 
-                    $product->meta_title       = $temporaryProduct->meta_title;
+                    $product->meta_title = $temporaryProduct->meta_title;
                     $product->meta_description = $temporaryProduct->meta_description;
-                    $product->meta_img         = $temporaryProduct->meta_image;
-                    $product->is_import        = 1;
-                    $product->created_by       = auth()->user()->id;
+                    $product->meta_img = $temporaryProduct->meta_image;
+                    $product->is_import = 1;
+                    $product->created_by = auth()->user()->id;
 
                     $product->save();
                     # Product Localization
-                    $ProductLocalization              = ProductLocalization::firstOrNew(['lang_key' => env('DEFAULT_LANGUAGE'), 'product_id' => $product->id]);
-                    $ProductLocalization->name        = $temporaryProduct->name;
+                    $ProductLocalization = ProductLocalization::firstOrNew(['lang_key' => env('DEFAULT_LANGUAGE'), 'product_id' => $product->id]);
+                    $ProductLocalization->name = $temporaryProduct->name;
                     $ProductLocalization->description = $temporaryProduct->description;
                     $ProductLocalization->save();
 
                     if ($product) {
-                        $variation             = new ProductVariation;
+                        $variation = new ProductVariation;
                         $variation->product_id = $product->id;
-                        $variation->sku        = $temporaryProduct->sku;
-                        $variation->code       = $temporaryProduct->code;
-                        $variation->price      = priceToUsd($temporaryProduct->price);
+                        $variation->sku = $temporaryProduct->sku;
+                        $variation->code = $temporaryProduct->code;
+                        $variation->price = priceToUsd($temporaryProduct->price);
                         $variation->save();
 
                         if ($variation) {
-                            $product_variation_stock                       = new ProductVariationStock;
+                            $product_variation_stock = new ProductVariationStock;
                             $product_variation_stock->product_variation_id = $variation->id;
-                            $product_variation_stock->location_id          = $location->id;
-                            $product_variation_stock->stock_qty            = $product->stock_qty;
+                            $product_variation_stock->location_id = $location->id;
+                            $product_variation_stock->stock_qty = $product->stock_qty;
                             $product_variation_stock->save();
                         }
                     }
                 }
             }
-            if($importTemporaryProducts){
-                 TemporaryProductImportData::where('created_by', auth()->user()->id)->delete();
+            if ($importTemporaryProducts) {
+                TemporaryProductImportData::where('created_by', auth()->user()->id)->delete();
             }
 
             flash(localize('Product has been imported successfully'))->success();

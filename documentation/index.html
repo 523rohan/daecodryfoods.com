@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <!-- Fav Icon  -->
+    <link rel="shortcut icon"
+          href="images/favicon.png">
+    <title>GroStore - Food & Grocery Laravel eCommerce with Admin Dashboard</title>
+
+    <link rel="stylesheet"
+          href="style.css"
+          type="text/css"
+          media="all">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,700"
+          rel="stylesheet"
+          type="text/css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+          rel='stylesheet'>
+
+</head>
+
+<body>
+    <div class="body-wrapper">
+        <!-- nav area -->
+        <div class="nav-wrapper">
+            <div class="logo-wrapper">
+                <h1 class="logo-title">GroStore - Food & Grocery Laravel eCommerce with Admin Dashboard</h1>
+            </div>
+            <div class="nav"
+                 id="nav">
+                <div class="nav-item active"><a class="main-nav-item"><i class="fas fa-cog"></i>Getting Started</a>
+                    <div class="sub-nav">
+                        <a class="sub-nav-item active"
+                           href="#introduction">Introduction</a>
+
+                        <a class="sub-nav-item"
+                           href="#server-requirements">Server Requirements</a>
+
+                        <a class="sub-nav-item"
+                           href="#upload-files">Upload Files</a>
+
+                        <a class="sub-nav-item"
+                           href="#create-database">Create Database</a>
+
+                        <a class="sub-nav-item"
+                           href="#install-on-server">Installation On Server</a>
+
+                        <a class="sub-nav-item"
+                           href="#install-on-localhost">Installation On Localhost</a>
+                    </div>
+                </div>
+
+                <div class="nav-item"><a class="main-nav-item"><i class="fas fa-palette"></i>Appearance</a>
+                    <div class="sub-nav">
+                        <a class="sub-nav-item"
+                           href="#system-logo">System Logo</a>
+                        <a class="sub-nav-item"
+                           href="#homepage">Homepage</a>
+                        <a class="sub-nav-item"
+                           href="#about">About Us</a>
+                        <a class="sub-nav-item"
+                           href="#admin-logo">Admin Logo</a>
+                    </div>
+                </div>
+
+                <div class="nav-item"><a class="main-nav-item"><i class="fas fa-question"></i>How to Questions</a>
+                    <div class="sub-nav">
+
+                        <a class="sub-nav-item"
+                           href="#headermenu">Add Dynamic Menus</a>
+
+
+                        <a class="sub-nav-item"
+                           href="#customProduct">Custom Products Section</a>
+
+                        <a class="sub-nav-item"
+                           href="#language">Add New Language</a>
+                        <a class="sub-nav-item"
+                           href="#localizations">Add Localizations</a>
+                        <a class="sub-nav-item"
+                           href="#currency">Add New Currency</a>
+
+                        <a class="sub-nav-item"
+                           href="#pwa">Configure PWA</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- content area -->
+        <div class="content-wrapper"
+             id="content">
+            <!-- navbar -->
+            <div class="need-support">
+                <a href="https://grostore.themetags.com"
+                   target="_blank"><i class="fa fa-bullseye"></i>View demo</a>
+                <a href="http://codecanyon.net/user/themetags/portfolio"
+                   target="_blank"><i class="fa fa-cloud-download"></i>Buy theme</a>
+                <a href="https://themetags.ticksy.com/"
+                   target="_blank"><i class="fa fa-support"></i>Need Support</a>
+            </div>
+
+            <!-- Getting start -->
+            <div class="content-section"
+                 id="introduction"
+                 style="display: block;">
+                <h3>Introduction</h3>
+
+                Thank you very much for choosing our application. We truly appreciate and really hope that you'll enjoy
+                our
+                script! <br />
+                <strong>If you like this script, Please support us by rating us 5 stars (<a
+                       href="images/how-to-rate.png"
+                       target="_blank">How to rate?</a>)</strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+                   class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i
+                   class="fa fa-star"></i><i class="fa fa-star"></i><br /><br />
+                <p><strong>GroStore</strong> - Food & Grocery Laravel eCommerce with Admin Dashboard</p>
+
+                <h3>Used Technologies</h3>
+                <ul>
+                    <li>Laravel</li>
+                    <li>Ajax</li>
+                    <li>jQuery</li>
+                </ul>
+
+                <h3>User Panels</h3>
+                <ul>
+                    <li>Customer Panel</li>
+                    <li>Admin Panel</li>
+                    <li>Website Frontend</li>
+                </ul>
+
+                <h3>Core Features</h3>
+                <ul>
+                    <li>Add To Cart</li>
+                    <li>Checkout</li>
+                    <li>Staff Management</li>
+                    <li>Order Management</li>
+                    <li>Multi-currency</li>
+                    <li>Multilingual</li>
+                    <li>Zone Based Shipping</li>
+                    <li>Logistic Based Shipping</li>
+                    <li>Media Manager</li>
+                    <li>Coupons</li>
+                    <li>Campaigns</li>
+                    <li>Newsletters</li>
+
+                </ul>
+
+                <h5>Need Support?</h5>
+                If you have any questions about the script, please create ticket on our <a
+                   href="https://themetags.ticksy.com/"
+                   target="_blank">Ticketing System</a>.
+            </div>
+
+            <!-- server-requirements -->
+            <div class="content-section"
+                 id="server-requirements">
+                <h3>Server Requirements</h3>
+                <div class="content">
+                    <section class="callout-yellow">
+                        <p> If you are not sure about how to configure these settings, please contact your hosting
+                            provider.
+                        </p>
+                    </section>
+                    <ul>
+                        <li>Minimum PHP version 7.4 or greater.</li>
+                        <li>OpenSSL PHP Extension</li>
+                        <li>PDO PHP Extension</li>
+                        <li>Mbstring PHP Extension</li>
+                        <li>Tokenizer PHP Extension</li>
+                        <li>XML PHP Extension</li>
+                        <li>Ctype PHP Extension</li>
+                        <li>JSON PHP Extension</li>
+                        <li>ZIP PHP Extension</li>
+                        <li>FileInfo PHP Extension</li>
+                        <li>BCMath PHP Extension</li>
+                    </ul>
+                    <h3 id="php-config">PHP configuration limits</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <td> Setting </td>
+                                <td> Value </td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td> max_execution_time </td>
+                                <td> 300 </td>
+
+                            </tr>
+                            <tr>
+                                <td> max_input_time </td>
+                                <td> 300 </td>
+
+                            </tr>
+                            <tr>
+                                <td> memory_limit&nbsp; </td>
+                                <td> 1024M </td>
+
+                            </tr>
+                            <tr>
+                                <td> post_max_size </td>
+                                <td> 1024M </td>
+
+                            </tr>
+                            <tr>
+                                <td> upload_max_filesize </td>
+                                <td> 1024M <br> </td>
+
+                            </tr>
+                            <tr>
+                                <td> max_input_vars </td>
+                                <td> 2000+ <br> </td>
+
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- upload files -->
+            <div class="content-section"
+                 id="upload-files">
+                <h3>Upload Files</h3>
+                <div class="content">
+                    <ul>
+                        <li><strong>Login to your cpanel</strong></li>
+                        <li class="ml-4">
+                            e.g “https://yourdomain.com/cpanel”
+                        </li>
+
+                        <li>Click "File Manager"</li>
+                        <li>
+                            Go to the "public_html" folder
+                        </li>
+                        <li>
+                            Upload here the "upload_this.zip" file
+                            which is in the downloaded file from
+                            “CodeCanyon”
+                        </li>
+                        <li>
+                            Go back to the "public_html" folder
+                        </li>
+                        <li>
+                            "Right click" on the Zip File, you will see
+                            some options there
+                        </li>
+                        <li>Now, Click on "Extract"</li>
+                        <li>
+                            Confirm Extract Files. The Zip File is now
+                            extracted successfully. You are all set to
+                            go to the next step
+                        </li>
+                        <li class="text-danger">
+                            <strong>Do not forget to delete "upload_this.zip"
+                                file after successful extraction.</strong>
+                        </li>
+                    </ul>
+
+                    <h3>Video Tutorial</h3>
+                    <p>
+                        You can follow the video below to get a good
+                        overview.
+                    </p>
+                    <iframe width="80%"
+                            height="500"
+                            src="https://www.youtube.com/embed/93_3ell25kc"
+                            frameborder="0"
+                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope;"
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <!-- create-database -->
+            <div class="content-section"
+                 id="create-database">
+                <h3>Create Database</h3>
+                <div class="content">
+                    <ul>
+                        <li><strong>Login to your cpanel</strong></li>
+                        <li class="ml-4">
+                            e.g “https://yourdomain.com/cpanel”
+                        </li>
+                        <li>
+                            Type "MySQL" in the Search Box
+                        </li>
+                        <li>
+                            Select "MySQL Databases". A page will
+                            come
+                        </li>
+                        <li>
+                            Type database name in the input field and
+                            click "Create Database". A new page will come
+                            with successful notification
+                        </li>
+                        <li><strong>Click Go Back</strong></li>
+                        <li>
+                            Now create an user for the database. To
+                            create an user, scroll down to "MySQL Users"
+                            on the same page
+                        </li>
+                        <li>
+                            Insert Username & Password, Click Create
+                            User. A new page will come with successful
+                            notification. Click Go Back
+                        </li>
+                        <li>
+                            Now Add User to Database so that the user
+                            can use the database. Scroll down to "Add
+                            User to Database"
+                        </li>
+                        <li>
+                            Select the User & Database you just have
+                            created
+                        </li>
+                        <li>
+                            Click on "Add". A new page will come
+                        </li>
+                        <li>Click on "Make Changes"</li>
+                        <li>Click on Go Back</li>
+                    </ul>
+
+                    <h3>Video Tutorial</h3>
+                    <p>
+                        You can follow the video below to get a good
+                        overview.
+                    </p>
+                    <iframe width="80%"
+                            height="500"
+                            src="https://www.youtube.com/embed/jozbQdrvbDU"
+                            frameborder="0"
+                            allow="accelerometer; clipboard-write; encrypted-media; gyroscope;"
+                            allowfullscreen></iframe>
+                </div>
+            </div>
+
+            <!-- installation -->
+            <div class="content-section"
+                 id="install-on-server">
+                <h3>Installation On Server</h3>
+
+                <ul>
+                    <li>Navigate to the link below replacing "yourdomain" with your original domain
+                    </li>
+
+                    <li class="ml-4"><a href="http://yourdomain.com"
+                           target="_blank"
+                           class="text-dark font-weight-bold">http://yourdomain.com</a> <span class="text-danger">Or
+                            (for SSL) </span><a href="https://yourdomain.com"
+                           target="_blank"
+                           class="text-dark font-weight-bold">https://yourdomain.com</a> </li>
+
+                    <li>Click "Proceed to Next". A page will come.</li>
+                    <li>Check Your server Configuration</li>
+                    <li class="text-danger">If your php version does not match the requirement
+                        (7.4 =+), contact your server provider</li>
+                    <li class="text-danger">If your curl is not enabled, contact your server
+                        provider</li>
+                    <br>
+                    <li>Now you need to set Database Host, Database Name, Database Username, Database
+                        Password</li>
+                    <li class="ml-4"><strong>Database Host - Type “localhost”</strong></li>
+                    <li class="ml-4"><strong>Database Port - your_port (e.g 3306)</strong></li>
+                    <li class="ml-4"><strong>Database Name - yourdomain_databasename</strong></li>
+                    <li class="ml-4"><strong>Database Username - yourdomain_username</strong></li>
+                    <li class="ml-4"><strong>Password - Type the password of the user you created from MySQL
+                            Database</strong></li>
+
+                    <li><strong>Click Save the configuration</strong></li>
+                    <br>
+                    <li>Click on Run Migration</li>
+                    <li>Name, Email, Phone no, Password to create an Admin</li>
+                    <li><strong>Save and that's all, use your system.</strong></li>
+                </ul>
+
+                <h3>Video Tutorial</h3>
+                <p>You can follow the video below to get a good overview.</p>
+                <iframe width="80%"
+                        height="500"
+                        src="https://www.youtube.com/embed/C_SCWr_kFN0"
+                        frameborder="0"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope;"
+                        allowfullscreen></iframe>
+
+
+            </div>
+
+            <!-- install-on-localhost -->
+            <div class="content-section"
+                 id="install-on-localhost">
+                <h3>Installation on Localhost</h3>
+                <h5 class="text-dark font-weight-bold">Step 1 - Copy Files</h5>
+                <ul>
+                    <li>Create a folder in your local server, name it <span class="text-info">"grostore"</span> (
+                        inside htdocs folder if you are using xampp
+                        )</li>
+                    <li>Copy and paste here the <span class="text-info">"upload_this.zip"</span> file which
+                        is in the downloaded file from “CodeCanyon”</li>
+                    <li>"Right click" on the Zip File</li>
+                    <li>"Extract here" the zip file</li>
+                </ul>
+
+                <h5 class="text-dark font-weight-bold">Step 2 - Create Database</h5>
+                <ul>
+                    <li>Start apache server</li>
+                    <li>Create a database in your local database, ( navigate to "localhost/phpmyadmin" if
+                        you are using xampp )</li> <br>
+                    <img src="./images/db.png"
+                         class="img-fluid w-75" />
+                </ul>
+
+                <br>
+                <h5 class="text-dark font-weight-bold">Step 3 - Install The System</h5>
+                <ul>
+                    <li>Navigate to the link below</li>
+                    <li class="ml-4"><a href="http://localhost/grostore"
+                           target="_blank"
+                           class="text-dark font-weight-bold">http://localhost/grostore</a></li>
+                    <li>A page will come. Follow the steps written there</li>
+                    <br>
+
+                    <li>You need to set Database Host, Database Port, Database Name, Database Username,
+                        Database Password</strong></li>
+                    <li class="ml-4"><strong>Database Host - Type “localhost”</strong></li>
+                    <li class="ml-4"><strong>Database Port - your_port (e.g 3306)</strong></li>
+                    <li class="ml-4"><strong>Database Name - databasename</strong></li>
+                    <li class="ml-4"><strong>Database Username - username (default "root")</strong></li>
+                    <li class="ml-4"><strong>Password - type your password ( keep password field blank if you didn't
+                            set any password )</strong></li>
+                    <li><strong>Click Save the configuration</strong></li>
+                    <br />
+
+                    <li>Click on Run Migration</li>
+                    <li>Name, Email, Phone no, Password to create an Admin</li>
+                    <li><strong>Save and that's all, use your system.</strong></li>
+
+                </ul>
+
+                <br>
+                <h3 id="thevideo">Video Tutorial</h3>
+                <p>You can follow the video below to get a good overview.</p>
+                <iframe width="80%"
+                        height="500"
+                        src="https://www.youtube.com/embed/61FXQhrr67g"
+                        frameborder="0"
+                        allow="accelerometer; clipboard-write; encrypted-media; gyroscope;"
+                        allowfullscreen></iframe>
+
+            </div>
+
+            <!-- system logo -->
+            <div class="content-section"
+                 id="system-logo">
+                <h3>Change Logo</h3>
+                <ul>
+                    <li>
+                        <strong>Login to the system as Admin</strong>
+                    </li>
+                    <li class="ml-4">https://yourdomain.com/admin</li>
+
+                    <li>
+                        <strong>Go to Appearance > Header</strong>
+                    </li>
+                    <li>
+                        <strong>Update the field with your changes</strong>
+                    </li>
+                    <li><strong>Click Save Changes</strong></li>
+                </ul>
+                <br>
+                <img src="./images/header.png"
+                     alt="">
+            </div>
+
+            <!-- homepage -->
+            <div class="content-section"
+                 id="homepage">
+                <h3>Configure Homepage</h3>
+                <p>Here you can configure all the sections of homepage of the website</p>
+                <ul>
+                    <li>
+                        <strong>Login to the system as Admin</strong>
+                    </li>
+                    <li class="ml-4">https://yourdomain.com/admin</li>
+
+                    <li>
+                        <strong>Go to Appearance > Homepage</strong>
+                    </li>
+                    <li>
+                        <strong>Update the field with your changes</strong>
+                    </li>
+                </ul>
+                <br>
+                <img src="./images/home.png"
+                     alt="">
+            </div>
+
+            <!-- about -->
+            <div class="content-section"
+                 id="about">
+                <h3>Configure About Us Page</h3>
+                <p>Here you can configure all the sections of about us page of the website</p>
+                <ul>
+                    <li>
+                        <strong>Login to the system as Admin</strong>
+                    </li>
+                    <li class="ml-4">https://yourdomain.com/admin</li>
+
+                    <li>
+                        <strong>Go to Appearance > About Us</strong>
+                    </li>
+                    <li>
+                        <strong>Update the field with your changes</strong>
+                    </li>
+                </ul>
+                <br>
+                <img src="./images/about.png"
+                     alt="">
+            </div>
+
+            <!-- admin logo -->
+            <div class="content-section"
+                 id="admin-logo">
+                <h3>Change Admin Logo</h3>
+                <ul>
+                    <li>
+                        <strong>Login to the system as Admin</strong>
+                    </li>
+                    <li class="ml-4">https://yourdomain.com/admin</li>
+
+                    <li>
+                        <strong>Go to System Settings > General Settings</strong>
+                    </li>
+                    <li>
+                        <strong>Update the field with your changes</strong>
+                    </li>
+                    <li><strong>Click Save Changes</strong></li>
+                </ul>
+                <br>
+                <img src="./images/admin-logo.png"
+                     alt="">
+            </div>
+
+            <!-- headermenu -->
+            <div class="content-section"
+                 id="headermenu">
+                <h3>Add Dynamic Header Menus</h3>
+                <ul>
+                    <li>
+                        <strong>Login to the system as Admin</strong>
+                    </li>
+                    <li class="ml-4">https://yourdomain.com/admin</li>
+
+                    <li>
+                        <strong>Go to System Appearance > Header</strong>
+                    </li>
+
+                    <li>
+                        <strong>Click "Navbar Information"</strong>
+                    </li>
+
+                    <li>
+                        <strong>Fill the form with required data</strong>
+                    </li>
+                    <li>
+                        <strong>Click "Save Changes"</strong>
+                    </li>
+                </ul>
+                <br>
+                <img src="./images/headermenu.png"
+                     alt="">
+            </div>
+
+            <!-- customProduct -->
+            <div class="content-section"
+                 id="customProduct">
+                <h3>Add Custom Product Section</h3>
+                <ul>
+                    <li>
+                        <strong>Login to the system as Admin</strong>
+                    </li>
+                    <li class="ml-4">https://yourdomain.com/admin</li>
+
+                    <li>
+                        <strong>Go to System Appearance > Homepage</strong>
+                    </li>
+
+                    <li>
+                        <strong>Click "Custom Product Section"</strong>
+                    </li>
+
+                    <li>
+                        <strong>Fill the form with required data</strong>
+                    </li>
+                    <li>
+                        <strong>Click "Save Changes"</strong>
+                    </li>
+                </ul>
+                <br>
+                <img src="./images/customproducts.png"
+                     alt="">
+            </div>
+            <!-- language -->
+            <div class="content-section"
+                 id="language">
+                <h3>Add New Language</h3>
+                <ul>
+                    <li>
+                        <strong>Login to the system as Admin</strong>
+                    </li>
+                    <li class="ml-4">https://yourdomain.com/admin</li>
+
+                    <li>
+                        <strong>Go to System Settings > Multilingual Settings</strong>
+                    </li>
+                    <li>
+                        <strong>Fill the form with required data</strong>
+                    </li>
+                    <li>
+                        <strong>Click "Save Language"</strong>
+                    </li>
+                </ul>
+                <br>
+                <img src="./images/language.png"
+                     alt="">
+            </div>
+
+            <!-- localizations -->
+            <div class="content-section"
+                 id="localizations">
+                <h3>Add Localizations / Translations for a Language</h3>
+                <ul>
+                    <li>
+                        <strong>Login to the system as Admin</strong>
+                    </li>
+                    <li class="ml-4">https://yourdomain.com/admin</li>
+
+                    <li>
+                        <strong>Go to System Settings > Multilingual Settings</strong>
+                    </li>
+
+                    <li>
+                        <strong>Click on three dots (...) of your targeted language</strong>
+                    </li>
+
+                    <li>
+                        <strong>Fill the form with translated data</strong>
+                    </li>
+
+                    <li>
+                        <strong>You can your Google Translator to translate the whole page & then click copy button to
+                            do it faster</strong>
+                    </li>
+
+                    <li>
+                        <strong>Click "Save"</strong>
+                    </li>
+                </ul>
+                <br>
+                <img src="./images/locale.png"
+                     alt="">
+            </div>
+
+            <!-- currency -->
+            <div class="content-section"
+                 id="currency">
+                <h3>Add New Currency</h3>
+                <ul>
+                    <li>
+                        <strong>Login to the system as Admin</strong>
+                    </li>
+                    <li class="ml-4">https://yourdomain.com/admin</li>
+
+                    <li>
+                        <strong>Go to System Settings > Multi Currency Settings</strong>
+                    </li>
+                    <li>
+                        <strong>Fill the form with required data</strong>
+                    </li>
+                    <li>
+                        <strong>Click "Save Currency"</strong>
+                    </li>
+                </ul>
+                <br>
+                <img src="./images/currency.png"
+                     alt="">
+            </div>
+
+            <!-- pwa -->
+            <div class="content-section"
+                 id="pwa">
+                <h3>Configure PWA</h3>
+                <ul>
+                    <li>
+                        <strong>Login to your cpanel</strong>
+                    </li>
+                    <li class="ml-4">https://yourdomain.com/cpanel</li>
+
+                    <li>
+                        <strong>Go to your project folder</strong>
+                    </li>
+                    <li>
+                        <strong>Go to /public folder</strong>
+                    </li>
+
+                    <li>
+                        <strong>Replace pwa.png image with your icon (512x512). Name it pwa.png</strong>
+                    </li>
+
+                    <li>
+                        <strong>Make changes in manifest.json file - change name, short name & description</strong>
+                    </li>
+
+                    <li>
+                        <strong>Clear your browser cache</strong>
+                    </li>
+
+
+                    <li>
+                        <strong>Save File</strong>
+                    </li>
+                </ul>
+                <br>
+                <img src="./images/pwa.png"
+                     alt="">
+                <br>
+                <br>
+                <img src="./images/pwacache.png"
+                     alt="">
+            </div>
+
+        </div>
+
+    </div>
+    </div> <!-- body-wrapper -->
+    <script type="text/javascript"
+            src="assets/js/jquery.js"></script>
+    <script type="text/javascript"
+            src="assets/js/script.js"></script>
+</body>
+
+</html>

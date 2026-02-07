@@ -40,10 +40,26 @@ use App\Http\Controllers\Backend\Payments\Stripe\StripePaymentController;
 */
 
 
-Route::get("test/test", function(){
-   
+Route::get("test/test", function () {
+
 });
 Route::get('test/test', [TestController::class, 'index']);
+
+Route::get('/cache-clearing', function () {
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    Artisan::call('view:clear');
+    Artisan::call('route:clear');
+});
+
+// Fallback for media files if server blocks direct access
+Route::get('uploads/media/{path}', function ($path) {
+    $file = public_path('uploads/media/' . $path);
+    if (file_exists($file)) {
+        return response()->file($file);
+    }
+    abort(404);
+})->where('path', '.*');
 Auth::routes(['verify' => true]);
 
 Route::controller(LoginController::class)->group(function () {

@@ -136,7 +136,7 @@ class AddForeignIdColumn extends Migration
         });
 
         Schema::table('category_brands', function (Blueprint $table) {
-            $table->foreign('brand_id')->references('id')->on('media_managers');
+            $table->foreign('brand_id')->references('id')->on('brands');
             $table->foreign('category_id')->references('id')->on('categories');
         });
 

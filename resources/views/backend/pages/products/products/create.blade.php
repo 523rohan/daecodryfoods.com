@@ -170,7 +170,8 @@
                                     <div class="card-body">
                                         <h5 class="mb-4">{{ localize('Product Brand') }}</h5>
                                         <div class="tt-select-brand">
-                                            <select class="select2 form-control" id="selectBrand" name="brand_id">
+                                            <select class="select2 form-control" id="selectBrand" name="brand_id"
+                                                style="width: 100%;">
                                                 <option value="">{{ localize('Select Brand') }}</option>
                                                 @foreach ($brands as $brand)
                                                     <option value="{{ $brand->id }}">
@@ -187,7 +188,8 @@
                                     <div class="card-body">
                                         <h5 class="mb-4">{{ localize('Product Unit') }}</h5>
                                         <div class="tt-select-brand">
-                                            <select class="select2 form-control" id="selectUnit" name="unit_id">
+                                            <select class="select2 form-control" id="selectUnit" name="unit_id"
+                                                style="width: 100%;">
                                                 <option value="">{{ localize('Select Unit') }}</option>
                                                 @foreach ($units as $unit)
                                                     <option value="{{ $unit->id }}">

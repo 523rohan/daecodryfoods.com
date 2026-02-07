@@ -5,6 +5,7 @@ npm-debug.log
 yarn-error.log
 
 public/uploads/media
+
 # Laravel 4 specific
 bootstrap/compiled.php
 app/storage/
@@ -31,3 +32,11 @@ multivendor-rename-to-vendor.zip
 # uploads.zip
 copy.php
 change-list.txt
+
+# Remote additions
+/public/build
+/storage/pail
+.env.backup
+.env.production
+.phpactor.json
+auth.json

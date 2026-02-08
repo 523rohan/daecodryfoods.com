@@ -181,19 +181,25 @@
                                         </div>
                                     </div>
 
+                                    {{-- Only show Grocery theme (first theme) --}}
                                     <input type="hidden" name="types[]" value="active_themes">
                                     @php
-                                        $active_themes = getSetting('active_themes') != null ? json_decode(getSetting('active_themes')) : [1];
+                                        // Always use first theme (Grocery) as active
+                                        $groceryTheme = isset($themes[0]) ? $themes[0] : null;
                                     @endphp
-                                    <select class="form-control select2" name="active_themes[]" class="w-100"
-                                        data-toggle="select2" data-placeholder="{{ localize('Select themes') }}" multiple
-                                        required>
-                                        @foreach ($themes as $theme)
-                                            <option value="{{ $theme->id }}"
-                                                @if (in_array($theme->id, $active_themes)) selected @endif>
-                                                {{ localize($theme->name) }}</option>
-                                        @endforeach
-                                    </select>
+                                    
+                                    @if($groceryTheme)
+                                        {{-- Hidden input to save Grocery theme as active --}}
+                                        <input type="hidden" name="active_themes[]" value="{{ $groceryTheme->id }}">
+                                        
+                                        {{-- Display active theme (read-only) --}}
+                                        <div class="form-control bg-light" style="cursor: not-allowed;">
+                                            {{ localize($groceryTheme->name) }}
+                                        </div>
+                                        <small class="text-muted">Your store is using the {{ $groceryTheme->name }} theme</small>
+                                    @else
+                                        <div class="alert alert-warning">No theme found</div>
+                                    @endif
 
                                 </div>
                                 <div class="mb-3">

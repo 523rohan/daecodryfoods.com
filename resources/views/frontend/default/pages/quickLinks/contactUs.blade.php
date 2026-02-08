@@ -65,10 +65,6 @@
                                 <span class="fw-bold text-white mb-3 d-block">{{ localize('Find us on') }}:</span>
                                 <div class="social-links d-flex align-items-center gap-2">
                                     <a href="{{ getSetting('facebook_link') }}"><i class="fab fa-facebook-f"></i></a>
-                                    <a href="{{ getSetting('twitter_link') }}" target="_blank"><i
-                                            class="fab fa-twitter"></i></a>
-                                    <a href="{{ getSetting('linkedin_link') }}" target="_blank"><i
-                                            class="fab fa-linkedin"></i></a>
                                     <a href="{{ getSetting('youtube_link') }}" target="_blank"><i
                                             class="fab fa-youtube"></i></a>
                                     <a href="{{ getSetting('instagram_link') }}" target="_blank"><i

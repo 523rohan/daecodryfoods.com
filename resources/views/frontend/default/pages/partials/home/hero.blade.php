@@ -47,17 +47,11 @@
             </div>
         </div>
     </div>
-    @if(getSetting('facebook_link') || getSetting('twitter_link') || getSetting('linkedin_link') || getSetting('youtube_link') || getSetting('instagram_link'))
+    @if(getSetting('facebook_link') || getSetting('youtube_link') || getSetting('instagram_link'))
         <div class="gs-hero-social">
             <ul class="list-unstyled">
                 @if(getSetting('facebook_link'))
                     <li><a href="{{ getSetting('facebook_link') }}"><i class="fab fa-facebook-f"></i></a></li>
-                @endif
-                @if(getSetting('twitter_link'))
-                    <li><a href="{{ getSetting('twitter_link') }}"><i class="fab fa-twitter"></i></a></li>
-                @endif
-                @if(getSetting('linkedin_link'))
-                    <li><a href="{{ getSetting('linkedin_link') }}"><i class="fab fa-linkedin-in"></i></a></li>
                 @endif
                 @if(getSetting('youtube_link'))
                     <li><a href="{{ getSetting('youtube_link') }}"><i class="fab fa-youtube"></i></a></li>

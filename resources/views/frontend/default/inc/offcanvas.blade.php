@@ -180,9 +180,6 @@
     <div class="offcanvas-contact social-contact mt-4">
         <a href="{{ getSetting('facebook_link') }}" target="_blank" class="social-btn"><i
                 class="fab fa-facebook-f"></i></a>
-        <a href="{{ getSetting('twitter_link') }}" target="_blank" class="social-btn"><i class="fab fa-twitter"></i></a>
-        <a href="{{ getSetting('linkedin_link') }}" target="_blank" class="social-btn"><i
-                class="fab fa-linkedin"></i></a>
         <a href="{{ getSetting('youtube_link') }}" target="_blank" class="social-btn"><i class="fab fa-youtube"></i></a>
         <a href="{{ getSetting('instagram_link') }}" target="_blank" class="social-btn"><i
                 class="fab fa-instagram"></i></a>

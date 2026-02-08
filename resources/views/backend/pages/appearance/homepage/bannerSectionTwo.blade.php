@@ -38,7 +38,8 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">{{ localize('Banner Image One') }}</label>
+                                    <label class="form-label">{{ localize('Banner Image One') }} <small
+                                            class="text-muted">(Recommended: 600x400px)</small></label>
                                     <input type="hidden" name="types[]" value="banner_section_two_banner_one">
                                     <div class="tt-image-drop rounded">
                                         <span class="fw-semibold">{{ localize('Choose Banner Image') }}</span>
@@ -69,7 +70,8 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label">{{ localize('Banner Image Two') }}</label>
+                                    <label class="form-label">{{ localize('Banner Image Two') }} <small
+                                            class="text-muted">(Recommended: 600x400px)</small></label>
                                     <input type="hidden" name="types[]" value="banner_section_two_banner_two">
                                     <div class="tt-image-drop rounded">
                                         <span class="fw-semibold">{{ localize('Choose Banner Image') }}</span>
@@ -131,7 +133,7 @@
         "use strict";
 
         // runs when the document is ready --> for media files
-        $(document).ready(function() {
+        $(document).ready(function () {
             getChosenFilesCount();
             showSelectedFilePreviewOnLoad();
         });

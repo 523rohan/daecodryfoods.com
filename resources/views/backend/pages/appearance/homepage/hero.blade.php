@@ -47,17 +47,18 @@
                                                 </td>
                                                 <td class="align-middle">
                                                     <div class="avatar avatar-lg">
-                                                        <img class="rounded" src="{{ uploadedAsset($slider->image) }}"
-                                                            alt="" />
+                                                        <img class="rounded" src="{{ uploadedAsset($slider->image) }}" alt="" />
                                                     </div>
                                                 </td>
                                                 <td class="align-middle">
                                                     <h6 class="fs-sm mb-0">
-                                                        {{ $slider->sub_title }}</h6>
+                                                        {{ $slider->sub_title }}
+                                                    </h6>
                                                 </td>
                                                 <td class="align-middle">
                                                     <h6 class="fs-sm mb-0">
-                                                        {{ $slider->title }}</h6>
+                                                        {{ $slider->title }}
+                                                    </h6>
                                                 </td>
 
                                                 <td class="align-middle">
@@ -74,8 +75,7 @@
 
                                                             <a class="dropdown-item"
                                                                 href="{{ route('admin.appearance.homepage.editHero', ['id' => $slider->id, 'lang_key' => env('DEFAULT_LANGUAGE')]) }}&localize">
-                                                                <i data-feather="edit-3"
-                                                                    class="me-2"></i>{{ localize('Edit') }}
+                                                                <i data-feather="edit-3" class="me-2"></i>{{ localize('Edit') }}
                                                             </a>
 
                                                             <a href="#" class="dropdown-item confirm-delete"
@@ -112,24 +112,25 @@
 
                                 <div class="mb-4">
                                     <label for="title" class="form-label">{{ localize('Title') }}</label>
-                                    <input type="text" name="title" id="title"
-                                        placeholder="{{ localize('Type title') }}" class="form-control" required>
+                                    <input type="text" name="title" id="title" placeholder="{{ localize('Type title') }}"
+                                        class="form-control" required>
                                 </div>
 
                                 <div class="mb-4">
                                     <label for="text" class="form-label">{{ localize('Text') }}</label>
-                                    <input type="text" name="text" id="text"
-                                        placeholder="{{ localize('Type text') }}" class="form-control" required>
+                                    <input type="text" name="text" id="text" placeholder="{{ localize('Type text') }}"
+                                        class="form-control" required>
                                 </div>
 
                                 <div class="mb-4">
                                     <label for="link" class="form-label">{{ localize('Link') }}</label>
-                                    <input type="url" name="link" id="link"
-                                        placeholder="{{ env('APP_URL') }}/example" class="form-control">
+                                    <input type="url" name="link" id="link" placeholder="{{ env('APP_URL') }}/example"
+                                        class="form-control">
                                 </div>
 
                                 <div class="mb-4">
-                                    <label class="form-label">{{ localize('Slider Image') }}</label>
+                                    <label class="form-label">{{ localize('Slider Image') }} <small
+                                            class="text-muted">(Recommended: 1920x600px)</small></label>
                                     <div class="tt-image-drop rounded">
                                         <span class="fw-semibold">{{ localize('Choose Slider Image') }}</span>
                                         <!-- choose media -->

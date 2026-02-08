@@ -47,7 +47,7 @@
 
 
                                 <div class="mb-3">
-                                    <label class="form-label">{{ localize('Banner Image') }}</label>
+                                    <label class="form-label">{{ localize('Banner Image') }} <small class="text-muted">(Recommended: 600x400px)</small></label>
                                     <input type="hidden" name="types[]" value="best_selling_banner">
                                     <div class="tt-image-drop rounded">
                                         <span class="fw-semibold">{{ localize('Choose Banner Image') }}</span>

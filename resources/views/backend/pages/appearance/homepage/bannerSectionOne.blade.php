@@ -45,8 +45,7 @@
                                                 </td>
                                                 <td class="align-middle">
                                                     <div class="avatar avatar-lg">
-                                                        <img class="rounded" src="{{ uploadedAsset($banner->image) }}"
-                                                            alt="" />
+                                                        <img class="rounded" src="{{ uploadedAsset($banner->image) }}" alt="" />
                                                     </div>
                                                 </td>
                                                 <td class="align-middle">
@@ -66,8 +65,7 @@
 
                                                             <a class="dropdown-item"
                                                                 href="{{ route('admin.appearance.homepage.editBannerOne', ['id' => $banner->id, 'lang_key' => env('DEFAULT_LANGUAGE')]) }}&localize">
-                                                                <i data-feather="edit-3"
-                                                                    class="me-2"></i>{{ localize('Edit') }}
+                                                                <i data-feather="edit-3" class="me-2"></i>{{ localize('Edit') }}
                                                             </a>
 
                                                             <a href="#" class="dropdown-item confirm-delete"
@@ -97,12 +95,13 @@
 
                                 <div class="mb-4">
                                     <label for="link" class="form-label">{{ localize('Link') }}</label>
-                                    <input type="url" name="link" id="link"
-                                        placeholder="{{ env('APP_URL') }}/example" class="form-control">
+                                    <input type="url" name="link" id="link" placeholder="{{ env('APP_URL') }}/example"
+                                        class="form-control">
                                 </div>
 
                                 <div class="mb-4">
-                                    <label class="form-label">{{ localize('Image') }}</label>
+                                    <label class="form-label">{{ localize('Image') }} <small
+                                            class="text-muted">(Recommended: 600x400px)</small></label>
                                     <div class="tt-image-drop rounded">
                                         <span class="fw-semibold">{{ localize('Choose Banner Image') }}</span>
                                         <!-- choose media -->

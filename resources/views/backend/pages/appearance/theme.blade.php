@@ -23,73 +23,60 @@
             <div class="row g-4">
                 <!--left sidebar-->
                 <div class="col-xl-9 order-2 order-md-2 order-lg-2 order-xl-1">
-                    <form action="{{ route('admin.appearance.themeUpdate') }}"
-                          method="POST"
-                          enctype="multipart/form-data"
-                          class="pb-650">
+                    <form action="{{ route('admin.appearance.themeUpdate') }}" method="POST" enctype="multipart/form-data"
+                        class="pb-650">
                         @csrf
                         <!--general settings-->
                         <div class="card mb-4" id="section-1">
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="mb-3 col-lg-3">
+                                    {{-- Only show Grocery theme (Theme 1) --}}
+                                    <div class="mb-3 col-lg-6">
                                         <label for="default_theme_name"
-                                               class="form-label">{{ localize('Theme Name 1') }}</label>
+                                            class="form-label">{{ localize('Theme Name') }}</label>
                                         <input type="text" id="default_theme_name" name="1" class="form-control"
-                                               value="{{ isset($themes[0]) ? $themes[0]->name : null }}" required>
+                                            value="{{ isset($themes[0]) ? $themes[0]->name : null }}" required>
                                     </div>
 
-                                    <div class="mb-3 col-lg-3">
-                                        <label for="halal_theme_name"
-                                               class="form-label">{{ localize('Theme Name 2') }}</label>
-                                        <input type="text" id="halal_theme_name" name="2" class="form-control"
-                                               value="{{ isset($themes[1]) ? $themes[1]->name : null }}" required>
-                                    </div>
+                                    {{-- Hidden fields for other themes to maintain database structure --}}
+                                    <input type="hidden" name="2"
+                                        value="{{ isset($themes[1]) ? $themes[1]->name : 'Halal Food' }}">
+                                    <input type="hidden" name="3"
+                                        value="{{ isset($themes[2]) ? $themes[2]->name : 'Furniture' }}">
+                                    <input type="hidden" name="4"
+                                        value="{{ isset($themes[3]) ? $themes[3]->name : 'Organic' }}">
 
-                                    <div class="mb-3 col-lg-3">
-                                        <label for="furniture_theme_name"
-                                               class="form-label">{{ localize('Theme Name 3') }}</label>
-                                        <input type="text" id="furniture_theme_name" name="3" class="form-control"
-                                               value="{{ isset($themes[2]) ? $themes[2]->name : null }}" required>
-                                    </div>
-
-                                     <div class="mb-3 col-lg-3">
-                                        <label for="furniture_theme_name"
-                                               class="form-label">{{ localize('Theme Name 4') }}</label>
-                                        <input type="text" id="furniture_theme_name" name="4" class="form-control"
-                                               value="{{ isset($themes[3]) ? $themes[3]->name : null }}" required>
-                                    </div>
-
-                                  </div>
-                               {{-- <div class="row">
+                                </div>
+                                {{-- <div class="row">
                                     <div class="mb-3 col-lg-4">
-                                        <p for="halal_theme_name" class="form-label">{{ localize('Select Active Theme') }}</p>
+                                        <p for="halal_theme_name" class="form-label">{{ localize('Select Active Theme') }}
+                                        </p>
 
                                         @php
-                                            $getActiveThemes = getSetting(appStatic()::ENTITY_ACTIVE_THEMES);
+                                        $getActiveThemes = getSetting(appStatic()::ENTITY_ACTIVE_THEMES);
 
-                                            $activeThemeId = null;
+                                        $activeThemeId = null;
 
-                                            if(!empty($getActiveThemes)){
-                                                try{
-                                                    $decodedData = json_decode($getActiveThemes);
-                                                    $activeThemeId = $decodedData[0];
-                                                }
-                                                catch(\Throwable $e){
-                                                    throw $e;
-                                                }
-                                            }
+                                        if(!empty($getActiveThemes)){
+                                        try{
+                                        $decodedData = json_decode($getActiveThemes);
+                                        $activeThemeId = $decodedData[0];
+                                        }
+                                        catch(\Throwable $e){
+                                        throw $e;
+                                        }
+                                        }
                                         @endphp
 
-                                            
+
                                         @forelse($themes as $key => $theme)
                                         <label for="activeTheme{{$theme->id}}" class="d-inline me-2">
-                                            <input type="radio"
-                                                   @if(!is_null($activeThemeId) && $theme->id == $activeThemeId) checked @endif
-                                                   name="active_theme_id"
-                                                   value="{{ $theme->id }}"
-                                                   id="activeTheme{{ $theme->id }}">
-                                                {{ $theme->name }}
+                                            <input type="radio" @if(!is_null($activeThemeId) && $theme->id ==
+                                            $activeThemeId) checked @endif
+                                            name="active_theme_id"
+                                            value="{{ $theme->id }}"
+                                            id="activeTheme{{ $theme->id }}">
+                                            {{ $theme->name }}
                                         </label>
                                         @empty
                                         @endforelse
@@ -100,39 +87,38 @@
 
                                 <div class="row">
                                     <div class="mb-3 col-lg-12">
-                                        <label class="form-label d-block mb-2">{{ localize('Select Active Theme') }}</label>
+                                        <label class="form-label d-block mb-2">{{ localize('Active Theme') }}</label>
 
                                         @php
                                             $getActiveThemes = getSetting(appStatic()::ENTITY_ACTIVE_THEMES);
 
                                             $activeThemeId = null;
 
-                                            if(!empty($getActiveThemes)){
-                                                try{
+                                            if (!empty($getActiveThemes)) {
+                                                try {
                                                     $decodedData = json_decode($getActiveThemes);
                                                     $activeThemeId = $decodedData[0];
-                                                }
-                                                catch(\Throwable $e){
+                                                } catch (\Throwable $e) {
                                                     throw $e;
                                                 }
                                             }
                                         @endphp
 
+                                        {{-- Only show Grocery theme (first theme) --}}
                                         <div class="d-flex flex-wrap gap-3">
-                                            @forelse($themes as $key => $theme)
-                                                <label for="activeTheme{{ $theme->id }}" class="d-inline-flex align-items-center me-3">
-                                                    <input type="radio"
-                                                        @if(!is_null($activeThemeId) && $theme->id == $activeThemeId) checked @endif
-                                                        name="active_theme_id"
-                                                        value="{{ $theme->id }}"
-                                                        id="activeTheme{{ $theme->id }}"
+                                            @if(isset($themes[0]))
+                                                <label for="activeTheme{{ $themes[0]->id }}"
+                                                    class="d-inline-flex align-items-center me-3">
+                                                    <input type="radio" checked name="active_theme_id"
+                                                        value="{{ $themes[0]->id }}" id="activeTheme{{ $themes[0]->id }}"
                                                         class="me-1">
-                                                    {{ $theme->name }}
+                                                    {{ $themes[0]->name }} (Active)
                                                 </label>
-                                            @empty
-                                                <span class="text-muted">No themes available</span>
-                                            @endforelse
+                                            @else
+                                                <span class="text-muted">Grocery theme is active</span>
+                                            @endif
                                         </div>
+                                        <small class="text-muted">Your store is using the Grocery theme</small>
                                     </div>
                                 </div>
 
@@ -174,7 +160,7 @@
         "use strict";
 
         // runs when the document is ready --> for media files
-        $(document).ready(function() {
+        $(document).ready(function () {
             getChosenFilesCount();
             showSelectedFilePreviewOnLoad();
         });

@@ -74,9 +74,39 @@
                 <div class="footer-widget">
                     <h5 class="text-white mb-4">{{ localize('Contact Info') }}</h5>
                     <ul class="footer-nav">
-                        <li class="text-white pb-2 fs-xs">{{ getSetting('topbar_location') }}</li>
-                        <li class="text-white pb-2 fs-xs">{{ getSetting('navbar_contact_number') }}</li>
-                        <li class="text-white pb-2 fs-xs">{{ getSetting('topbar_email') }}</li>
+                        <li class="text-white pb-2 fs-xs d-flex align-items-center gap-2">
+                            <span
+                                class="icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                                style="width: 30px; height: 30px; background: rgba(255,255,255,0.1);">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </span>
+                            <div>
+                                <span class="d-block mb-1">{{ localize('Address') }}:</span>
+                                {{ getSetting('topbar_location') }}
+                            </div>
+                        </li>
+                        <li class="text-white pb-2 fs-xs d-flex align-items-center gap-2">
+                            <span
+                                class="icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                                style="width: 30px; height: 30px; background: rgba(255,255,255,0.1);">
+                                <i class="fas fa-phone-alt"></i>
+                            </span>
+                            <div>
+                                <span class="d-block mb-1">{{ localize('Phone') }}:</span>
+                                {{ getSetting('navbar_contact_number') }}
+                            </div>
+                        </li>
+                        <li class="text-white pb-2 fs-xs d-flex align-items-center gap-2">
+                            <span
+                                class="icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                                style="width: 30px; height: 30px; background: rgba(255,255,255,0.1);">
+                                <i class="fas fa-envelope"></i>
+                            </span>
+                            <div>
+                                <span class="d-block mb-1">{{ localize('Email') }}:</span>
+                                {{ getSetting('topbar_email') }}
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>

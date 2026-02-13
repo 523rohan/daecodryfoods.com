@@ -25,7 +25,7 @@
             @php
                 //$product_listing_categories = getSetting('product_listing_categories') != null ? json_decode(getSetting('product_listing_categories')) : [];
                 //$categories = \App\Models\Category::whereIn('id', $product_listing_categories)->get();
-                $categories = \App\Models\Category::where('parent_id', 0)->orderBy('sorting_order_level', 'asc')->get();
+                $categories = \App\Models\Category::parentCategoryOnly()->orderBy('sorting_order_level', 'asc')->get();
             @endphp
             @foreach ($categories as $category)
                 @php

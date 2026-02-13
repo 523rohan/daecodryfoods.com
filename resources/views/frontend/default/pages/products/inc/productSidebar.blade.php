@@ -7,10 +7,7 @@
         </div>
         <div class="search-form d-flex align-items-center mt-4">
             <input type="hidden" name="view" value="{{ request()->view }}">
-            <input type="text" id="search" name="search"
-                @isset($searchKey)
-       value="{{ $searchKey }}"
-       @endisset
+            <input type="text" id="search" name="search" @isset($searchKey) value="{{ $searchKey }}" @endisset
                 placeholder="{{ localize('Search') }}">
             <button type="submit" class="submit-icon-btn-secondary"><i
                     class="fa-solid fa-magnifying-glass"></i></button>
@@ -26,8 +23,9 @@
         <ul class="widget-nav mt-4">
 
             @php
-                $product_listing_categories = getSetting('product_listing_categories') != null ? json_decode(getSetting('product_listing_categories')) : [];
-                $categories = \App\Models\Category::whereIn('id', $product_listing_categories)->get();
+                //$product_listing_categories = getSetting('product_listing_categories') != null ? json_decode(getSetting('product_listing_categories')) : [];
+                //$categories = \App\Models\Category::whereIn('id', $product_listing_categories)->get();
+                $categories = \App\Models\Category::where('parent_id', 0)->where('is_active', 1)->orderBy('sorting_order_level', 'asc')->get();
             @endphp
             @foreach ($categories as $category)
                 @php
@@ -57,8 +55,7 @@
                         data-value="{{ $min_value }}" data-min-range="0">
                     <span class="d-inline-block ms-2 me-2 fw-bold">-</span>
 
-                    <input type="number" max="{{ $max_range }}"
-                        oninput="validity.valid||(value='{{ $max_range }}');"
+                    <input type="number" max="{{ $max_range }}" oninput="validity.valid||(value='{{ $max_range }}');"
                         class="max_price price-range-field price-input price-input-max" name="max_price"
                         data-value="{{ $max_value }}" data-max-range="{{ $max_range }}">
 

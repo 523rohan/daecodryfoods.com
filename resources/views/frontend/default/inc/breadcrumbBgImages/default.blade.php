@@ -1,6 +1,6 @@
 <img src="{{ staticAsset('frontend/default/assets/img/shapes/bg-shape-6.png') }}" alt="bg-shape"
     class="position-absolute start-0 z--1 w-100 bg-shape">
-<img src="{{ staticAsset('frontend/default/assets/img/shapes/pata-xs.svg') }}" alt="pata"
+{{-- <img src="{{ staticAsset('frontend/default/assets/img/shapes/pata-xs.svg') }}" alt="pata"
     class="position-absolute pata-xs z--1 vector-shape">
 <img src="{{ staticAsset('frontend/default/assets/img/shapes/onion.png') }}" alt="onion"
     class="position-absolute z--1 onion start-0 top-0 vector-shape">
@@ -23,4 +23,4 @@
 <img src="{{ staticAsset('frontend/default/assets/img/shapes/cauliflower.png') }}" alt="tomato"
     class="position-absolute z--1 cauliflower vector-shape">
 <img src="{{ staticAsset('frontend/default/assets/img/shapes/leaf-gray.png') }}" alt="tomato"
-    class="position-absolute z--1 leaf-gray vector-shape">
+    class="position-absolute z--1 leaf-gray vector-shape"> --}}

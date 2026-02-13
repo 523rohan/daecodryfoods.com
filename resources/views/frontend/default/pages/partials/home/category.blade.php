@@ -18,11 +18,11 @@
                     @endphp
                     <div class="col-xxl-2 col-lg-3 col-md-4 col-sm-6">
                         <div
-                            class="gshop-animated-iconbox py-5 px-4 text-center border rounded-3 position-relative overflow-hidden {{ $loop->even ? 'color-2' : '' }}">
+                            class="gshop-animated-iconbox py-5 px-4 text-center border rounded-3 position-relative overflow-hidden {{ $loop->even ? 'color-2' : '' }} h-100">
                             <div
                                 class="animated-icon d-inline-flex align-items-center justify-content-center rounded-circle position-relative">
-                                <img src="{{ uploadedAsset($category->collectLocalization('thumbnail_image')) }}"
-                                    alt="" class="img-fluid">
+                                <img src="{{ uploadedAsset($category->collectLocalization('thumbnail_image')) }}" alt=""
+                                    class="img-fluid">
                             </div>
 
                             <a href="{{ route('products.index') }}?&category_id={{ $category->id }}"

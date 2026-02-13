@@ -1,4 +1,4 @@
-<div class="vertical-product-card rounded-2 position-relative {{ isset($bgClass) ? $bgClass : '' }}">
+<div class="vertical-product-card rounded-2 position-relative h-100 d-flex flex-column {{ isset($bgClass) ? $bgClass : '' }}">
 
     @php
         $discountPercentage = discountPercentage($product);
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <div class="card-content">
+    <div class="card-content flex-grow-1">
         @if (getSetting('enable_reward_points') == 1)
             <span class="fs-xxs fw-bold" data-bs-toggle="tooltip" data-bs-placement="top"
                 data-bs-title="{{ localize('Reward Points') }}">

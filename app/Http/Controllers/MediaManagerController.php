@@ -12,8 +12,8 @@ class MediaManagerController extends Controller
     # get media files
     public function index(Request $request)
     {
-        $searchKey  = null;
-        $type       = null;
+        $searchKey = null;
+        $type = null;
 
         $mediaFiles = MediaManager::query()->latest();
 
@@ -32,7 +32,7 @@ class MediaManagerController extends Controller
             $searchKey = $request->searchKey;
             $mediaFiles = $mediaFiles->where('media_name', 'like', '%' . $request->searchKey . '%');
         }
-        $mediaFiles  = $mediaFiles->whereNotIn('id', $recentFileIds)->paginate(paginationNumber(30))->appends(request()->query());
+        $mediaFiles = $mediaFiles->whereNotIn('id', $recentFileIds)->paginate(paginationNumber(30))->appends(request()->query());
 
         return [
             'status' => true,
@@ -77,14 +77,31 @@ class MediaManagerController extends Controller
     # delete media
     public function delete($id)
     {
-        $mediaFile = MediaManager::findOrFail($id);
-        if (!is_null($mediaFile)) {
-            fileDelete($mediaFile->media_file);
+        try {
+            $mediaFile = MediaManager::find($id);
+
+            if (is_null($mediaFile)) {
+                flash(localize('File not found or already deleted'))->error();
+                return back();
+            }
+
+            // Attempt to delete physical file
+            try {
+                fileDelete($mediaFile->media_file);
+            } catch (\Throwable $e) {
+                // Log error but continue with DB deletion
+                // \Log::error('File delete error: ' . $e->getMessage());
+            }
+
             # todo:: check auth user, media user -- 
             $mediaFile->delete();
-        }
 
-        flash(localize('File has been deleted successfully'))->success();
-        return back();
+            flash(localize('File has been deleted successfully'))->success();
+            return back();
+
+        } catch (\Throwable $e) {
+            flash(localize('Something went wrong: ' . $e->getMessage()))->error();
+            return back();
+        }
     }
 }

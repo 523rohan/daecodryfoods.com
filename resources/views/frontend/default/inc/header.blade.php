@@ -166,7 +166,7 @@
             <div class="row align-items-center">
                 <div class="col-xxl-2 col-xl-3 col-md-3 col-5">
                     <a href="{{ route('home') }}" class="logo"><img
-                            src="{{ uploadedAsset(getSetting('navbar_logo')) }}" alt="logo" class="img-fluid"></a>
+                            src="{{ uploadedAsset(getSetting('navbar_logo')) }}" alt="logo" class="img-fluid navbar-logo"></a>
                 </div>
                 <div class="col-xxl-10 col-xl-9 col-md-9 col-7">
                     <div class="gshop-navbar-right d-flex align-items-center justify-content-end position-relative">

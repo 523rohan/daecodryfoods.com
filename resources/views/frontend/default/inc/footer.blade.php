@@ -4,28 +4,22 @@
 </div>
 
 <footer class="gshop-footer position-relative pt-8 bg-dark z-1 overflow-hidden">
-    {{-- @include('frontend.default.inc.footerBgImages.' . getTheme()) --}} 
+    {{-- @include('frontend.default.inc.footerBgImages.' . getTheme()) --}}
     {{-- comment for run problem --}}
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-xl-5 col-lg-6">
                 <div class="gshop_subscribe_form text-center">
-                    <h4 class="text-white gshop-title">{{ localize('Subscribe to the us') }}<mark
-                            class="p-0 position-relative text-secondary bg-transparent"> {{ localize('New Arrivals') }}
+                    <h4 class="text-white gshop-title">{{ localize('Join Our') }}<mark
+                            class="p-0 position-relative text-secondary bg-transparent">
+                            {{ localize('WhatsApp Community') }}
                             <img src="{{ staticAsset('frontend/default/assets/img/shapes/border-line.svg') }}"
                                 alt="border line" class="position-absolute border-line"></mark><br
-                            class="d-none d-sm-block">{{ localize('& Other Information.') }}</h4>
-                    <form class="mt-5 d-flex align-items-center bg-white rounded subscribe_form"
-                        action="{{ route('subscribe.store') }}" method="POST">
-                        @csrf
-                        @if (getSetting('enable_recaptcha') == 1)
-                            {!! RecaptchaV3::field('recaptcha_token') !!}
-                        @endif
-                        <input type="email" class="form-control" placeholder="{{ localize('Enter Email Address') }}"
-                            type="email" name="email" required>
-                        <button type="submit"
-                            class="btn btn-primary flex-shrink-0">{{ localize('Subscribe Now') }}</button>
-                    </form>
+                            class="d-none d-sm-block">{{ localize('Get latest updates & offers.') }}</h4>
+                    <div class="mt-5 text-center">
+                        <a href="#" target="_blank"
+                            class="btn btn-secondary border-0">{{ localize('Join Community') }}</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -108,8 +102,8 @@
                     <div class="footer-payments-info d-flex align-items-center justify-content-lg-end gap-2">
                         <div
                             class="rounded-1 d-inline-flex align-items-center justify-content-center p-2 flex-shrink-0">
-                            <img src="{{ uploadedAsset(getSetting('accepted_payment_banner')) }}"
-                                alt="accepted_payment" class="img-fluid">
+                            <img src="{{ uploadedAsset(getSetting('accepted_payment_banner')) }}" alt="accepted_payment"
+                                class="img-fluid">
                         </div>
                     </div>
                 </div>

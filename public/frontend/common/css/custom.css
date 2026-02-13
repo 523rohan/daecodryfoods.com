@@ -372,7 +372,7 @@ html:not([dir="rtl"]) .toast-close-button {
 
 /* Navbar Logo Control */
 .navbar-logo {
-    max-height: 40px;
+    max-height: 55px;
     width: auto;
 }
 

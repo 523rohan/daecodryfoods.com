@@ -656,6 +656,7 @@ if (!function_exists('productBasePrice')) {
         $price = $product->min_price;
         $tax = 0;
 
+        /*
         foreach ($product->taxes as $productTax) {
             if ($productTax->tax_type == 'percent') {
                 $tax += ($price * $productTax->tax_value) / 100;
@@ -665,6 +666,7 @@ if (!function_exists('productBasePrice')) {
         }
 
         $price += $tax;
+        */
         return $formatted ? formatPrice($price) : $price;
     }
 }
@@ -694,6 +696,7 @@ if (!function_exists('discountedProductBasePrice')) {
             }
         }
 
+        /*
         foreach ($product->taxes as $product_tax) {
             if ($product_tax->tax_type == 'percent') {
                 $price += ($price * $product_tax->tax_value) / 100;
@@ -701,6 +704,7 @@ if (!function_exists('discountedProductBasePrice')) {
                 $price += $product_tax->tax_value;
             }
         }
+        */
 
         return $formatted ? formatPrice($price) : $price;
     }
@@ -713,6 +717,7 @@ if (!function_exists('productMaxPrice')) {
         $price = $product->max_price;
         $tax = 0;
 
+        /*
         foreach ($product->taxes as $productTax) {
             if ($productTax->tax_type == 'percent') {
                 $tax += ($price * $productTax->tax_value) / 100;
@@ -722,6 +727,7 @@ if (!function_exists('productMaxPrice')) {
         }
 
         $price += $tax;
+        */
         return $formatted ? formatPrice($price) : $price;
     }
 }
@@ -751,6 +757,7 @@ if (!function_exists('discountedProductMaxPrice')) {
             }
         }
 
+        /*
         foreach ($product->taxes as $product_tax) {
             if ($product_tax->tax_type == 'percent') {
                 $price += ($price * $product_tax->tax_value) / 100;
@@ -758,6 +765,7 @@ if (!function_exists('discountedProductMaxPrice')) {
                 $price += $product_tax->tax_value;
             }
         }
+        */
 
         return $formatted ? formatPrice($price) : $price;
     }
@@ -848,6 +856,7 @@ if (!function_exists('variationPrice')) {
     {
         $price = $variation->price;
 
+        /*
         foreach ($product->taxes as $product_tax) {
             if ($product_tax->tax_type == 'percent') {
                 $price += ($price * $product_tax->tax_value) / 100;
@@ -855,6 +864,7 @@ if (!function_exists('variationPrice')) {
                 $price += $product_tax->tax_value;
             }
         }
+        */
         return $price;
     }
 }

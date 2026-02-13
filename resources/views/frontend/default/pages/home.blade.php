@@ -30,7 +30,7 @@
     <!--banner section end-->
 
     <!--banner 2 section start-->
-    @include('frontend.default.pages.partials.home.bannersTwo')
+    {{-- @include('frontend.default.pages.partials.home.bannersTwo') --}}
     <!--banner 2 section end-->
 
     <!--feedback section start-->

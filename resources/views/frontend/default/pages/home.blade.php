@@ -49,7 +49,7 @@
     @endif
 
     <!--blog section start-->
-    @include('frontend.default.pages.partials.home.blogs', ['blogs' => $blogs])
+    {{-- @include('frontend.default.pages.partials.home.blogs', ['blogs' => $blogs]) --}}
     <!--blog section end-->
 @endsection
 
@@ -58,10 +58,10 @@
         "use strict";
 
         // runs when the document is ready 
-        $(document).ready(function() {
+        $(document).ready(function () {
             @if (\App\Models\Location::where('is_published', 1)->count() > 1)
                 notifyMe('info', '{{ localize('Select your location if not selected') }}');
             @endif
-        });
+            });
     </script>
 @endsection

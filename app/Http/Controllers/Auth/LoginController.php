@@ -190,11 +190,20 @@ class LoginController extends Controller
             }
         }
 
-        if (session('link') != null) {
-            return redirect(session('link'));
-        } else {
+        $link = session('link');
+        if ($link != null) {
+            session()->forget('link');
+        }
+
+        if (session()->has('url.intended')) {
             return redirect()->intended(route('customers.dashboard'));
         }
+
+        if ($link != null) {
+            return redirect($link);
+        }
+
+        return redirect()->route('customers.dashboard');
     }
 
     # Get the failed login response instance.  

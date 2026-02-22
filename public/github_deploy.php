@@ -12,8 +12,8 @@ if (!isset($_GET['token']) || $_GET['token'] !== $secretToken) {
     die("Unauthorized: Invalid token.");
 }
 
-// 3. Go up one directory to the project root and pull the latest code securely
-$command = "cd .. && git pull origin main 2>&1";
+// 3. Go up one directory to the project root and reset the latest code securely
+$command = "cd .. && git fetch origin 2>&1 && git reset --hard origin/main 2>&1";
 $output = shell_exec($command);
 
 // 4. Save a log file so we can debug deployments later if necessary

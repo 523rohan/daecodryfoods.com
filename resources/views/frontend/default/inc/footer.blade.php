@@ -1,8 +1,3 @@
-<div class="footer-curve position-relative overflow-hidden">
-    <span class="position-absolute section-curve-wrapper top-0 h-100"
-        data-background="{{ staticAsset('frontend/default/assets/img/shapes/section-curve.png') }}"></span>
-</div>
-
 <footer class="gshop-footer position-relative pt-8 bg-dark z-1 overflow-hidden">
     {{-- @include('frontend.default.inc.footerBgImages.' . getTheme()) --}}
     {{-- comment for run problem --}}

@@ -68,7 +68,13 @@ class VerificationController extends Controller
     # set as verified
     public function verification_confirmation($code)
     {
-        $user = User::where('verification_code', $code)->first();
+        try {
+            $userId = decrypt($code);
+            $user = User::find($userId);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            $user = null;
+        }
+
         if ($user != null) {
             $user->email_or_otp_verified = 1;
             $user->email_verified_at = Carbon::now();
@@ -76,7 +82,7 @@ class VerificationController extends Controller
             auth()->login($user, true);
             flash(localize('Your account has been verified successfully'))->success();
         } else {
-            flash(localize('Sorry, we could not verify you. Please try again'))->error();
+            flash(localize('Sorry, the verification link is invalid or has expired. Please log in and request a new one.'))->error();
         }
 
         return redirect()->route('customers.dashboard');

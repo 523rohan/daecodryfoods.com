@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Socialite;
 use App\Models\User;
-use Nwidart\Modules\Facades\Module; 
+use Nwidart\Modules\Facades\Module;
 
 class LoginController extends Controller
 {
@@ -104,34 +104,34 @@ class LoginController extends Controller
 
     # validate login
     protected function validateLogin(Request $request)
-    {  
+    {
         $data = [
-            'email'    => 'required_without:phone',
-            'phone'    => 'required_without:email',
+            'email' => 'required_without:phone',
+            'phone' => 'required_without:email',
             'password' => 'required|string',
-        ]; 
+        ];
 
-        if($request->email){
+        if ($request->email) {
             $user = User::where('email', $request->email)->first();
-        }else if($request->phone){ 
+        } else if ($request->phone) {
             $user = User::where('phone', $request->phone)->first();
         }
-        if(!is_null($user) && $user->user_type =='customer'){ 
-            $score = recaptchaValidation($request);  
+        if (!is_null($user) && $user->user_type == 'customer') {
+            $score = recaptchaValidation($request);
             $request->request->add([
                 'score' => $score
             ]);
-            $data['score'] = 'required|numeric|min:0.9';  
-        }else{ 
+            $data['score'] = 'required|numeric|min:0.9';
+        } else {
             $request->request->add([
                 'score' => 1
             ]);
-            $data['score'] = 'nullable|numeric|min:0.9';  
+            $data['score'] = 'nullable|numeric|min:0.9';
         }
-            
-        $request->validate($data,[
+
+        $request->validate($data, [
             'score.min' => localize('Google recaptcha validation error, seems like you are not a human.')
-        ]); 
+        ]);
     }
 
     # set credentials for phone/email login
@@ -139,7 +139,7 @@ class LoginController extends Controller
     {
         if ($request->get('login_with') == "phone" && $request->get('phone') != null) {
             session(['login_with' => "phone"]);
-            $phone =  validatePhone($request->get('phone'));
+            $phone = validatePhone($request->get('phone'));
             return ['phone' => $phone, 'password' => $request->get('password')];
         } elseif ($request->get('email') != null) {
             session(['login_with' => "email"]);
@@ -160,7 +160,7 @@ class LoginController extends Controller
 
             flash(localize('Vendor panel is unavailable'))->error();
             return redirect()->route('logout');
-        }elseif (auth()->user()->user_type == 'deliveryman') { 
+        } elseif (auth()->user()->user_type == 'deliveryman') {
             return redirect()->route('deliveryman.dashboard');
         }
 
@@ -172,7 +172,7 @@ class LoginController extends Controller
     {
         // set guest_user_id to user_id from carts
         if (isset($_COOKIE['guest_user_id'])) {
-            $carts  = Cart::where('guest_user_id', (int) $_COOKIE['guest_user_id'])->get();
+            $carts = Cart::where('guest_user_id', (int) $_COOKIE['guest_user_id'])->get();
             $userId = auth()->user()->id;
             if ($carts) {
                 foreach ($carts as $cart) {
@@ -193,7 +193,7 @@ class LoginController extends Controller
         if (session('link') != null) {
             return redirect(session('link'));
         } else {
-            return redirect()->route('customers.dashboard');
+            return redirect()->intended(route('customers.dashboard'));
         }
     }
 

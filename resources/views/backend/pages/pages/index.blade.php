@@ -76,7 +76,7 @@
                                             </span>
                                         </td>
                                         <td>
-                                            {{ \Request::root() . '/' . $page->slug }}
+                                            {{ \Request::root() . '/pages/' . $page->slug }}
                                         </td>
 
                                         <td class="text-end">

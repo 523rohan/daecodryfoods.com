@@ -276,6 +276,28 @@
                         <!--pagination settings-->
 
                         <!--Tips For Deliveryman settings-->
+                        <div class="card mb-4" id="section-11">
+                            <div class="card-body">
+                                <h5 class="mb-4">{{ localize('Tax Settings') }}</h5>
+                                <div class="mb-3">
+                                    <label for="taxes_inclusive"
+                                        class="form-label">{{ localize('Is Tax Inclusive?') }}</label>
+                                    <input type="hidden" name="types[]" value="taxes_inclusive">
+                                    <select id="taxes_inclusive" class="form-control text-uppercase select2"
+                                        name="taxes_inclusive" data-toggle="select2">
+                                        <option value="1"
+                                            {{ getSetting('taxes_inclusive') == '1' ? 'selected' : '' }}>
+                                            {{ localize('Enable') }}</option>
+                                        <option value="0"
+                                            {{ getSetting('taxes_inclusive') == '0' ? 'selected' : '' }}>
+                                            {{ localize('Disable') }}</option>
+                                    </select>
+                                    <small>*{{ localize('If enabled, product prices will be considered inclusive of all taxes.') }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--Tips For Deliveryman settings-->
                         <div class="card mb-4" id="section-8">
                             <div class="card-body">
                                 <h5 class="mb-4">{{ localize('Tips For Deliveryman') }}</h5>
@@ -364,6 +386,9 @@
                                     </li>
                                     <li>
                                         <a href="#section-8">{{ localize('Tips For Deliveryman') }}</a>
+                                    </li>
+                                    <li>
+                                        <a href="#section-11">{{ localize('Tax Settings') }}</a>
                                     </li>
                                     <li>
                                         <a href="#section-9">{{ localize('Custom CSS') }}</a>

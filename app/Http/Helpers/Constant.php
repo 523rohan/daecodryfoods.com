@@ -894,11 +894,16 @@ if (!function_exists('variationDiscountedPrice')) {
         }
 
         if ($addTax) {
+            $is_inclusive = getSetting('taxes_inclusive') == '1';
             foreach ($product->taxes as $product_tax) {
                 if ($product_tax->tax_type == 'percent') {
-                    $price += ($price * $product_tax->tax_value) / 100;
+                    if (!$is_inclusive) {
+                        $price += ($price * $product_tax->tax_value) / 100;
+                    }
                 } elseif ($product_tax->tax_type == 'flat') {
-                    $price += $product_tax->tax_value;
+                    if (!$is_inclusive) {
+                        $price += $product_tax->tax_value;
+                    }
                 }
             }
         }
@@ -987,11 +992,23 @@ if (!function_exists('variationTaxAmount')) {
             }
         }
 
+        $is_inclusive = getSetting('taxes_inclusive') == '1';
         foreach ($product->taxes as $product_tax) {
             if ($product_tax->tax_type == 'percent') {
-                $tax += ($price * $product_tax->tax_value) / 100;
+                if ($is_inclusive) {
+                    $tax += $price - ($price / (1 + $product_tax->tax_value / 100));
+                } else {
+                    $tax += ($price * $product_tax->tax_value) / 100;
+                }
             } elseif ($product_tax->tax_type == 'flat') {
-                $tax += $product_tax->tax_value;
+                if ($is_inclusive) {
+                    // For flat tax, extraction is tricky if multiple taxes exist, 
+                    // but usually it's Price - (Price - Tax) = Tax.
+                    // This assumes the price already has the flat tax inside.
+                    $tax += $product_tax->tax_value;
+                } else {
+                    $tax += $product_tax->tax_value;
+                }
             }
         }
 

@@ -108,14 +108,14 @@
                                 </div>
                             @endforeach
                         </div>
-                        @if (getSetting('product_page_banner'))
+                        <!-- @if (getSetting('product_page_banner'))
                             <div class="sidebar-widget banner-widget mt-4">
                                 <a href="{{ getSetting('product_page_banner_link') }}">
                                     <img src="{{ uploadedAsset(getSetting('product_page_banner')) }}" alt=""
                                         class="img-fluid">
                                 </a>
                             </div>
-                        @endif
+                        @endif -->
 
                     </div>
                 </div>

@@ -89,34 +89,38 @@
                         <!-- description -->
                     </div>
 
-                    <div class="col-xl-3 col-lg-6 col-md-8 d-none d-xl-block">
-                        <div class="gshop-sidebar">
-                            <div class="sidebar-widget info-sidebar bg-white rounded-3 py-3">
-                                @foreach ($product_page_widgets as $widget)
-                                    <div class="sidebar-info-list d-flex align-items-center gap-3 p-4">
-                                        <span
-                                            class="icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle text-primary">
-                                            <img src="{{ uploadedAsset($widget->image) }}" class="img-fluid"
-                                                alt="">
-                                        </span>
-                                        <div class="info-right">
-                                            <h6 class="mb-1 fs-md">{{ $widget->title }}</h6>
-                                            <span class="fw-medium fs-xs">{{ $widget->sub_title }}</span>
-                                        </div>
+                </div>
+
+                <div class="col-xl-3 col-lg-6 col-md-8 d-none d-xl-block">
+                    <div class="gshop-sidebar">
+                        <div class="sidebar-widget info-sidebar bg-white rounded-3 py-3">
+                            @foreach ($product_page_widgets as $widget)
+                                <div class="sidebar-info-list d-flex align-items-center gap-3 p-4">
+                                    <span
+                                        class="icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle text-primary">
+                                        <img src="{{ uploadedAsset($widget->image) }}" class="img-fluid"
+                                            alt="">
+                                    </span>
+                                    <div class="info-right">
+                                        <h6 class="mb-1 fs-md">{{ $widget->title }}</h6>
+                                        <span class="fw-medium fs-xs">{{ $widget->sub_title }}</span>
                                     </div>
-                                @endforeach
-                            </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        @if (getSetting('product_page_banner'))
                             <div class="sidebar-widget banner-widget mt-4">
                                 <a href="{{ getSetting('product_page_banner_link') }}">
                                     <img src="{{ uploadedAsset(getSetting('product_page_banner')) }}" alt=""
                                         class="img-fluid">
                                 </a>
                             </div>
+                        @endif
 
-                        </div>
                     </div>
                 </div>
             </div>
+        </div>
     </section>
     <!--product details end-->
 

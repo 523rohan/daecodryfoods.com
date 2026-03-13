@@ -120,12 +120,12 @@
                             if (Session::has('currency_code')) {
                                 $currency_code = Session::get('currency_code', Config::get('app.currency_code'));
                             } else {
-                                $currency_code = env('DEFAULT_CURRENCY');
+                                $currency_code = env('DEFAULT_CURRENCY', getSetting('default_currency'));
                             }
                             $currentCurrency = \App\Models\Currency::where('code', $currency_code)->first();
 
                             if ($currentCurrency == null) {
-                                $currentCurrency = \App\Models\Currency::where('code', 'usd')->first();
+                                $currentCurrency = \App\Models\Currency::where('is_active', 1)->first();
                             }
                         @endphp
 
@@ -256,8 +256,8 @@
                                     <li><a href="{{ route('products.index') }}">{{ localize('Products') }}</a></li>
                                     {{-- <li><a href="{{ route('home.campaigns') }}">{{ localize('Campaigns') }}</a>
                                     </li> --}}
-                                    <li><a href="{{ route('home.coupons') }}">{{ localize('Coupons') }}</a>
-                                    </li>
+                                    <!-- <li><a href="{{ route('home.coupons') }}">{{ localize('Coupons') }}</a>
+                                    </li> -->
                                 @endif
 
                                 @if (getSetting('show_navbar_pages') != 0 || getSetting('show_navbar_pages') == null)

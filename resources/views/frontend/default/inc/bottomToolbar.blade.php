@@ -5,21 +5,23 @@
                 class="mobile-toolbar-label">{{ localize('Category') }}
             </span>
         </a>
-        <div class="gshop-header-search dropdown d-table-cell mobile-toolbar-item">
-            <button class="header-icon" type="button" data-bs-toggle="dropdown">
-                <span class="mobile-toolbar-icon">
-                    <svg width="18" height="23" viewBox="0 0 22 23" fill="none"
-                        xmlns="http://www.w3.org/2000/svg">
+        <a class="d-table-cell mobile-toolbar-item  gshop-header-search" href="javascript:void(0)" data-bs-toggle="dropdown">
+            <span class="mobile-toolbar-icon">
+                <svg width="18" height="25" viewBox="0 0 22 25" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <g transform="translate(0, 2)">
                         <path
                             d="M9.68859 0.5C4.34645 0.5 0 4.84646 0 10.1886C0 15.5311 4.34645 19.8772 9.68859 19.8772C15.031 19.8772 19.3772 15.5311 19.3772 10.1886C19.3772 4.84646 15.031 0.5 9.68859 0.5ZM9.68859 18.0886C5.33261 18.0886 1.78866 14.5447 1.78866 10.1887C1.78866 5.83266 5.33261 2.28867 9.68859 2.28867C14.0446 2.28867 17.5885 5.83262 17.5885 10.1886C17.5885 14.5446 14.0446 18.0886 9.68859 18.0886Z"
                             fill="#5D6374" />
                         <path
                             d="M21.7406 20.9824L16.6436 15.8853C16.2962 15.538 15.7338 15.538 15.3865 15.8853C15.0391 16.2323 15.0391 16.7954 15.3865 17.1424L20.4835 22.2395C20.6571 22.4131 20.8845 22.5 21.1121 22.5C21.3393 22.5 21.5669 22.4131 21.7406 22.2395C22.0879 21.8925 22.0879 21.3294 21.7406 20.9824Z"
                             fill="#5D6374" />
-                    </svg>
-                </span>
-                <span class="mobile-toolbar-label">{{ localize('Search') }}</span>
-            </button>
+                    </g>
+                </svg>
+            </span>
+            <span class="mobile-toolbar-label">{{ localize('Search') }}</span>
+        </a>
+        <div class="gshop-header-search">
             <div class="dropdown-menu dropdown-menu-start border-0">
                 <form class="search-form d-flex align-items-center" action="{{ route('products.index') }}">
                     <input type="text" placeholder="{{ localize('Search products') }}..." class="w-100"

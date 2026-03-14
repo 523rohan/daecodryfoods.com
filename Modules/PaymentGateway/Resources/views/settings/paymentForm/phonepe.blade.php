@@ -28,6 +28,26 @@
                  <label for="PHONEPE_SALT_INDEX" class="form-label">{{ localize('Salt Index') }}</label>
                  <input type="text" id="PHONEPE_SALT_INDEX" name="types[PHONEPE_SALT_INDEX]" class="form-control"
                      value="{{ paymentGatewayValue('phonepe', 'PHONEPE_SALT_INDEX') }}">
+             </div>
+             <div class="mb-3">
+                 <label for="PHONEPE_CLIENT_ID" class="form-label">{{ localize('Client ID') }}</label>
+                 <input type="text" id="PHONEPE_CLIENT_ID" name="types[PHONEPE_CLIENT_ID]" class="form-control"
+                     value="{{ paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_ID') }}">
+             </div>
+             <div class="mb-3">
+                 <label for="PHONEPE_CLIENT_SECRET" class="form-label">{{ localize('Client Secret') }}</label>
+                 <input type="text" id="PHONEPE_CLIENT_SECRET" name="types[PHONEPE_CLIENT_SECRET]" class="form-control"
+                     value="{{ paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_SECRET') }}">
+             </div>
+             <div class="mb-3">
+                 <label class="form-label">{{ localize('Sandbox Mode') }}</label>
+                 <select id="sandbox" class="form-control select2" name="sandbox" data-toggle="select2">
+                     <option value="1" {{ paymentGateway('phonepe')->sandbox == '1' ? 'selected' : '' }}>
+                         {{ localize('Enable') }}</option>
+                     <option value="0" {{ paymentGateway('phonepe')->sandbox == '0' ? 'selected' : '' }}>
+                         {{ localize('Disable') }}</option>
+                 </select>
+             </div>
              <div class="mb-3">
                  <label class="form-label">{{ localize('Enable PhonePe') }}</label>
                  <select id="enable_phonepe" class="form-control select2" name="is_active" data-toggle="select2">

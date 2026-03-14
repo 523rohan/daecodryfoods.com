@@ -33,10 +33,11 @@ if (!function_exists('imagePath')) {
     # return path for module assets
     function imagePath($path, $secure = null)
     {
-        if (str_contains(url('/'), '.test') || str_contains(url('/'), 'http://127.0.0.1:')) {
-            return app('url')->asset('' . $path, $secure) . '?v=' . env('APP_VERSION');
+        $url = app('url')->asset($path, $secure);
+        if (str_contains($path, 'phonepe')) {
+            return $url;
         }
-        return app('url')->asset($path, $secure) . '?v=' . env('APP_VERSION');
+        return $url . '?v=' . env('APP_VERSION');
     }
 }
 

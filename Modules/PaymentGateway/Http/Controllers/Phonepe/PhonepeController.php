@@ -47,8 +47,12 @@ class PhonepeController extends Controller
         $sha256 = hash('sha256', $string);
         $finalHeader = $sha256 . '###' . $saltIndex;
 
-        $url = "https://api-preprod.phonepe.com/apis/hermes/pg/v1/pay"; // Sandbox URL
-        // In production, use: https://api.phonepe.com/apis/hermes/pg/v1/pay
+        $isSandbox = paymentGateway('phonepe')->sandbox;
+        if ($isSandbox) {
+            $url = "https://api-preprod.phonepe.com/apis/hermes/pg/v1/pay";
+        } else {
+            $url = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
+        }
 
         $response = curl_init();
         curl_setopt_array($response, array(

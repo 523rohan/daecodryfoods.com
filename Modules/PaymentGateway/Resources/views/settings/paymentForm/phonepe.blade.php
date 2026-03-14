@@ -28,13 +28,6 @@
                  <label for="PHONEPE_SALT_INDEX" class="form-label">{{ localize('Salt Index') }}</label>
                  <input type="text" id="PHONEPE_SALT_INDEX" name="types[PHONEPE_SALT_INDEX]" class="form-control"
                      value="{{ paymentGatewayValue('phonepe', 'PHONEPE_SALT_INDEX') }}">
-             </div>
-             <div class="mb-3">
-                <label for="PHONEPE_MERCHANT_ID" class="form-label">{{ localize('Merchant ID') }}</label>
-                <input type="text" id="PHONEPE_MERCHANT_ID" name="types[PHONEPE_MERCHANT_ID]" class="form-control"
-                    value="{{ paymentGatewayValue('phonepe', 'PHONEPE_MERCHANT_ID') }}">
-            </div>
-
              <div class="mb-3">
                  <label class="form-label">{{ localize('Enable PhonePe') }}</label>
                  <select id="enable_phonepe" class="form-control select2" name="is_active" data-toggle="select2">

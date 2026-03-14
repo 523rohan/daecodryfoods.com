@@ -8,6 +8,7 @@ use Modules\PaymentGateway\Http\Controllers\Paystack\PaystackController;
 use Modules\PaymentGateway\Http\Controllers\Molile\MolilePaymentController;
 use Modules\PaymentGateway\Http\Controllers\Flutterwave\FlutterwaveController;
 use Modules\PaymentGateway\Http\Controllers\Phonepe\PhonepeController;
+use Modules\PaymentGateway\Http\Controllers\Yookassa\YookassaPaymentController;
 use Modules\PaymentGateway\Http\Controllers\Mercadopago\MercadopagoPaymentController;
 
 /*
@@ -43,7 +44,6 @@ Route::prefix('payment-gateway')->group(function () {
             ]);
             return "PhonePe Registered Successfully!";
         });
-        $routes->get('/', [PaymentGatewayController::class, 'index'])->name('index');
     });
 });
 

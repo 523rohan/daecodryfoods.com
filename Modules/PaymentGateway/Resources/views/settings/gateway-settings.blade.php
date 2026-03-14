@@ -73,5 +73,6 @@
     @include('paymentgateway::settings.paymentForm.midtrans')
     @include('paymentgateway::settings.paymentForm.offline')
     @include('paymentgateway::settings.paymentForm.cash')
+    @include('paymentgateway::settings.paymentForm.phonepe')
 
 @endsection

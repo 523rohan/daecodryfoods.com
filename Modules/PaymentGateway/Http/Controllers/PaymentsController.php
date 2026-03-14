@@ -7,16 +7,15 @@ use Modules\PaymentGateway\Http\Controllers\Duitku\DuitkuController;
 use Modules\PaymentGateway\Http\Controllers\IyZico\IyZicoController;
 use Modules\PaymentGateway\Http\Controllers\Paypal\PaypalController;
 use Modules\PaymentGateway\Http\Controllers\Midtrans\MidtransController;
-use Modules\PaymentGateway\Http\Controllers\Paystack\PaystackController;
+use Modules\PaymentGateway\Http\Controllers\Phonepe\PhonepeController;
 use Modules\PaymentGateway\Http\Controllers\Razorpay\RazorpayController;
+use Modules\PaymentGateway\Http\Controllers\Paystack\PaystackController;
 use Modules\PaymentGateway\Http\Controllers\Paytm\PaytmPaymentController;
 use Modules\PaymentGateway\Http\Controllers\Molile\MolilePaymentController;
 use Modules\PaymentGateway\Http\Controllers\Stripe\StripePaymentController;
 use Modules\PaymentGateway\Http\Controllers\Flutterwave\FlutterwaveController;
 use Modules\PaymentGateway\Http\Controllers\Yookassa\YookassaPaymentController;
 use Modules\PaymentGateway\Http\Controllers\Mercadopago\MercadopagoPaymentController;
-
-
 
 
 class PaymentsController extends Controller
@@ -50,6 +49,8 @@ class PaymentsController extends Controller
             return (new MercadopagoPaymentController)->initPayment();
         } else if ($payment_method == 'midtrans') {
             return (new MidtransController)->initPayment();
+        } else if ($payment_method == 'phonepe') {
+            return (new PhonepeController())->initPayment();
         }
         # todo::[update versions] more gateways
         return $this->payment_success();

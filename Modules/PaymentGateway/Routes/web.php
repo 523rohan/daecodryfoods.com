@@ -7,7 +7,7 @@ use Modules\PaymentGateway\Http\Controllers\Midtrans\MidtransController;
 use Modules\PaymentGateway\Http\Controllers\Paystack\PaystackController;
 use Modules\PaymentGateway\Http\Controllers\Molile\MolilePaymentController;
 use Modules\PaymentGateway\Http\Controllers\Flutterwave\FlutterwaveController;
-use Modules\PaymentGateway\Http\Controllers\Yookassa\YookassaPaymentController;
+use Modules\PaymentGateway\Http\Controllers\Phonepe\PhonepeController;
 use Modules\PaymentGateway\Http\Controllers\Mercadopago\MercadopagoPaymentController;
 
 /*
@@ -28,6 +28,21 @@ Route::prefix('payment-gateway')->group(function () {
     Route::group(['prefix' => 'settings', 'as' => 'payment-gateway-setting.', 'middleware' => ['auth', 'verified']], function ($routes) {
         $routes->get('/', [PaymentGatewayController::class, 'index'])->name('index');
         $routes->post('/', [PaymentGatewayController::class, 'store'])->name('store');
+        
+        // Temporary route to register PhonePe
+        Route::get('/register-phonepe', function() {
+            \Modules\PaymentGateway\Entities\PaymentGateway::updateOrCreate([
+                'gateway' => 'phonepe'
+            ], [
+                'sandbox'    => 1,
+                'is_active'  => 0,
+                'type'       => 'sandbox',
+                'is_virtual' => 1,
+                'is_show'    => 1,
+                'image'      => 'Modules/PaymentGateway/Resources/assets/images/payments/phonepe.png'
+            ]);
+            return "PhonePe Registered Successfully!";
+        });
         $routes->get('/', [PaymentGatewayController::class, 'index'])->name('index');
     });
 });
@@ -61,3 +76,6 @@ Route::get('/molile/redirect', [MolilePaymentController::class, 'redirect'])->na
 # mercadopago
 Route::get('/mercadopago/redirect', [MercadopagoPaymentController::class, 'redirect'])->name('mercadopago.redirect');
 Route::get('/mercadopago/failed', [MercadopagoPaymentController::class, 'failed'])->name('mercadopago.failed');
+
+# phonepe
+Route::any('/phonepe/payment/callback', [PhonepeController::class, 'callback'])->name('phonepe.callback');

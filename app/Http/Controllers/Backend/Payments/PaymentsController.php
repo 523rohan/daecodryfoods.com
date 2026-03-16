@@ -49,6 +49,8 @@ class PaymentsController extends Controller
             return (new MercadopagoPaymentController)->initPayment();
         } else if ($payment_method == 'midtrans') {
             return (new MidtransController)->initPayment();
+        } else if ($payment_method == 'phonepe') {
+            return (new \Modules\PaymentGateway\Http\Controllers\Phonepe\PhonepeController())->initPayment();
         }
         # todo::[update versions] more gateways
     }

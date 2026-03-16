@@ -4,6 +4,7 @@ namespace Modules\PaymentGateway\Http\Controllers\Phonepe;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Backend\Payments\PaymentsController;
 
@@ -15,11 +16,26 @@ class PhonepeController extends Controller
     public function initPayment()
     {
         $amount = session('amount');
+        if (!$amount && session('order_code')) {
+            $orderGroup = \App\Models\OrderGroup::where('order_code', session('order_code'))->first();
+            if ($orderGroup) {
+                $amount = $orderGroup->grand_total_amount;
+            }
+        }
+        
+        if (!$amount) {
+            return (new PaymentsController)->payment_failed();
+        }
         
         // PhonePe only supports INR
-        if (Session::has('currency_code') && strtoupper(Session::get('currency_code')) !== 'INR') {
-            // Logic to convert to INR if needed, or fail
-            // For now, assume INR or throw error
+        if (Session::has('currency_code')) {
+            if (strtoupper(Session::get('currency_code')) == 'INR') {
+                $amount = formatPrice($amount, false, false, false, false);
+            } else {
+                // If not INR, we should convert to INR. 
+                // Since INR is default (rate 1), priceToUsd actually returns the amount in default currency (INR)
+                $amount = priceToUsd($amount);
+            }
         }
 
         $merchantId = paymentGatewayValue('phonepe', 'PHONEPE_MERCHANT_ID');
@@ -74,6 +90,7 @@ class PhonepeController extends Controller
         $result = curl_exec($response);
         curl_close($response);
 
+        Log::info('PhonePe Response: ' . $result);
         $res = json_decode($result);
 
         if (isset($res->success) && $res->success == true) {

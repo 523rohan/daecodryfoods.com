@@ -20,6 +20,7 @@ use Modules\PaymentGateway\Http\Controllers\Mercadopago\MercadopagoPaymentContro
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
+rohan
 */
 
 Route::prefix('payment-gateway')->group(function () {
@@ -29,18 +30,18 @@ Route::prefix('payment-gateway')->group(function () {
     Route::group(['prefix' => 'settings', 'as' => 'payment-gateway-setting.', 'middleware' => ['auth', 'verified']], function ($routes) {
         $routes->get('/', [PaymentGatewayController::class, 'index'])->name('index');
         $routes->post('/', [PaymentGatewayController::class, 'store'])->name('store');
-        
+
         // Temporary route to register PhonePe
-        Route::get('/register-phonepe', function() {
+        Route::get('/register-phonepe', function () {
             \Modules\PaymentGateway\Entities\PaymentGateway::updateOrCreate([
                 'gateway' => 'phonepe'
             ], [
-                'sandbox'    => 1,
-                'is_active'  => 0,
-                'type'       => 'sandbox',
+                'sandbox' => 1,
+                'is_active' => 0,
+                'type' => 'sandbox',
                 'is_virtual' => 1,
-                'is_show'    => 1,
-                'image'      => 'Modules/PaymentGateway/Resources/assets/images/payments/phonepe.png'
+                'is_show' => 1,
+                'image' => 'Modules/PaymentGateway/Resources/assets/images/payments/phonepe.png'
             ]);
             return "PhonePe Registered Successfully!";
         });

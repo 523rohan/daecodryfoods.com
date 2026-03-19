@@ -86,8 +86,8 @@ class PhonepeController extends Controller
             $encode = base64_encode(json_encode($data));
             
             // For V2, some environments still require X-VERIFY header along with Bearer token
-            $saltKey = paymentGatewayValue('phonepe', 'PHONEPE_SALT_KEY');
-            $saltIndex = paymentGatewayValue('phonepe', 'PHONEPE_SALT_INDEX');
+            $saltKey = paymentGatewayValue('phonepe', 'PHONEPE_SALT_KEY') ?: $clientSecret;
+            $saltIndex = paymentGatewayValue('phonepe', 'PHONEPE_SALT_INDEX') ?: $clientVersion;
             
             $headers = array(
                 'Content-Type: application/json',
@@ -101,7 +101,7 @@ class PhonepeController extends Controller
                 $sha256 = hash('sha256', $string);
                 $finalHeader = $sha256 . '###' . $saltIndex;
                 $headers[] = 'X-VERIFY: ' . $finalHeader;
-                Log::info('PhonePe: Added X-VERIFY to V2 Flow');
+                Log::info('PhonePe: Added X-VERIFY to V2 Flow (using ' . (paymentGatewayValue('phonepe', 'PHONEPE_SALT_KEY') ? 'config' : 'fallback') . ' salt)');
             }
             
             if ($isSandbox) {

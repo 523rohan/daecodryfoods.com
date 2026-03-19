@@ -21,7 +21,7 @@ class PaytmPaymentController extends Controller
             'user' => $user->id,
             'mobile_number' => $user->phone != null ? $user->phone : "+912354123123",
             'email' => $user->email != null ? $user->email : "customer@example.com",
-            'amount' => $amount,
+            'amount' => (int) round($amount),
             'callback_url' => route('paytm.callback')
         ]);
         return $payment->receive();

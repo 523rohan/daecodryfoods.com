@@ -41,17 +41,23 @@ class PhonepeController extends Controller
             }
         }
 
-        $merchantId = paymentGatewayValue('phonepe', 'PHONEPE_MERCHANT_ID');
-        $saltKey = paymentGatewayValue('phonepe', 'PHONEPE_SALT_KEY');
-        $saltIndex = paymentGatewayValue('phonepe', 'PHONEPE_SALT_INDEX');
+        $gateway = \Modules\PaymentGateway\Entities\PaymentGateway::where('gateway', 'phonepe')->first();
+        if (!$gateway) {
+            Log::error('PhonePe: Gateway not found in database');
+            return (new PaymentsController)->payment_failed();
+        }
 
-        Log::info('PhonePe Settings Read: MerchantID='.$merchantId.', SaltKey=' . (empty($saltKey) ? 'EMPTY' : 'PRESENT') . ', SaltIndex='.$saltIndex);
+        $merchantId = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_MERCHANT_ID')->value('value');
+        $saltKey = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_SALT_KEY')->value('value');
+        $saltIndex = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_SALT_INDEX')->value('value');
 
-        $clientId = paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_ID');
-        $clientSecret = paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_SECRET');
-        $clientVersion = paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_VERSION') ?? '1';
+        Log::info('PhonePe Settings Read (Direct DB): MerchantID='.$merchantId.', SaltKey=' . (empty($saltKey) ? 'EMPTY' : 'PRESENT') . ', SaltIndex='.$saltIndex);
 
-        $isSandbox = paymentGateway('phonepe')->sandbox;
+        $clientId = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_CLIENT_ID')->value('value');
+        $clientSecret = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_CLIENT_SECRET')->value('value');
+        $clientVersion = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_CLIENT_VERSION')->value('value') ?? '1';
+
+        $isSandbox = $gateway->sandbox;
 
         // Prioritize V1 API if Merchant ID and Salt Key are provided, as it's more stable for Hosted Checkout
         if ($merchantId && $saltKey && $saltIndex) {

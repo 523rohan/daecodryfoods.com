@@ -34,9 +34,8 @@
     <!--banner 2 section end-->
 
     <!--feedback section start-->
-    @include('frontend.default.pages.partials.home.feedback')
+    {{-- @include('frontend.default.pages.partials.home.feedback') --}}
     <!--feedback section end-->
-
 
     <!--products listing start-->
     @include('frontend.default.pages.partials.home.products')

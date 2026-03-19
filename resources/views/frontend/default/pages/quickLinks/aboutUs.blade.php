@@ -25,8 +25,10 @@
 
     <!--about section start-->
     <section class="pt-120 ab-about-section position-relative z-1 overflow-hidden">
+        {{--
         <img src="{{ staticAsset('frontend/default/assets/img/shapes/mango.png') }}" alt="mango"
             class="position-absolute mango z--1">
+        --}}
         <div class="container">
             <div class="row g-5 g-xl-4 align-items-center">
                 <div class="col-xl-6">
@@ -87,8 +89,10 @@
 
     <!--brands section start-->
     <section class="brands-section ptb-120 position-relative z-1 overflow-hidden service-section">
+        {{--
         <img src="{{ staticAsset('frontend/default/assets/img/shapes/bg-shape-4.png') }}" alt="bg shape"
             class="position-absolute start-0 bottom-0 w-100 z--1 bg-shape">
+        --}}
         <div class="container">
             <div class="brand-wrapper px-5 rounded-4">
                 <h4 class="section-title mb-0">{{ localize('The Most Popular Brands') }}</h4>
@@ -113,6 +117,7 @@
 
     <!--feature section start-->
     <section class="about-section bg-shade position-relative z-1">
+        {{--
         <img src="{{ staticAsset('frontend/default/assets/img/shapes/bg-shape-5.png') }}" alt="bg shape"
             class="position-absolute start-0 bottom-0 z--1 w-100">
         <img src="{{ staticAsset('frontend/default/assets/img/shapes/roll-color.png') }}" alt="roll"
@@ -121,6 +126,7 @@
             class="position-absolute roll-color-curve z--1" data-parallax='{"y": 50}'>
         <img src="{{ staticAsset('frontend/default/assets/img/shapes/onion-color.png') }}" alt="onion"
             class="position-absolute onion-color z--1" data-parallax='{"x": -30}'>
+        --}}
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-6">

@@ -26,12 +26,12 @@ class DeliverymanAssignNotification extends Notification implements ShouldQueue
 
     public function toMail($notifiable)
     {
-        $array['subject'] = localize('Your order has been placed') . ' - ' . $this->order->orderGroup->order_code;
-        $array['order'] = $this->order;
-
         return (new MailMessage)
-            ->view('backend.pages.orders.invoice', ['order' => $this->order])
-            ->from(env('MAIL_FROM_ADDRESS'))
+            ->view('backend.pages.orders.invoice', [
+                'order' => $this->order,
+                'font_family' => env('INVOICE_FONT') ?: 'THSarabunNew.ttf',
+            ])
+            ->from(config('mail.from.address'), config('mail.from.name'))
             ->subject(localize('Order Placed') . ' - ' . env('APP_NAME'));
     }
 

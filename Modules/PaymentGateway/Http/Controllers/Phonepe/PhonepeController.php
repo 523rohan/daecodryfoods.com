@@ -74,9 +74,9 @@ class PhonepeController extends Controller
                 'merchantId' => $merchantId, 
                 'merchantTransactionId' => $transactionId,
                 'merchantUserId' => 'MUID' . auth()->id(),
-                'amount' => round($amount * 100), // Amount in paise
+                'amount' => (int) round($amount * 100), // Amount in paise, cast to int
                 'redirectUrl' => $callbackUrl,
-                'redirectMode' => 'POST',
+                'redirectMode' => 'REDIRECT',
                 'callbackUrl' => $callbackUrl,
                 'paymentInstrument' => array(
                     'type' => 'PAY_PAGE'
@@ -85,18 +85,30 @@ class PhonepeController extends Controller
 
             $encode = base64_encode(json_encode($data));
             
+            // For V2, some environments still require X-VERIFY header along with Bearer token
+            $saltKey = paymentGatewayValue('phonepe', 'PHONEPE_SALT_KEY');
+            $saltIndex = paymentGatewayValue('phonepe', 'PHONEPE_SALT_INDEX');
+            
+            $headers = array(
+                'Content-Type: application/json',
+                'Authorization: O-Bearer ' . $accessToken,
+                'X-CLIENT-ID: ' . $clientId,
+                'X-CLIENT-VERSION: ' . $clientVersion
+            );
+
+            if ($saltKey && $saltIndex) {
+                $string = $encode . '/pg/v1/pay' . $saltKey;
+                $sha256 = hash('sha256', $string);
+                $finalHeader = $sha256 . '###' . $saltIndex;
+                $headers[] = 'X-VERIFY: ' . $finalHeader;
+                Log::info('PhonePe: Added X-VERIFY to V2 Flow');
+            }
+            
             if ($isSandbox) {
                 $url = "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay";
             } else {
                 $url = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
             }
-
-            $headers = array(
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $accessToken,
-                'X-CLIENT-ID: ' . $clientId,
-                'X-CLIENT-VERSION: ' . $clientVersion
-            );
 
             Log::info('PhonePe V2 Initiation URL: ' . $url);
             Log::info('PhonePe V2 Payload: ' . json_encode($data));

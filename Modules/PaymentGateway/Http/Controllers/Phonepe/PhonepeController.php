@@ -52,11 +52,12 @@ class PhonepeController extends Controller
         // Use V2 API if Client ID and Client Secret are provided
         if ($clientId && $clientSecret) {
             Log::info('PhonePe: Using V2 API Flow');
-            $accessToken = $this->getAccessToken($clientId, $clientSecret, $isSandbox);
+            $accessToken = $this->getAccessToken($clientId, $clientSecret, $clientVersion, $isSandbox);
             if (!$accessToken) {
                 Log::error('PhonePe: Failed to get Access Token');
                 return (new PaymentsController)->payment_failed();
             }
+// ... (omitting lines for brevity in instruction, using multi_replace if needed but this is a contiguous block)
 
             $transactionId = 'TXN' . time();
             $callbackUrl = route('phonepe.callback');
@@ -178,7 +179,7 @@ class PhonepeController extends Controller
     /**
      * Get OAuth token for V2 API
      */
-    private function getAccessToken($clientId, $clientSecret, $isSandbox)
+    private function getAccessToken($clientId, $clientSecret, $clientVersion, $isSandbox)
     {
         if ($isSandbox) {
             $url = "https://api-preprod.phonepe.com/apis/pg-sandbox/v1/oauth/token";
@@ -190,6 +191,7 @@ class PhonepeController extends Controller
             'grant_type' => 'client_credentials',
             'client_id' => $clientId,
             'client_secret' => $clientSecret,
+            'client_version' => $clientVersion
         ];
 
         $response = curl_init();

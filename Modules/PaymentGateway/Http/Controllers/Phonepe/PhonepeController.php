@@ -114,12 +114,13 @@ class PhonepeController extends Controller
                 return (new PaymentsController)->payment_failed();
             }
 
-            // For V2, some documentation suggests using the FULL Client ID as the merchantId in the payload
+            // Prefix only for V2 payload merchantId, as seen in token response
+            $v2MerchantId = $merchantId ?: explode('_', $clientId)[0];
             $transactionId = 'TXN' . time();
             $callbackUrl = route('phonepe.callback');
             
             $data = array(
-                'merchantId' => $clientId, // Using full client ID specifically for V2 request
+                'merchantId' => $v2MerchantId, 
                 'merchantTransactionId' => $transactionId,
                 'merchantUserId' => 'MUID' . auth()->id(),
                 'amount' => (int) round($amount * 100), // Amount in paise
@@ -137,11 +138,10 @@ class PhonepeController extends Controller
                 $url = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
             }
 
+            // Minimal headers for V2 Standard Checkout
             $headers = array(
                 'Content-Type: application/json',
-                'Authorization: Bearer ' . $accessToken,
-                'X-CLIENT-ID: ' . $clientId,
-                'X-CLIENT-VERSION: ' . $clientVersion
+                'Authorization: Bearer ' . $accessToken
             );
 
             Log::info('PhonePe V2 Initiation URL: ' . $url);

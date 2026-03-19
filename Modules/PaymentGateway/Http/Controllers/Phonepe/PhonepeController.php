@@ -59,11 +59,19 @@ class PhonepeController extends Controller
             }
 // ... (omitting lines for brevity in instruction, using multi_replace if needed but this is a contiguous block)
 
+            // Derive merchantId from clientId if PHONEPE_MERCHANT_ID is empty
+            $merchantId = paymentGatewayValue('phonepe', 'PHONEPE_MERCHANT_ID');
+            if (!$merchantId) {
+                $parts = explode('_', $clientId);
+                $merchantId = $parts[0];
+                Log::info('PhonePe: Derived Merchant ID from Client ID: ' . $merchantId);
+            }
+
             $transactionId = 'TXN' . time();
             $callbackUrl = route('phonepe.callback');
             
             $data = array(
-                'merchantId' => paymentGatewayValue('phonepe', 'PHONEPE_MERCHANT_ID') ?? 'MERCHANT', // Some V2 accounts still need merchantId in payload
+                'merchantId' => $merchantId, 
                 'merchantTransactionId' => $transactionId,
                 'merchantUserId' => 'MUID' . auth()->id(),
                 'amount' => round($amount * 100), // Amount in paise
@@ -78,7 +86,7 @@ class PhonepeController extends Controller
             $encode = base64_encode(json_encode($data));
             
             if ($isSandbox) {
-                $url = "https://api-preprod.phonepe.com/apis/pg-sandbox/v1/pay";
+                $url = "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay";
             } else {
                 $url = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
             }
@@ -91,6 +99,7 @@ class PhonepeController extends Controller
             );
 
             Log::info('PhonePe V2 Initiation URL: ' . $url);
+            Log::info('PhonePe V2 Payload: ' . json_encode($data));
             Log::info('PhonePe V2 Headers: ' . json_encode($headers));
 
             $response = curl_init();

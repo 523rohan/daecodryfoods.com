@@ -15,15 +15,20 @@ class PhonepeController extends Controller
      */
     public function initPayment()
     {
+        Log::info('PhonePe initPayment called. Session order_code: ' . session('order_code') . ', Session amount: ' . session('amount'));
         $amount = session('amount');
         if (!$amount && session('order_code')) {
             $orderGroup = \App\Models\OrderGroup::where('order_code', session('order_code'))->first();
             if ($orderGroup) {
                 $amount = $orderGroup->grand_total_amount;
+                Log::info('PhonePe amount retrieved from OrderGroup: ' . $amount);
+            } else {
+                Log::error('PhonePe: OrderGroup not found for code: ' . session('order_code'));
             }
         }
         
         if (!$amount) {
+            Log::error('PhonePe: Amount is empty, failing payment.');
             return (new PaymentsController)->payment_failed();
         }
         
@@ -38,57 +43,126 @@ class PhonepeController extends Controller
             }
         }
 
-        $merchantId = paymentGatewayValue('phonepe', 'PHONEPE_MERCHANT_ID');
-        $saltKey = paymentGatewayValue('phonepe', 'PHONEPE_SALT_KEY');
-        $saltIndex = paymentGatewayValue('phonepe', 'PHONEPE_SALT_INDEX');
-        
-        $transactionId = 'TXN' . time();
-        $callbackUrl = route('phonepe.callback');
-        
-        $data = array(
-            'merchantId' => $merchantId,
-            'merchantTransactionId' => $transactionId,
-            'merchantUserId' => 'MUID' . auth()->id(),
-            'amount' => $amount * 100, // Amount in paise
-            'redirectUrl' => $callbackUrl,
-            'redirectMode' => 'POST',
-            'callbackUrl' => $callbackUrl,
-            'paymentInstrument' => array(
-                'type' => 'PAY_PAGE'
-            )
-        );
-
-        $encode = base64_encode(json_encode($data));
-        $string = $encode . '/pg/v1/pay' . $saltKey;
-        $sha256 = hash('sha256', $string);
-        $finalHeader = $sha256 . '###' . $saltIndex;
+        $clientId = paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_ID');
+        $clientSecret = paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_SECRET');
+        $clientVersion = paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_VERSION') ?? '1';
 
         $isSandbox = paymentGateway('phonepe')->sandbox;
-        if ($isSandbox) {
-            $url = "https://api-preprod.phonepe.com/apis/hermes/pg/v1/pay";
-        } else {
-            $url = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
-        }
 
-        $response = curl_init();
-        curl_setopt_array($response, array(
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => false,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            CURLOPT_POSTFIELDS => json_encode(['request' => $encode]),
-            CURLOPT_HTTPHEADER => array(
+        // Use V2 API if Client ID and Client Secret are provided
+        if ($clientId && $clientSecret) {
+            Log::info('PhonePe: Using V2 API Flow');
+            $accessToken = $this->getAccessToken($clientId, $clientSecret, $isSandbox);
+            if (!$accessToken) {
+                Log::error('PhonePe: Failed to get Access Token');
+                return (new PaymentsController)->payment_failed();
+            }
+
+            $transactionId = 'TXN' . time();
+            $callbackUrl = route('phonepe.callback');
+            
+            $data = array(
+                'merchantId' => paymentGatewayValue('phonepe', 'PHONEPE_MERCHANT_ID') ?? 'MERCHANT', // Some V2 accounts still need merchantId in payload
+                'merchantTransactionId' => $transactionId,
+                'merchantUserId' => 'MUID' . auth()->id(),
+                'amount' => round($amount * 100), // Amount in paise
+                'redirectUrl' => $callbackUrl,
+                'redirectMode' => 'POST',
+                'callbackUrl' => $callbackUrl,
+                'paymentInstrument' => array(
+                    'type' => 'PAY_PAGE'
+                )
+            );
+
+            $encode = base64_encode(json_encode($data));
+            
+            if ($isSandbox) {
+                $url = "https://api-preprod.phonepe.com/apis/pg-sandbox/v1/pay";
+            } else {
+                $url = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
+            }
+
+            $headers = array(
                 'Content-Type: application/json',
-                'X-VERIFY: ' . $finalHeader
-            ),
-        ));
+                'Authorization: Bearer ' . $accessToken,
+                'X-CLIENT-ID: ' . $clientId,
+                'X-CLIENT-VERSION: ' . $clientVersion
+            );
 
-        $result = curl_exec($response);
-        curl_close($response);
+            Log::info('PhonePe V2 Initiation URL: ' . $url);
+            Log::info('PhonePe V2 Headers: ' . json_encode($headers));
+
+            $response = curl_init();
+            curl_setopt_array($response, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => false,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode(['request' => $encode]),
+                CURLOPT_HTTPHEADER => $headers,
+            ));
+
+            $result = curl_exec($response);
+            curl_close($response);
+
+        } else {
+            // Fallback to V1 API
+            Log::info('PhonePe: Using V1 API Flow');
+            $merchantId = paymentGatewayValue('phonepe', 'PHONEPE_MERCHANT_ID');
+            $saltKey = paymentGatewayValue('phonepe', 'PHONEPE_SALT_KEY');
+            $saltIndex = paymentGatewayValue('phonepe', 'PHONEPE_SALT_INDEX');
+            
+            $transactionId = 'TXN' . time();
+            $callbackUrl = route('phonepe.callback');
+            
+            $data = array(
+                'merchantId' => $merchantId,
+                'merchantTransactionId' => $transactionId,
+                'merchantUserId' => 'MUID' . auth()->id(),
+                'amount' => round($amount * 100), // Amount in paise
+                'redirectUrl' => $callbackUrl,
+                'redirectMode' => 'POST',
+                'callbackUrl' => $callbackUrl,
+                'paymentInstrument' => array(
+                    'type' => 'PAY_PAGE'
+                )
+            );
+
+            $encode = base64_encode(json_encode($data));
+            $string = $encode . '/pg/v1/pay' . $saltKey;
+            $sha256 = hash('sha256', $string);
+            $finalHeader = $sha256 . '###' . $saltIndex;
+
+            if ($isSandbox) {
+                $url = "https://api-preprod.phonepe.com/apis/hermes/pg/v1/pay";
+            } else {
+                $url = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
+            }
+
+            $response = curl_init();
+            curl_setopt_array($response, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_ENCODING => '',
+                CURLOPT_MAXREDIRS => 10,
+                CURLOPT_TIMEOUT => 0,
+                CURLOPT_FOLLOWLOCATION => false,
+                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => json_encode(['request' => $encode]),
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/json',
+                    'X-VERIFY: ' . $finalHeader
+                ),
+            ));
+
+            $result = curl_exec($response);
+            curl_close($response);
+        }
 
         Log::info('PhonePe Response: ' . $result);
         $res = json_decode($result);
@@ -96,8 +170,46 @@ class PhonepeController extends Controller
         if (isset($res->success) && $res->success == true) {
             return redirect()->to($res->data->instrumentResponse->redirectInfo->url);
         } else {
+            Log::error('PhonePe API Error: ' . ($res->message ?? 'Unknown error'));
             return (new PaymentsController)->payment_failed();
         }
+    }
+
+    /**
+     * Get OAuth token for V2 API
+     */
+    private function getAccessToken($clientId, $clientSecret, $isSandbox)
+    {
+        if ($isSandbox) {
+            $url = "https://api-preprod.phonepe.com/apis/pg-sandbox/v1/oauth/token";
+        } else {
+            $url = "https://api.phonepe.com/apis/identity-manager/v1/oauth/token";
+        }
+
+        $fields = [
+            'grant_type' => 'client_credentials',
+            'client_id' => $clientId,
+            'client_secret' => $clientSecret,
+        ];
+
+        $response = curl_init();
+        curl_setopt_array($response, array(
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            CURLOPT_POSTFIELDS => http_build_query($fields),
+            CURLOPT_HTTPHEADER => array(
+                'Content-Type: application/x-www-form-urlencoded'
+            ),
+        ));
+
+        $result = curl_exec($response);
+        curl_close($response);
+
+        Log::info('PhonePe Token Response: ' . $result);
+        $res = json_decode($result);
+
+        return $res->access_token ?? null;
     }
 
     /**
@@ -105,10 +217,12 @@ class PhonepeController extends Controller
      */
     public function callback(Request $request)
     {
+        Log::info('PhonePe Callback received: ' . json_encode($request->all()));
         if ($request->code == 'PAYMENT_SUCCESS') {
             $payment_details = json_encode($request->all());
             return (new PaymentsController)->payment_success($payment_details);
         } else {
+            Log::error('PhonePe Callback failed with code: ' . $request->code);
             return (new PaymentsController)->payment_failed();
         }
     }

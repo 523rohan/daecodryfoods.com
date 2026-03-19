@@ -40,6 +40,11 @@
                      value="{{ paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_SECRET') }}">
              </div>
              <div class="mb-3">
+                 <label for="PHONEPE_CLIENT_VERSION" class="form-label">{{ localize('Client Version') }}</label>
+                 <input type="text" id="PHONEPE_CLIENT_VERSION" name="types[PHONEPE_CLIENT_VERSION]" class="form-control"
+                     value="{{ paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_VERSION') }}">
+             </div>
+             <div class="mb-3">
                  <label class="form-label">{{ localize('Sandbox Mode') }}</label>
                  <select id="sandbox" class="form-control select2" name="sandbox" data-toggle="select2">
                      <option value="1" {{ paymentGateway('phonepe')->sandbox == '1' ? 'selected' : '' }}>

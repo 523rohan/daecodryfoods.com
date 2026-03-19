@@ -149,7 +149,7 @@ class PhonepeController extends Controller
             $headers = array(
                 'Content-Type: application/json',
                 'Authorization: O-Bearer ' . $accessToken,
-                'X-CLIENT-ID: ' . $clientId,
+                'X-CLIENT-ID: ' . $v2MerchantId,
                 'X-CLIENT-VERSION: ' . $clientVersion
             );
 

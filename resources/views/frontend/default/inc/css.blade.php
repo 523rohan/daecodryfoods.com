@@ -13,19 +13,6 @@
 <link rel="stylesheet" href="{{ staticAsset('frontend/common/css/summernote-custom.css') }}">
 
 <style>
-    .gshop-navbar .logo {
-        display: flex;
-        align-items: center;
-        min-height: 84px;
-    }
-
-    .gshop-navbar .navbar-logo {
-        width: auto;
-        max-width: 220px;
-        max-height: 70px;
-        object-fit: contain;
-    }
-
     @media (min-width: 1200px) {
         .choose-us-section::after {
             background-image: url({{ uploadedAsset(getSetting('halal_why_choose_us_large_img')) }});

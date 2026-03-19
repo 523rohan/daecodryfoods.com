@@ -5,15 +5,16 @@
         <div class="row justify-content-center">
             <div class="col-xl-5 col-lg-6">
                 <div class="gshop_subscribe_form text-center">
-                    <h4 class="text-white gshop-title">{{ localize('Join Our') }}<mark
+                    <h4 class="text-white gshop-title">{{ localize('Need help with your order?') }}<mark
                             class="p-0 position-relative text-secondary bg-transparent">
-                            {{ localize('WhatsApp Community') }}
+                            {{ localize('Chat with us on WhatsApp') }}
                             <img src="{{ staticAsset('frontend/default/assets/img/shapes/border-line.svg') }}"
                                 alt="border line" class="position-absolute border-line"></mark><br
-                            class="d-none d-sm-block">{{ localize('Get latest updates & offers.') }}</h4>
+                            class="d-none d-sm-block">{{ localize('Get quick support for products, delivery, and order updates.') }}</h4>
                     <div class="mt-5 text-center">
-                        <a href="#" target="_blank"
-                            class="btn btn-secondary border-0">{{ localize('Join Community') }}</a>
+                        <a href="https://wa.me/919686839395?text=Hi,%20can%20you%20help%20me%20with%20my%20order%3F"
+                            target="_blank" rel="noopener noreferrer"
+                            class="btn btn-secondary border-0">{{ localize('Chat on WhatsApp') }}</a>
                     </div>
                 </div>
             </div>

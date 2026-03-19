@@ -22,7 +22,10 @@ use App\Models\RewardPoint;
 use App\Models\ScheduledDeliveryTimeList;
 use App\Notifications\OrderPlacedNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use Session;
+use Throwable;
 
 class OrderController extends Controller
 {
@@ -253,6 +256,7 @@ class OrderController extends Controller
 
             $orderGroup->payment_method = $request->payment_method;
             $orderGroup->save();
+            $this->sendOrderPlacedNotification($orderGroup, $user);
             return $this->order_complete($orderGroup->order_code);
         }
 
@@ -264,12 +268,7 @@ class OrderController extends Controller
     {
         $orderGroup = OrderGroup::where('user_id', auth()->user()->id)->where('order_code', $code)->first();
         $user = auth()->user();
-
-        // todo:: change this from here
-        try {
-            Notification::send($user, new OrderPlacedNotification($orderGroup->order));
-        } catch (\Exception $e) {
-        }
+        $this->sendOrderPlacedNotification($orderGroup, $user);
     }
 
     # order successful don't send notification
@@ -351,6 +350,29 @@ class OrderController extends Controller
     {
         $request->payment_method = "wallet";
         return $this->store($request);
+    }
+
+    private function sendOrderPlacedNotification(?OrderGroup $orderGroup, $user)
+    {
+        if (!$orderGroup || !$user || empty($user->email) || !$orderGroup->order) {
+            Log::warning('API order email skipped: missing user email or order.', [
+                'order_code' => optional($orderGroup)->order_code,
+                'user_id' => optional($user)->id,
+                'email' => optional($user)->email,
+            ]);
+            return;
+        }
+
+        try {
+            Notification::send($user, new OrderPlacedNotification($orderGroup->order));
+        } catch (Throwable $e) {
+            Log::error('API order confirmation email failed.', [
+                'order_code' => $orderGroup->order_code,
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 
     public function track(Request $request)

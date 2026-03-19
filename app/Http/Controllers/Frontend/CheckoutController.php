@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Session;
 use App\Models\ScheduledDeliveryTimeList;
 use Illuminate\Support\Facades\Notification;
+use Throwable;
 
 use App\Notifications\OrderPlacedNotification;
 use App\Http\Controllers\Backend\Payments\PaymentsController;
@@ -336,6 +337,7 @@ class CheckoutController extends Controller
                     $carts   = Cart::where('user_id', $userId)->whereIn('id', $cartIds)->delete();
                 }
                 DB::commit();
+                $this->sendOrderPlacedNotification($orderGroup, $user);
                 flash(localize('Your order has been placed successfully'))->success();
                 return redirect()->route('checkout.success', $orderGroup->order_code);
                 
@@ -359,13 +361,6 @@ class CheckoutController extends Controller
     public function success($code)
     {
         $orderGroup = OrderGroup::where('user_id', auth()->user()->id)->where('order_code', $code)->first();
-        $user = auth()->user();
-
-        // todo:: change this from here
-        try {
-            Notification::send($user, new OrderPlacedNotification($orderGroup->order));
-        } catch (\Exception $e) {
-        }
         return view('frontend.default.pages.checkout.invoice', ['orderGroup' => $orderGroup]);
     }
 
@@ -391,11 +386,36 @@ class CheckoutController extends Controller
         $orderGroup->payment_details = $payment_details;
         $orderGroup->save();
 
+        $this->sendOrderPlacedNotification($orderGroup, auth()->user());
+
         // cart empty
         Cart::where('user_id', auth()->user()->id)->delete();
 
         clearOrderSession();
         flash(localize('Your order has been placed successfully'))->success();
         return redirect()->route('checkout.success', $orderGroup->order_code);
+    }
+
+    private function sendOrderPlacedNotification(OrderGroup $orderGroup, $user)
+    {
+        if (!$user || empty($user->email) || !$orderGroup->order) {
+            Log::warning('Order email skipped: missing user email or order.', [
+                'order_code' => $orderGroup->order_code,
+                'user_id' => optional($user)->id,
+                'email' => optional($user)->email,
+            ]);
+            return;
+        }
+
+        try {
+            Notification::send($user, new OrderPlacedNotification($orderGroup->order));
+        } catch (Throwable $e) {
+            Log::error('Order confirmation email failed.', [
+                'order_code' => $orderGroup->order_code,
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 }

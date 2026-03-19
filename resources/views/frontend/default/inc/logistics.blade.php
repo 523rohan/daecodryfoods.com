@@ -16,8 +16,11 @@
             </div>
         </div>
         <div class="radio-right text-end">
-            <img src="{{ uploadedAsset($zoneCity->logistic->thumbnail_image) }}" alt="{{ $zoneCity->logistic->name }}"
-                class="img-fluid">
+            <div style="width: 140px; height: 72px; display: flex; align-items: center; justify-content: flex-end;">
+                <img src="{{ uploadedAsset($zoneCity->logistic->thumbnail_image) }}"
+                    alt="{{ $zoneCity->logistic->name }}"
+                    style="max-width: 140px; max-height: 72px; width: auto; height: auto; object-fit: contain;">
+            </div>
         </div>
     </div>
 @empty

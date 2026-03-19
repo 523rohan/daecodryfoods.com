@@ -114,28 +114,23 @@ class PhonepeController extends Controller
                 return (new PaymentsController)->payment_failed();
             }
 
-            // Derive merchantId from clientId if PHONEPE_MERCHANT_ID is empty
-            $v2MerchantId = $merchantId ?: explode('_', $clientId)[0];
-
+            // For V2, some documentation suggests using the FULL Client ID as the merchantId in the payload
             $transactionId = 'TXN' . time();
             $callbackUrl = route('phonepe.callback');
             
             $data = array(
-                'merchantId' => $v2MerchantId, 
+                'merchantId' => $clientId, // Using full client ID specifically for V2 request
                 'merchantTransactionId' => $transactionId,
                 'merchantUserId' => 'MUID' . auth()->id(),
                 'amount' => (int) round($amount * 100), // Amount in paise
                 'redirectUrl' => $callbackUrl,
-                'redirectMode' => 'REDIRECT',
+                'redirectMode' => 'POST',
                 'callbackUrl' => $callbackUrl,
                 'paymentInstrument' => array(
                     'type' => 'PAY_PAGE'
                 )
             );
 
-            // Modern V2 Standard Checkout (OAuth) uses direct JSON and Bearer token.
-            // Some environments don't like the O-Bearer prefix or X-VERIFY for this flow.
-            
             if ($isSandbox) {
                 $url = "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay";
             } else {
@@ -144,7 +139,7 @@ class PhonepeController extends Controller
 
             $headers = array(
                 'Content-Type: application/json',
-                'Authorization: Bearer ' . $accessToken, // Using standard Bearer
+                'Authorization: Bearer ' . $accessToken,
                 'X-CLIENT-ID: ' . $clientId,
                 'X-CLIENT-VERSION: ' . $clientVersion
             );
@@ -163,7 +158,7 @@ class PhonepeController extends Controller
                 CURLOPT_FOLLOWLOCATION => false,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => json_encode($data), // Direct JSON
+                CURLOPT_POSTFIELDS => json_encode($data),
                 CURLOPT_HTTPHEADER => $headers,
             ));
 

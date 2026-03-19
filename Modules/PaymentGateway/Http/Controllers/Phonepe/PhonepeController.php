@@ -41,21 +41,26 @@ class PhonepeController extends Controller
             }
         }
 
+        $amount = (float) str_replace(',', '', (string) $amount);
+
         $gateway = \Modules\PaymentGateway\Entities\PaymentGateway::where('gateway', 'phonepe')->first();
         if (!$gateway) {
             Log::error('PhonePe: Gateway not found in database');
             return (new PaymentsController)->payment_failed();
         }
 
-        $merchantId = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_MERCHANT_ID')->value('value');
-        $saltKey = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_SALT_KEY')->value('value');
-        $saltIndex = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_SALT_INDEX')->value('value');
+        $gatewayDetails = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)
+            ->pluck('value', 'key');
+
+        $merchantId = trim((string) $gatewayDetails->get('PHONEPE_MERCHANT_ID', ''));
+        $saltKey = trim((string) $gatewayDetails->get('PHONEPE_SALT_KEY', ''));
+        $saltIndex = trim((string) $gatewayDetails->get('PHONEPE_SALT_INDEX', ''));
 
         Log::info('PhonePe Settings Read (Direct DB): MerchantID='.$merchantId.', SaltKey=' . (empty($saltKey) ? 'EMPTY' : 'PRESENT') . ', SaltIndex='.$saltIndex);
 
-        $clientId = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_CLIENT_ID')->value('value');
-        $clientSecret = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_CLIENT_SECRET')->value('value');
-        $clientVersion = \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->where('key', 'PHONEPE_CLIENT_VERSION')->value('value') ?? '1';
+        $clientId = trim((string) $gatewayDetails->get('PHONEPE_CLIENT_ID', ''));
+        $clientSecret = trim((string) $gatewayDetails->get('PHONEPE_CLIENT_SECRET', ''));
+        $clientVersion = trim((string) $gatewayDetails->get('PHONEPE_CLIENT_VERSION', '')) ?: '1';
 
         $isSandbox = $gateway->sandbox;
 
@@ -111,45 +116,43 @@ class PhonepeController extends Controller
             ));
 
             $result = curl_exec($response);
+            $curlError = curl_error($response);
+            $httpCode = curl_getinfo($response, CURLINFO_HTTP_CODE);
             curl_close($response);
 
         } elseif ($clientId && $clientSecret) {
-            // Use V2 API if ONLY Client ID and Client Secret are provided
+            // Use V2 Standard Checkout if client credentials are available.
             Log::info('PhonePe: Using V2 API Flow (Client ID + Client Secret)');
-            $accessToken = $this->getAccessToken($clientId, $clientSecret, $clientVersion, $isSandbox);
-            if (!$accessToken) {
+            $tokenData = $this->getAccessToken($clientId, $clientSecret, $clientVersion, $isSandbox);
+            if (empty($tokenData['access_token'])) {
                 Log::error('PhonePe: Failed to get Access Token');
                 return (new PaymentsController)->payment_failed();
             }
 
-            // Prefix only for V2 payload merchantId, as seen in token response
-            $v2MerchantId = $merchantId ?: explode('_', $clientId)[0];
-            $transactionId = 'TXN' . time();
-            $callbackUrl = route('phonepe.callback');
+            $merchantOrderId = $this->buildMerchantOrderId();
+            $redirectUrl = route('phonepe.callback');
             
             $data = array(
-                'merchantId' => $v2MerchantId, 
-                'merchantTransactionId' => $transactionId,
-                'merchantUserId' => 'MUID' . auth()->id(),
                 'amount' => (int) round($amount * 100), // Amount in paise
-                'redirectUrl' => $callbackUrl,
-                'redirectMode' => 'POST',
-                'callbackUrl' => $callbackUrl,
-                'paymentInstrument' => array(
-                    'type' => 'PAY_PAGE'
+                'merchantOrderId' => $merchantOrderId,
+                'paymentFlow' => array(
+                    'type' => 'PG_CHECKOUT',
+                    'merchantUrls' => array(
+                        'redirectUrl' => $redirectUrl,
+                    ),
                 )
             );
 
             if ($isSandbox) {
-                $url = "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay";
+                $url = "https://api-preprod.phonepe.com/apis/pg-sandbox/checkout/v2/pay";
             } else {
-                $url = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
+                $url = "https://api.phonepe.com/apis/pg/checkout/v2/pay";
             }
 
-            // Minimal headers for V2 Standard Checkout
+            $authorizationType = $tokenData['token_type'] ?? 'O-Bearer';
             $headers = array(
                 'Content-Type: application/json',
-                'Authorization: Bearer ' . $accessToken
+                'Authorization: ' . $authorizationType . ' ' . $tokenData['access_token']
             );
 
             Log::info('PhonePe V2 Initiation URL: ' . $url);
@@ -171,6 +174,8 @@ class PhonepeController extends Controller
             ));
 
             $result = curl_exec($response);
+            $curlError = curl_error($response);
+            $httpCode = curl_getinfo($response, CURLINFO_HTTP_CODE);
             curl_close($response);
 
         } else {
@@ -178,10 +183,22 @@ class PhonepeController extends Controller
             return (new PaymentsController)->payment_failed();
         }
 
+        if (!empty($curlError)) {
+            Log::error('PhonePe cURL Error: ' . $curlError);
+        }
+
+        Log::info('PhonePe HTTP Status: ' . ($httpCode ?? 'N/A'));
         Log::info('PhonePe Response: ' . $result);
         $res = json_decode($result);
 
-        if (isset($res->success) && $res->success == true) {
+        if (isset($res->redirectUrl) && !empty($res->redirectUrl)) {
+            session([
+                'phonepe_merchant_order_id' => $merchantOrderId ?? null,
+                'phonepe_pg_order_id' => $res->orderId ?? null,
+            ]);
+
+            return redirect()->away($res->redirectUrl);
+        } elseif (isset($res->success) && $res->success == true) {
             return redirect()->to($res->data->instrumentResponse->redirectInfo->url);
         } else {
             Log::error('PhonePe API Error: ' . ($res->message ?? 'Unknown error'));
@@ -219,12 +236,24 @@ class PhonepeController extends Controller
         ));
 
         $result = curl_exec($response);
+        $curlError = curl_error($response);
         curl_close($response);
+
+        if (!empty($curlError)) {
+            Log::error('PhonePe Token cURL Error: ' . $curlError);
+        }
 
         Log::info('PhonePe Token Response: ' . $result);
         $res = json_decode($result);
 
-        return $res->access_token ?? null;
+        if (!isset($res->access_token)) {
+            return null;
+        }
+
+        return [
+            'access_token' => $res->access_token,
+            'token_type' => $res->token_type ?? 'O-Bearer',
+        ];
     }
 
     /**
@@ -233,12 +262,93 @@ class PhonepeController extends Controller
     public function callback(Request $request)
     {
         Log::info('PhonePe Callback received: ' . json_encode($request->all()));
+
+        $gateway = \Modules\PaymentGateway\Entities\PaymentGateway::where('gateway', 'phonepe')->first();
+        $gatewayDetails = $gateway
+            ? \Modules\PaymentGateway\Entities\PaymentGatewayDetail::where('payment_gateway_id', $gateway->id)->pluck('value', 'key')
+            : collect();
+
+        $clientId = trim((string) $gatewayDetails->get('PHONEPE_CLIENT_ID', ''));
+        $clientSecret = trim((string) $gatewayDetails->get('PHONEPE_CLIENT_SECRET', ''));
+        $clientVersion = trim((string) $gatewayDetails->get('PHONEPE_CLIENT_VERSION', '')) ?: '1';
+        $merchantOrderId = $request->input('merchantOrderId') ?: session('phonepe_merchant_order_id');
+
+        if ($merchantOrderId && $clientId && $clientSecret && $gateway) {
+            $statusResponse = $this->getOrderStatus($merchantOrderId, $clientId, $clientSecret, $clientVersion, (bool) $gateway->sandbox);
+            $statusState = strtoupper((string) data_get($statusResponse, 'state'));
+
+            Log::info('PhonePe Order Status Response: ' . json_encode($statusResponse));
+
+            if ($statusState === 'COMPLETED') {
+                session()->forget(['phonepe_merchant_order_id', 'phonepe_pg_order_id']);
+
+                $payment_details = json_encode([
+                    'callback' => $request->all(),
+                    'status' => $statusResponse,
+                ]);
+                return (new PaymentsController)->payment_success($payment_details);
+            }
+
+            Log::error('PhonePe Callback status not completed. MerchantOrderId=' . $merchantOrderId . ', State=' . ($statusState ?: 'UNKNOWN'));
+        }
+
         if ($request->code == 'PAYMENT_SUCCESS') {
+            session()->forget(['phonepe_merchant_order_id', 'phonepe_pg_order_id']);
             $payment_details = json_encode($request->all());
             return (new PaymentsController)->payment_success($payment_details);
-        } else {
-            Log::error('PhonePe Callback failed with code: ' . $request->code);
-            return (new PaymentsController)->payment_failed();
         }
+
+        Log::error('PhonePe Callback failed with code: ' . $request->code);
+        session()->forget(['phonepe_merchant_order_id', 'phonepe_pg_order_id']);
+        return (new PaymentsController)->payment_failed();
+    }
+
+    private function getOrderStatus($merchantOrderId, $clientId, $clientSecret, $clientVersion, $isSandbox)
+    {
+        $tokenData = $this->getAccessToken($clientId, $clientSecret, $clientVersion, $isSandbox);
+        if (empty($tokenData['access_token'])) {
+            Log::error('PhonePe: Failed to get access token for order status.');
+            return null;
+        }
+
+        $baseUrl = $isSandbox
+            ? 'https://api-preprod.phonepe.com/apis/pg-sandbox'
+            : 'https://api.phonepe.com/apis/pg';
+
+        $url = $baseUrl . '/checkout/v2/order/' . urlencode($merchantOrderId) . '/status?details=false';
+        $headers = [
+            'Content-Type: application/json',
+            'Authorization: ' . ($tokenData['token_type'] ?? 'O-Bearer') . ' ' . $tokenData['access_token'],
+        ];
+
+        $response = curl_init();
+        curl_setopt_array($response, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_FOLLOWLOCATION => false,
+            CURLOPT_HTTPHEADER => $headers,
+        ]);
+
+        $result = curl_exec($response);
+        $curlError = curl_error($response);
+        $httpCode = curl_getinfo($response, CURLINFO_HTTP_CODE);
+        curl_close($response);
+
+        if (!empty($curlError)) {
+            Log::error('PhonePe Order Status cURL Error: ' . $curlError);
+        }
+
+        Log::info('PhonePe Order Status HTTP Status: ' . $httpCode);
+
+        return json_decode($result, true);
+    }
+
+    private function buildMerchantOrderId()
+    {
+        $base = session('order_code') ?: ('ORDER' . time());
+        $base = preg_replace('/[^A-Za-z0-9_-]/', '', (string) $base);
+
+        return strtoupper($base . '_' . time());
     }
 }

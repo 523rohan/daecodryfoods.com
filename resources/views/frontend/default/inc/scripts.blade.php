@@ -55,14 +55,41 @@
 
     //isotop filter grid 
     function initIsotop() {
-        var $filter_grid = $(".filter_group").isotope({});
-        $(".filter-btns").on("click", "button", function() {
-            var filterValue = $(this).attr("data-filter");
-            $filter_grid.isotope({
+        $(".filter_group").each(function() {
+            var $filterGrid = $(this);
+
+            $filterGrid.isotope({
+                itemSelector: ".filter_item",
+                layoutMode: "fitRows",
+            });
+
+            $filterGrid.find("img").each(function() {
+                if (this.complete) {
+                    return;
+                }
+
+                $(this).one("load error", function() {
+                    $filterGrid.isotope("layout");
+                });
+            });
+        });
+
+        $(".filter-btns").off("click.isotopeFilter").on("click.isotopeFilter", "button", function() {
+            var $button = $(this);
+            var filterValue = $button.attr("data-filter");
+            var $section = $button.closest("section");
+            var $filterGrid = $section.find(".filter_group").first();
+
+            $filterGrid.isotope({
                 filter: filterValue,
             });
-            $(this).parent().find("button.active").removeClass("active");
-            $(this).addClass("active");
+
+            $button.parent().find("button.active").removeClass("active");
+            $button.addClass("active");
+
+            setTimeout(function() {
+                $filterGrid.isotope("layout");
+            }, 50);
         });
     }
 

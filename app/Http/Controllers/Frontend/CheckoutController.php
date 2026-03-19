@@ -85,6 +85,52 @@ class CheckoutController extends Controller
 
             DB::beginTransaction();
             if (count($carts) > 0) {
+                if ($request->boolean('same_as_shipping') || !$request->filled('billing_address_id')) {
+                    $request->merge([
+                        'billing_address_id' => $request->shipping_address_id,
+                    ]);
+                }
+
+                $shippingAddress = $user->addresses()->find($request->shipping_address_id);
+                if (!$request->filled('chosen_logistic_zone_id') && $shippingAddress) {
+                    $availableLogistics = LogisticZoneCity::where('city_id', $shippingAddress->city_id)
+                        ->distinct('logistic_id')
+                        ->get();
+
+                    if ($availableLogistics->count() === 1) {
+                        $request->merge([
+                            'chosen_logistic_zone_id' => $availableLogistics->first()->logistic_zone_id,
+                        ]);
+                    }
+                }
+
+                if (!$request->filled('payment_method')) {
+                    $paymentMethods = [];
+
+                    if (getSetting('enable_cod') == 1) {
+                        $paymentMethods[] = 'cod';
+                    }
+
+                    if (getSetting('enable_wallet_checkout') == 1) {
+                        $paymentMethods[] = 'wallet';
+                    }
+
+                    if (isModuleActive('PaymentGateway')) {
+                        $gatewayMethods = \Modules\PaymentGateway\Entities\PaymentGateway::where('is_active', 1)
+                            ->where('gateway', '!=', 'Cash_on_Delivery')
+                            ->isActive()
+                            ->pluck('gateway')
+                            ->toArray();
+
+                        $paymentMethods = array_merge($paymentMethods, $gatewayMethods);
+                    }
+
+                    if (count($paymentMethods) === 1) {
+                        $request->merge([
+                            'payment_method' => $paymentMethods[0],
+                        ]);
+                    }
+                }
 
                 # check if coupon applied -> validate coupon
                 $couponResponse = checkCouponValidityForCheckout($carts);

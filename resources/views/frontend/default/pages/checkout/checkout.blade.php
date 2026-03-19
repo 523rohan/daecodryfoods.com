@@ -25,6 +25,9 @@
     <!--checkout form start-->
     <form class="checkout-form" action="{{ route('checkout.complete') }}" method="POST">
         @csrf
+        @php
+            $singleAddress = count($addresses) === 1;
+        @endphp
         <div class="checkout-section ptb-120">
             <div class="container">
                 <div class="row g-4">
@@ -44,7 +47,7 @@
                                             <input type="radio" class="tt-custom-radio" name="shipping_address_id"
                                                 id="shipping-{{ $address->id }}" value="{{ $address->id }}"
                                                 onchange="getLogistics({{ $address->city_id }})"
-                                                @if ($address->is_default) checked @endif
+                                                @if ($address->is_default || $singleAddress) checked @endif
                                                 data-city_id="{{ $address->city_id }}">
 
                                             <label for="shipping-{{ $address->id }}"
@@ -78,14 +81,23 @@
 
                             <!-- billing address -->
                             @if (count($addresses) > 0)
-                                <h4 class="mb-3 mt-7">{{ localize('Billing Address') }}</h4>
-                                <div class="row g-4">
+                                <div class="d-flex justify-content-between align-items-center mt-7 mb-3">
+                                    <h4 class="mb-0">{{ localize('Billing Address') }}</h4>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="same_as_shipping"
+                                            id="same-as-shipping" value="1" checked>
+                                        <label class="form-check-label" for="same-as-shipping">
+                                            {{ localize('Same as shipping address') }}
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row g-4" id="billing-address-options">
                                     @foreach ($addresses as $address)
                                         <div class="col-lg-6 col-sm-6">
                                             <div class="tt-address-content">
                                                 <input type="radio" class="tt-custom-radio" name="billing_address_id"
                                                     id="billing-{{ $address->id }}" value="{{ $address->id }}"
-                                                    @if ($address->is_default) checked @endif>
+                                                    @if ($address->is_default || $singleAddress) checked @endif>
 
                                                 <label for="billing-{{ $address->id }}"
                                                     class="tt-address-info bg-white rounded p-4 position-relative">

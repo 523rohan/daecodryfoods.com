@@ -41,6 +41,9 @@
             });
         }
 
+        syncBillingAddressWithShipping();
+        initializeCheckoutDefaults();
+
     });
 
     // tooltip
@@ -435,9 +438,61 @@
                 $('.checkout-logistics').empty();
                 $('.checkout-logistics').html(data.logistics);
                 $('.checkout-sidebar').html(data.summary);
+                applyLogisticDefaults();
             }
         });
     }
+
+    function initializeCheckoutDefaults() {
+        const selectedShippingAddress = $('.checkout-form input[name=shipping_address_id]:checked');
+        if (selectedShippingAddress.length === 1) {
+            getLogistics(selectedShippingAddress.data('city_id'));
+        }
+
+        syncBillingAddressWithShipping();
+    }
+
+    function applyLogisticDefaults() {
+        const logisticOptions = $('.checkout-logistics input[name=chosen_logistic_zone_id]');
+
+        if (logisticOptions.length === 1) {
+            logisticOptions.prop('checked', true);
+        }
+
+        const checkedLogistic = $('.checkout-logistics input[name=chosen_logistic_zone_id]:checked');
+        if (checkedLogistic.length === 1) {
+            getShippingAmount(checkedLogistic.val());
+        }
+    }
+
+    function syncBillingAddressWithShipping() {
+        const sameAsShipping = $('#same-as-shipping');
+        if (!sameAsShipping.length) {
+            return;
+        }
+
+        const billingOptions = $('#billing-address-options');
+        const selectedShippingAddress = $('.checkout-form input[name=shipping_address_id]:checked');
+
+        if (sameAsShipping.is(':checked')) {
+            billingOptions.addClass('d-none');
+
+            if (selectedShippingAddress.length === 1) {
+                const shippingValue = selectedShippingAddress.val();
+                $('.checkout-form input[name=billing_address_id][value="' + shippingValue + '"]').prop('checked', true);
+            }
+        } else {
+            billingOptions.removeClass('d-none');
+        }
+    }
+
+    $(document).on('change', '#same-as-shipping', function() {
+        syncBillingAddressWithShipping();
+    });
+
+    $(document).on('change', '.checkout-form input[name=shipping_address_id]', function() {
+        syncBillingAddressWithShipping();
+    });
 
     //  get logistics to check out -- onchange
     $(document).on('change', '[name=chosen_logistic_zone_id]', function() {

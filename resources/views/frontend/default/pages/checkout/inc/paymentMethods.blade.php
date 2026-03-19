@@ -1,10 +1,18 @@
+@php
+    $gatewayCount = isset($activeGateways) ? $activeGateways->count() : 0;
+    $paymentOptionCount = (getSetting('enable_cod') == 1 ? 1 : 0) +
+        (getSetting('enable_wallet_checkout') == 1 ? 1 : 0) +
+        $gatewayCount;
+@endphp
+
 <!--COD-->
 
 @if (getSetting('enable_cod') == 1)
     <div class="checkout-radio d-flex align-items-center justify-content-between gap-3 bg-white rounded p-4 mt-3">
         <div class="radio-left d-inline-flex align-items-center">
             <div class="theme-radio">
-                <input type="radio" name="payment_method" id="cod" value="cod" required>
+                <input type="radio" name="payment_method" id="cod" value="cod" required
+                    {{ $paymentOptionCount === 1 ? 'checked' : '' }}>
                 <span class="custom-radio"></span>
             </div>
             <label for="cod" class="ms-2 h6 mb-0">{{ localize('Cash on delivery') }}
@@ -21,7 +29,8 @@
     <div class="checkout-radio d-flex align-items-center justify-content-between gap-3 bg-white rounded p-4 mt-3">
         <div class="radio-left d-inline-flex align-items-center">
             <div class="theme-radio">
-                <input type="radio" name="payment_method" id="wallet" value="wallet" required>
+                <input type="radio" name="payment_method" id="wallet" value="wallet" required
+                    {{ $paymentOptionCount === 1 ? 'checked' : '' }}>
                 <span class="custom-radio"></span>
             </div>
             <label for="wallet" class="ms-2 h6 mb-0">{{ localize('Wallet Payment') }}
@@ -41,7 +50,8 @@
         <div class="checkout-radio d-flex align-items-center justify-content-between gap-3 bg-white rounded p-4 mt-3">
             <div class="radio-left d-inline-flex align-items-center">
                 <div class="theme-radio">
-                    <input type="radio" name="payment_method" id="{{$gateway->gateway}}" value="{{$gateway->gateway}}" required>
+                    <input type="radio" name="payment_method" id="{{$gateway->gateway}}" value="{{$gateway->gateway}}" required
+                        {{ $paymentOptionCount === 1 ? 'checked' : '' }}>
                     <span class="custom-radio"></span>
                 </div>
                 <label for="{{$gateway->gateway}}" class="ms-2 h6 mb-0">{{ localize('Pay with ') }} {{ucfirst($gateway->gateway)}}</label>

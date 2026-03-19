@@ -3,7 +3,22 @@
     $paymentOptionCount = (getSetting('enable_cod') == 1 ? 1 : 0) +
         (getSetting('enable_wallet_checkout') == 1 ? 1 : 0) +
         $gatewayCount;
+    $singlePaymentMethod = null;
+
+    if ($paymentOptionCount === 1) {
+        if (getSetting('enable_cod') == 1) {
+            $singlePaymentMethod = 'cod';
+        } elseif (getSetting('enable_wallet_checkout') == 1) {
+            $singlePaymentMethod = 'wallet';
+        } elseif ($gatewayCount === 1) {
+            $singlePaymentMethod = optional($activeGateways->first())->gateway;
+        }
+    }
 @endphp
+
+@if ($paymentOptionCount === 1 && $singlePaymentMethod)
+    <input type="hidden" name="payment_method" value="{{ $singlePaymentMethod }}">
+@else
 
 <!--COD-->
 
@@ -62,3 +77,5 @@
         </div>
         @endforeach
 @endisset
+
+@endif

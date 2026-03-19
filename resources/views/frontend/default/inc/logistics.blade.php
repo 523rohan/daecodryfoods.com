@@ -1,7 +1,10 @@
-<h4 class="mt-7">{{ localize('Available Logistics') }}</h4>
 @php
     $singleLogisticOption = $logisticZoneCities->count() === 1;
 @endphp
+@if ($singleLogisticOption && $logisticZoneCities->first())
+    <input type="hidden" name="chosen_logistic_zone_id" value="{{ $logisticZoneCities->first()->logistic_zone_id }}">
+@else
+<h4 class="mt-7">{{ localize('Available Logistics') }}</h4>
 @forelse ($logisticZoneCities as $zoneCity)
     <div class="checkout-radio d-flex align-items-center justify-content-between gap-3 bg-white rounded p-4 mt-3">
         <div class="radio-left d-inline-flex align-items-center">
@@ -35,3 +38,4 @@
         </div>
     </div>
 @endforelse
+@endif

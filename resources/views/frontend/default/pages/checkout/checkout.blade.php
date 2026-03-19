@@ -27,6 +27,9 @@
         @csrf
         @php
             $singleAddress = count($addresses) === 1;
+            $paymentOptionCount = (getSetting('enable_cod') == 1 ? 1 : 0) +
+                (getSetting('enable_wallet_checkout') == 1 ? 1 : 0) +
+                (isset($activeGateways) ? $activeGateways->count() : 0);
         @endphp
         <div class="checkout-section ptb-120">
             <div class="container">
@@ -227,7 +230,9 @@
                             <!-- personal information -->
 
                             <!-- payment methods -->
-                            <h4 class="mt-7">{{ localize('Payment Method') }}</h4>
+                            @if ($paymentOptionCount > 1)
+                                <h4 class="mt-7">{{ localize('Payment Method') }}</h4>
+                            @endif
                             @include('frontend.default.pages.checkout.inc.paymentMethods')
                             <!-- payment methods -->
                         </div>

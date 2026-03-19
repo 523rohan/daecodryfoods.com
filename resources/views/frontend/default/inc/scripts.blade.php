@@ -456,7 +456,14 @@
         const logisticOptions = $('.checkout-logistics input[name=chosen_logistic_zone_id]');
 
         if (logisticOptions.length === 1) {
-            logisticOptions.prop('checked', true);
+            const logisticField = logisticOptions.first();
+
+            if (logisticField.is(':radio')) {
+                logisticField.prop('checked', true);
+            }
+
+            getShippingAmount(logisticField.val());
+            return;
         }
 
         const checkedLogistic = $('.checkout-logistics input[name=chosen_logistic_zone_id]:checked');
@@ -528,7 +535,10 @@
         }
 
         // logistic not selected
-        if ($('.checkout-form input[name=chosen_logistic_zone_id]:checked').length == 0) {
+        const logisticFields = $('.checkout-form input[name=chosen_logistic_zone_id]');
+        const hasSelectedLogistic = $('.checkout-form input[name=chosen_logistic_zone_id]:checked').length > 0;
+        const hasSingleHiddenLogistic = logisticFields.length === 1 && logisticFields.first().attr('type') === 'hidden';
+        if (!hasSelectedLogistic && !hasSingleHiddenLogistic) {
             notifyMe('error', '{{ localize('Please select logistic') }}');
             e.preventDefault();;
             return false;

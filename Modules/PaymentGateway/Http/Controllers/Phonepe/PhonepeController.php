@@ -44,7 +44,9 @@ class PhonepeController extends Controller
         $merchantId = paymentGatewayValue('phonepe', 'PHONEPE_MERCHANT_ID');
         $saltKey = paymentGatewayValue('phonepe', 'PHONEPE_SALT_KEY');
         $saltIndex = paymentGatewayValue('phonepe', 'PHONEPE_SALT_INDEX');
-        
+
+        Log::info('PhonePe Settings Read: MerchantID='.$merchantId.', SaltKey=' . (empty($saltKey) ? 'EMPTY' : 'PRESENT') . ', SaltIndex='.$saltIndex);
+
         $clientId = paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_ID');
         $clientSecret = paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_SECRET');
         $clientVersion = paymentGatewayValue('phonepe', 'PHONEPE_CLIENT_VERSION') ?? '1';

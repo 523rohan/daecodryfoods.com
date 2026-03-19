@@ -83,26 +83,8 @@ class PhonepeController extends Controller
                 )
             );
 
-            $encode = base64_encode(json_encode($data));
-            
-            // For V2, some environments still require X-VERIFY header along with Bearer token
-            $saltKey = paymentGatewayValue('phonepe', 'PHONEPE_SALT_KEY') ?: $clientSecret;
-            $saltIndex = paymentGatewayValue('phonepe', 'PHONEPE_SALT_INDEX') ?: $clientVersion;
-            
-            $headers = array(
-                'Content-Type: application/json',
-                'Authorization: O-Bearer ' . $accessToken,
-                'X-CLIENT-ID: ' . $clientId,
-                'X-CLIENT-VERSION: ' . $clientVersion
-            );
-
-            if ($saltKey && $saltIndex) {
-                $string = $encode . '/pg/v1/pay' . $saltKey;
-                $sha256 = hash('sha256', $string);
-                $finalHeader = $sha256 . '###' . $saltIndex;
-                $headers[] = 'X-VERIFY: ' . $finalHeader;
-                Log::info('PhonePe: Added X-VERIFY to V2 Flow (using ' . (paymentGatewayValue('phonepe', 'PHONEPE_SALT_KEY') ? 'config' : 'fallback') . ' salt)');
-            }
+            // In V2 Standard Checkout (Bearer mode), we send the JSON payload directly
+            // and often do NOT need the base64 'request' wrapper or X-VERIFY.
             
             if ($isSandbox) {
                 $url = "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay";
@@ -110,8 +92,15 @@ class PhonepeController extends Controller
                 $url = "https://api.phonepe.com/apis/hermes/pg/v1/pay";
             }
 
+            $headers = array(
+                'Content-Type: application/json',
+                'Authorization: O-Bearer ' . $accessToken,
+                'X-CLIENT-ID: ' . $clientId,
+                'X-CLIENT-VERSION: ' . $clientVersion
+            );
+
             Log::info('PhonePe V2 Initiation URL: ' . $url);
-            Log::info('PhonePe V2 Payload: ' . json_encode($data));
+            Log::info('PhonePe V2 Payload (Direct JSON): ' . json_encode($data));
             Log::info('PhonePe V2 Headers: ' . json_encode($headers));
 
             $response = curl_init();
@@ -124,7 +113,7 @@ class PhonepeController extends Controller
                 CURLOPT_FOLLOWLOCATION => false,
                 CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
                 CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => json_encode(['request' => $encode]),
+                CURLOPT_POSTFIELDS => json_encode($data), // DIRECT JSON
                 CURLOPT_HTTPHEADER => $headers,
             ));
 

@@ -166,7 +166,7 @@
                     @php
                         $isTaxInclusive = getSetting('taxes_inclusive') == '1';
                     @endphp
-                    <div class="total-item">{{ localize('Tax') }}{{ $isTaxInclusive ? ' (' . localize('Included') . ')' : '' }} <span class="total-value">{{ formatPrice($order->orderGroup->total_tax_amount) }}</span></div>
+                    <div class="total-item">{{ $isTaxInclusive ? '' : '(+) ' }}{{ localize('Tax') }}{{ $isTaxInclusive ? ' (' . localize('Included') . ')' : '' }} <span class="total-value">{{ formatPrice($order->orderGroup->total_tax_amount) }}</span></div>
                     @if ($order->orderGroup->is_pos_order && $order->orderGroup->total_discount_amount > 0)
                         <div class="total-item" style="color: #EF4444;">{{ localize('POS Discount') }} <span class="total-value">-{{ formatPrice($order->orderGroup->total_discount_amount) }}</span></div>
                     @endif

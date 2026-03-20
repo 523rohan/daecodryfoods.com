@@ -13,7 +13,7 @@
             $isTaxInclusive = getSetting('taxes_inclusive') == '1';
         @endphp
         <tr>
-            <td>(+) {{ localize('Tax') }}{{ $isTaxInclusive ? ' (' . localize('Included') . ')' : '' }}:</td>
+            <td>{{ $isTaxInclusive ? '' : '(+) ' }}{{ localize('Tax') }}{{ $isTaxInclusive ? ' (' . localize('Included') . ')' : '' }}:</td>
             <td class="text-end">{{ formatPrice(getTotalTax($carts)) }}</td>
         </tr>
 

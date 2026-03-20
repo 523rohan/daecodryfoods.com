@@ -16,7 +16,7 @@ class AddressController extends Controller
         return [
             'country_id' => ['required', 'integer', 'exists:countries,id'],
             'state_id' => ['required', 'integer', 'exists:states,id'],
-            'city_id' => ['required', 'integer', 'exists:cities,id'],
+            'city_id' => ['nullable', 'integer', 'exists:cities,id'],
             'pincode' => ['required', 'string', 'max:20'],
             'address' => ['required', 'string'],
             'is_default' => ['nullable', 'in:0,1'],
@@ -58,7 +58,7 @@ class AddressController extends Controller
         $address->user_id       = $userId;
         $address->country_id    = $validated['country_id'];
         $address->state_id      = $validated['state_id'];
-        $address->city_id       = $validated['city_id'];
+        $address->city_id       = $validated['city_id'] ?? null;
         $address->pincode       = $validated['pincode'];
 
         if (($validated['is_default'] ?? 0) == 1) {
@@ -104,7 +104,7 @@ class AddressController extends Controller
 
         $address->country_id    = $validated['country_id'];
         $address->state_id      = $validated['state_id'];
-        $address->city_id       = $validated['city_id'];
+        $address->city_id       = $validated['city_id'] ?? null;
         $address->pincode       = $validated['pincode'];
         if (($validated['is_default'] ?? 0) == 1) {
             $prevDefault = UserAddress::where('user_id', $userId)->where('is_default', 1)->first();

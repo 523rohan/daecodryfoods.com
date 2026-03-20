@@ -33,8 +33,8 @@
 
                                  <div class="col-sm-6">
                                      <div class="w-100 label-input-field">
-                                         <label>{{ localize('City') }}</label>
-                                         <select class="select2Address" required name="city_id">
+                                         <label>{{ localize('City') }} ({{ localize('Optional') }})</label>
+                                         <select class="select2Address" name="city_id">
                                              <option value="">{{ localize('Select City') }}</option>
 
                                          </select>

@@ -2,8 +2,10 @@
     <strong>{{ $address->address }}</strong>
 </address>
 
+@if ($address->city)
 <strong> {{ localize('City') }}: </strong>{{ $address->city->name }}
 <br>
+@endif
 
 <strong>{{ localize('State') }}: </strong>{{ $address->state->name }}
 

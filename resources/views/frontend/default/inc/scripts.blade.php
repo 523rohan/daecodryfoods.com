@@ -451,6 +451,14 @@
 
     // get logistics to check out
     function getLogistics(city_id) {
+        if (!city_id) {
+            $('.checkout-logistics').html(
+                '<div class="col-12 mt-5"><div class="tt-address-content"><div class="alert alert-warning text-center">{{ localize('City is optional for saving address, but required for delivery serviceability. Please edit the address and select a city before checkout.') }}</div></div></div>'
+            );
+            $('.checkout-sidebar').html(`@include('frontend.default.pages.partials.checkout.orderSummary', ['carts' => $carts ?? []])`);
+            return;
+        }
+
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
@@ -557,6 +565,13 @@
         // shipping address not selected
         if ($('.checkout-form input[name=shipping_address_id]:checked').length == 0) {
             notifyMe('error', '{{ localize('Please select shipping address') }}');
+            e.preventDefault();;
+            return false;
+        }
+
+        const selectedShippingAddress = $('.checkout-form input[name=shipping_address_id]:checked');
+        if (!selectedShippingAddress.data('city_id')) {
+            notifyMe('error', '{{ localize('Please edit the selected address and choose a city for delivery') }}');
             e.preventDefault();;
             return false;
         }

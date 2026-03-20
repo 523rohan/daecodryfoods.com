@@ -93,6 +93,11 @@ class CheckoutController extends Controller
                 }
 
                 $shippingAddress = $user->addresses()->find($request->shipping_address_id);
+                if (!$shippingAddress || !$shippingAddress->city_id) {
+                    flash(localize('Please update your shipping address and select a city for delivery'))->error();
+                    return back();
+                }
+
                 if (!$request->filled('chosen_logistic_zone_id') && $shippingAddress) {
                     $availableLogistics = LogisticZoneCity::where('city_id', $shippingAddress->city_id)
                         ->distinct('logistic_id')
@@ -177,6 +182,10 @@ class CheckoutController extends Controller
                     # [done->codes below] increase coupon usage counter after successful order
                 }
                 $logisticZone = LogisticZone::where('id', $request->chosen_logistic_zone_id)->first();
+                if (!$logisticZone) {
+                    flash(localize('No delivery option is available for the selected address'))->error();
+                    return back();
+                }
                 # todo::[for eCommerce] handle exceptions for standard & express
                 $orderGroup->total_shipping_cost                = $logisticZone->standard_delivery_charge;
 

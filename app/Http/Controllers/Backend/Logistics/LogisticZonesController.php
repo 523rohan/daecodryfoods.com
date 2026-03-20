@@ -7,6 +7,7 @@ use App\Models\City;
 use App\Models\Logistic;
 use App\Models\LogisticZone;
 use App\Models\LogisticZoneCity;
+use App\Models\State;
 use Illuminate\Http\Request;
 
 class LogisticZonesController extends Controller
@@ -43,7 +44,7 @@ class LogisticZonesController extends Controller
     public function create()
     {
         $logistics = Logistic::where('is_active', 1)->latest()->get();
-        $states = \App\Models\State::where('is_active', 1)->orderBy('name')->get();
+        $states = State::where('is_active', 1)->orderBy('name')->get();
         return view('backend.pages.fulfillments.logisticZones.create', compact('logistics', 'states'));
     }
 
@@ -51,15 +52,18 @@ class LogisticZonesController extends Controller
     # create zone
     public function getLogisticCities(Request $request)
     {
-        $logistic = Logistic::find($request->logistic_id);
         $html = '<option value="">' . localize("Select City") . '</option>';
 
-        if (!is_null($logistic)) {
-            $logisticCities = $logistic->cities()->pluck('city_id');
-            $cities = City::isActive()->whereNotIn('id', $logisticCities)->latest()->get();
+        $logisticId = $request->logistic_id ? (int) $request->logistic_id : null;
+        $zoneId = $request->zone_id ? (int) $request->zone_id : null;
+
+        if (!is_null($logisticId)) {
+            $cities = $this->availableCitiesQuery($logisticId, $zoneId)
+                ->orderBy('name')
+                ->get();
 
             foreach ($cities as $city) {
-                $html .= '<option value="' . $city->id . '">' . $city->name . '</option>';
+                $html .= '<option value="' . $city->id . '">' . e($city->name . ' (' . optional($city->state)->name . ')') . '</option>';
             }
         }
 
@@ -69,17 +73,57 @@ class LogisticZonesController extends Controller
     # get cities by states
     public function getStatesCities(Request $request)
     {
-        $stateIds = $request->state_ids;
-        $cities = City::whereIn('state_id', $stateIds)
-            ->where('is_active', 1)
-            ->pluck('id')
-            ->toArray();
-        return response()->json($cities);
+        $stateIds = collect($request->state_ids ?? [])
+            ->map(fn ($id) => (int) $id)
+            ->filter()
+            ->values()
+            ->all();
+
+        if (empty($stateIds)) {
+            return response()->json([
+                'ids' => [],
+                'count' => 0,
+                'options' => [],
+            ]);
+        }
+
+        $coverageMode = $request->coverage_mode === 'exclude' ? 'exclude' : 'include';
+        $logisticId = $request->logistic_id ? (int) $request->logistic_id : null;
+        $zoneId = $request->zone_id ? (int) $request->zone_id : null;
+
+        $citiesQuery = $this->availableCitiesQuery($logisticId, $zoneId);
+
+        if ($coverageMode === 'exclude') {
+            $citiesQuery->whereNotIn('state_id', $stateIds);
+        } else {
+            $citiesQuery->whereIn('state_id', $stateIds);
+        }
+
+        $cities = $citiesQuery
+            ->orderBy('name')
+            ->get(['id', 'name', 'state_id']);
+
+        return response()->json([
+            'ids' => $cities->pluck('id')->all(),
+            'count' => $cities->count(),
+            'options' => $cities->map(function ($city) {
+                return [
+                    'id' => $city->id,
+                    'text' => $city->name,
+                ];
+            })->all(),
+        ]);
     }
 
     # zone store
     public function store(Request $request)
     {
+        $cityIds = $this->resolveCityIds($request, (int) $request->logistic_id);
+        if (empty($cityIds)) {
+            flash(localize('Please select at least one state or city for this zone'))->error();
+            return back()->withInput();
+        }
+
         $logisticZone = new LogisticZone;
         $logisticZone->name = $request->name;
         $logisticZone->logistic_id = $request->logistic_id;
@@ -87,16 +131,7 @@ class LogisticZonesController extends Controller
         $logisticZone->standard_delivery_time = $request->standard_delivery_time;
         $logisticZone->save();
 
-        foreach ($request->city_ids as $city_id) {
-            LogisticZoneCity::where('logistic_id', $logisticZone->logistic_id)
-                ->where('city_id', $city_id)
-                ->delete();
-            $logisticZoneCity = new LogisticZoneCity;
-            $logisticZoneCity->logistic_id = $logisticZone->logistic_id;
-            $logisticZoneCity->logistic_zone_id = $logisticZone->id;
-            $logisticZoneCity->city_id = $city_id;
-            $logisticZoneCity->save();
-        }
+        $this->syncZoneCities($logisticZone, $cityIds);
 
         flash(localize('Zone has been inserted successfully'))->success();
         return redirect()->route('admin.logisticZones.index');
@@ -106,14 +141,24 @@ class LogisticZonesController extends Controller
     public function edit(Request $request, $id)
     {
         $logisticZone = LogisticZone::findOrFail($id);
-        $cities = City::isActive()->latest()->get();
-        return view('backend.pages.fulfillments.logisticZones.edit', compact('logisticZone', 'cities'));
+        $states = State::where('is_active', 1)->orderBy('name')->get();
+        $cities = $this->availableCitiesQuery($logisticZone->logistic_id, $logisticZone->id)
+            ->orderBy('name')
+            ->get();
+        $selectedStateIds = $logisticZone->cities()->pluck('state_id')->unique()->values()->all();
+        return view('backend.pages.fulfillments.logisticZones.edit', compact('logisticZone', 'cities', 'states', 'selectedStateIds'));
     }
 
     # update zone
     public function update(Request $request)
     {
         $logisticZone = LogisticZone::findOrFail($request->id);
+        $cityIds = $this->resolveCityIds($request, (int) $logisticZone->logistic_id, (int) $logisticZone->id);
+        if (empty($cityIds)) {
+            flash(localize('Please select at least one state or city for this zone'))->error();
+            return back()->withInput();
+        }
+
         $logisticZone->name = $request->name;
 
         $logisticZone->standard_delivery_charge = priceToUsd($request->standard_delivery_charge);
@@ -128,17 +173,7 @@ class LogisticZonesController extends Controller
 
         $logisticZone->save();
 
-        LogisticZoneCity::where('logistic_id', $logisticZone->logistic_id)
-
-            ->delete();
-        foreach ($request->city_ids as $city_id) {
-
-            $logisticZoneCity = new LogisticZoneCity;
-            $logisticZoneCity->logistic_id = $logisticZone->logistic_id;
-            $logisticZoneCity->logistic_zone_id = $logisticZone->id;
-            $logisticZoneCity->city_id = $city_id;
-            $logisticZoneCity->save();
-        }
+        $this->syncZoneCities($logisticZone, $cityIds);
 
         flash(localize('Zone has been updated successfully'))->success();
         return back();
@@ -152,5 +187,77 @@ class LogisticZonesController extends Controller
         $logisticZone->delete();
         flash(localize('Zone has been deleted successfully'))->success();
         return back();
+    }
+
+    private function resolveCityIds(Request $request, int $logisticId, ?int $zoneId = null): array
+    {
+        $selectionMode = $request->selection_mode === 'state' ? 'state' : 'city';
+
+        if ($selectionMode === 'state') {
+            $stateIds = collect($request->state_ids ?? [])
+                ->map(fn ($id) => (int) $id)
+                ->filter()
+                ->values()
+                ->all();
+
+            if (empty($stateIds)) {
+                return [];
+            }
+
+            $coverageMode = $request->coverage_mode === 'exclude' ? 'exclude' : 'include';
+            $citiesQuery = $this->availableCitiesQuery($logisticId, $zoneId);
+
+            if ($coverageMode === 'exclude') {
+                $citiesQuery->whereNotIn('state_id', $stateIds);
+            } else {
+                $citiesQuery->whereIn('state_id', $stateIds);
+            }
+
+            return $citiesQuery->pluck('id')->all();
+        }
+
+        return collect($request->city_ids ?? [])
+            ->map(fn ($id) => (int) $id)
+            ->filter()
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    private function syncZoneCities(LogisticZone $logisticZone, array $cityIds): void
+    {
+        LogisticZoneCity::where('logistic_zone_id', $logisticZone->id)->delete();
+
+        foreach ($cityIds as $cityId) {
+            LogisticZoneCity::where('logistic_id', $logisticZone->logistic_id)
+                ->where('city_id', $cityId)
+                ->where('logistic_zone_id', '!=', $logisticZone->id)
+                ->delete();
+
+            $logisticZoneCity = new LogisticZoneCity;
+            $logisticZoneCity->logistic_id = $logisticZone->logistic_id;
+            $logisticZoneCity->logistic_zone_id = $logisticZone->id;
+            $logisticZoneCity->city_id = $cityId;
+            $logisticZoneCity->save();
+        }
+    }
+
+    private function availableCitiesQuery(?int $logisticId = null, ?int $zoneId = null)
+    {
+        $query = City::isActive()->with('state');
+
+        if ($logisticId) {
+            $assignedCityIds = LogisticZoneCity::where('logistic_id', $logisticId)
+                ->when($zoneId, function ($builder) use ($zoneId) {
+                    $builder->where('logistic_zone_id', '!=', $zoneId);
+                })
+                ->pluck('city_id');
+
+            if ($assignedCityIds->isNotEmpty()) {
+                $query->whereNotIn('id', $assignedCityIds);
+            }
+        }
+
+        return $query;
     }
 }

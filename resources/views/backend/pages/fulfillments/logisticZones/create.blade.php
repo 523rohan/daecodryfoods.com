@@ -72,14 +72,32 @@
 
                                 <div class="mb-4" id="state_selection">
                                     <label class="form-label">{{ localize('States') }}</label>
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="coverage_mode"
+                                                id="coverage_include" value="include" checked>
+                                            <label class="form-check-label" for="coverage_include">
+                                                {{ localize('Use only selected states') }}
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="coverage_mode"
+                                                id="coverage_exclude" value="exclude">
+                                            <label class="form-check-label" for="coverage_exclude">
+                                                {{ localize('Use all states except selected states') }}
+                                            </label>
+                                        </div>
+                                    </div>
                                     <select class="form-control select2" name="state_ids[]" id="state_ids"
                                         data-placeholder="{{ localize('Select states') }}" multiple>
                                         @foreach($states as $state)
                                             <option value="{{ $state->id }}">{{ $state->name }}</option>
                                         @endforeach
                                     </select>
-                                    <small
-                                        class="text-muted">{{ localize('All cities in selected states will be included') }}</small>
+                                    <small class="text-muted d-block">
+                                        {{ localize('Example: choose Karnataka for an inside-Karnataka zone. For an outside-Karnataka zone, switch to "all states except selected" and select Karnataka.') }}
+                                    </small>
+                                    <small class="text-muted d-block mt-1" id="state_selection_summary"></small>
                                 </div>
 
                                 <div class="mb-4" id="city_selection" style="display:none;">
@@ -146,6 +164,45 @@
     <script>
         "use strict";
 
+        function updateStateCities() {
+            if ($('input[name="selection_mode"]:checked').val() !== 'state') {
+                return;
+            }
+
+            var stateIds = $('#state_ids').val() || [];
+            var logisticId = $('[name=logistic_id]').val();
+            var coverageMode = $('input[name="coverage_mode"]:checked').val();
+
+            if (!stateIds.length) {
+                $('#city_ids').html('');
+                $('#state_selection_summary').text('');
+                return;
+            }
+
+            $.ajax({
+                headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
+                url: "{{ route('admin.logisticZones.getStatesCities') }}",
+                type: 'POST',
+                data: {
+                    state_ids: stateIds,
+                    logistic_id: logisticId,
+                    coverage_mode: coverageMode
+                },
+                success: function (response) {
+                    $('#city_ids').html('');
+                    response.options.forEach(function (city) {
+                        $('#city_ids').append('<option value="' + city.id + '" selected>' + city.text + '</option>');
+                    });
+
+                    if (coverageMode === 'exclude') {
+                        $('#state_selection_summary').text(response.count + ' {{ localize('cities will be assigned from all other available states') }}');
+                    } else {
+                        $('#state_selection_summary').text(response.count + ' {{ localize('cities will be assigned from the selected states') }}');
+                    }
+                }
+            });
+        }
+
         // Toggle between state and city selection
         $('input[name="selection_mode"]').on('change', function () {
             if ($(this).val() === 'state') {
@@ -153,6 +210,7 @@
                 $('#city_selection').hide();
                 $('#city_ids').prop('required', false);
                 $('#state_ids').prop('required', true);
+                updateStateCities();
             } else {
                 $('#state_selection').hide();
                 $('#city_selection').show();
@@ -166,38 +224,18 @@
             }
         });
 
-        // When states are selected, auto-populate city_ids
-        $('#state_ids').on('change', function () {
-            var stateIds = $(this).val();
-            if (stateIds && stateIds.length > 0) {
-                $.ajax({
-                    headers: {'X-CSRF-TOKEN': '{{ csrf_token() }}'},
-                    url: "{{ route('admin.logisticZones.getStatesCities') }}",
-                    type: 'POST',
-                    data: {state_ids: stateIds},
-                    success: function (cityIds) {
-                        // Clear and populate city_ids with selected cities
-                        $('#city_ids').html('');
-                        cityIds.forEach(function (cityId) {
-                            $('#city_ids').append('<option value="' + cityId + '" selected></option>');
-                        });
-                    }
-                });
-            } else {
-                $('#city_ids').html('');
-            }
-        });
+        $('#state_ids').on('change', updateStateCities);
+        $('input[name="coverage_mode"]').on('change', updateStateCities);
 
-        //  get states on country change
         $(document).on('change', '[name=logistic_id]', function () {
             var logistic_id = $(this).val();
-            // Only load cities if in city mode
             if ($('input[name="selection_mode"]:checked').val() === 'city') {
                 getLogisticCities(logistic_id);
+            } else {
+                updateStateCities();
             }
         });
 
-        //  get cities
         function getLogisticCities(logistic_id) {
             $.ajax({
                 headers: {

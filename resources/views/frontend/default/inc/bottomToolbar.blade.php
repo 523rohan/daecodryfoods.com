@@ -92,10 +92,9 @@
                             ->whereIn('id', $navbar_categories_decoded)
                             ->get();
                     } else {
-                        // Fallback: Show all published top-level categories if nothing is selected or if setting is empty
+                        // Fallback: Show all top-level categories if nothing is selected or if setting is empty
                         $categories = \App\Models\Category::withoutGlobalScope(App\Scopes\ThemeCategoryScope::class)
-                            ->where('is_published', 1)
-                            ->where('parent_id', 0)
+                            ->parentCategoryOnly()
                             ->get();
                     }
                 @endphp

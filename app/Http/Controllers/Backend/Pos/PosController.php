@@ -432,7 +432,8 @@ class PosController extends Controller
             }
 
             $orderGroup->total_shipping_cost                = $request->total_shipping_cost / $currentCurrency->rate;
-            $orderGroup->grand_total_amount                 = $orderGroup->sub_total_amount + $orderGroup->total_tax_amount + $orderGroup->total_shipping_cost - $orderGroup->total_discount_amount;
+            $isTaxInclusive = getSetting('taxes_inclusive') == '1';
+            $orderGroup->grand_total_amount = $orderGroup->sub_total_amount + ($isTaxInclusive ? 0 : $orderGroup->total_tax_amount) + $orderGroup->total_shipping_cost - $orderGroup->total_discount_amount;
             $orderGroup->save();
 
             # order

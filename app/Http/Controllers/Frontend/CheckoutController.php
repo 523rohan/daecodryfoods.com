@@ -200,7 +200,8 @@ class CheckoutController extends Controller
 
                 $orderGroup->total_tips_amount                  = $request->tips / $currentCurrency->rate; // convert to base price;
 
-                $orderGroup->grand_total_amount                 = $orderGroup->sub_total_amount + $orderGroup->total_tax_amount + $orderGroup->total_shipping_cost + $orderGroup->total_tips_amount - $orderGroup->total_coupon_discount_amount;
+                $isTaxInclusive = getSetting('taxes_inclusive') == '1';
+                $orderGroup->grand_total_amount = $orderGroup->sub_total_amount + ($isTaxInclusive ? 0 : $orderGroup->total_tax_amount) + $orderGroup->total_shipping_cost + $orderGroup->total_tips_amount - $orderGroup->total_coupon_discount_amount;
 
 
                 if ($request->payment_method == "wallet") {

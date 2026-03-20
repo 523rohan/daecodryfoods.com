@@ -9,8 +9,11 @@
             <td class="text-end">{{ formatPrice(getSubTotal($carts, false, '', false)) }}</td>
         </tr>
 
+        @php
+            $isTaxInclusive = getSetting('taxes_inclusive') == '1';
+        @endphp
         <tr>
-            <td>(+) {{ localize('Tax') }}:</td>
+            <td>(+) {{ localize('Tax') }}{{ $isTaxInclusive ? ' (' . localize('Included') . ')' : '' }}:</td>
             <td class="text-end">{{ formatPrice(getTotalTax($carts)) }}</td>
         </tr>
 
@@ -38,7 +41,7 @@
             }
             $total =
                 getSubTotal($carts, false, '', false) +
-                getTotalTax($carts) +
+                ($isTaxInclusive ? 0 : getTotalTax($carts)) +
                 $shipping -
                 getCouponDiscount(getSubTotal($carts, false), getCoupon());
         @endphp

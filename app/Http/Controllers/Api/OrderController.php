@@ -21,6 +21,7 @@ use App\Models\OrderItem;
 use App\Models\RewardPoint;
 use App\Models\ScheduledDeliveryTimeList;
 use App\Notifications\OrderPlacedNotification;
+use App\Notifications\AdminOrderPlacedNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
@@ -374,7 +375,7 @@ class OrderController extends Controller
                 foreach ($emails as $email) {
                     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                         try {
-                            Notification::route('mail', $email)->notify(new OrderPlacedNotification($orderGroup->order));
+                            Notification::route('mail', $email)->notify(new AdminOrderPlacedNotification($orderGroup->order));
                         } catch (\Exception $e) {
                             Log::error('API Admin order notification email failed for: ' . $email, [
                                 'order_code' => $orderGroup->order_code,

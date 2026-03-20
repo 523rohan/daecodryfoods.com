@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class OrderPlacedNotification extends Notification implements ShouldQueue
+class AdminOrderPlacedNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -27,12 +27,11 @@ class OrderPlacedNotification extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->view('backend.pages.orders.invoice', [
+            ->view('backend.pages.orders.admin_invoice', [
                 'order' => $this->order,
-                'font_family' => env('INVOICE_FONT') ?: 'THSarabunNew.ttf',
             ])
             ->from(config('mail.from.address'), config('mail.from.name'))
-            ->subject(localize('Order Placed') . ' - #' . getSetting('order_code_prefix') . $this->order->orderGroup->order_code);
+            ->subject(localize('New Order Received') . ' - #' . getSetting('order_code_prefix') . $this->order->orderGroup->order_code);
     }
 
     public function toArray($notifiable)

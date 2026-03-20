@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Notification;
 use Throwable;
 
 use App\Notifications\OrderPlacedNotification;
+use App\Notifications\AdminOrderPlacedNotification;
 use App\Http\Controllers\Backend\Payments\PaymentsController;
 use Modules\PaymentGateway\Http\Services\PaymentGatewayService;
 
@@ -427,7 +428,7 @@ class CheckoutController extends Controller
                 foreach ($emails as $email) {
                     if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
                         try {
-                            Notification::route('mail', $email)->notify(new OrderPlacedNotification($orderGroup->order));
+                            Notification::route('mail', $email)->notify(new AdminOrderPlacedNotification($orderGroup->order));
                         } catch (\Exception $e) {
                             Log::error('Admin order notification email failed for: ' . $email, [
                                 'order_code' => $orderGroup->order_code,

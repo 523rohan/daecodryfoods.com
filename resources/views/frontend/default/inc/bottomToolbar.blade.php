@@ -84,8 +84,19 @@
             <ul>
                 @php
                     $categories = [];
-                    if (getSetting('navbar_categories') != null) {
-                        $categories = \App\Models\Category::whereIn('id', json_decode(getSetting('navbar_categories')))->get();
+                    $navbar_categories_setting = getSetting('navbar_categories');
+                    $navbar_categories_decoded = $navbar_categories_setting ? json_decode($navbar_categories_setting) : [];
+
+                    if (!empty($navbar_categories_decoded)) {
+                        $categories = \App\Models\Category::withoutGlobalScope(App\Scopes\ThemeCategoryScope::class)
+                            ->whereIn('id', $navbar_categories_decoded)
+                            ->get();
+                    } else {
+                        // Fallback: Show all published top-level categories if nothing is selected or if setting is empty
+                        $categories = \App\Models\Category::withoutGlobalScope(App\Scopes\ThemeCategoryScope::class)
+                            ->where('is_published', 1)
+                            ->where('parent_id', 0)
+                            ->get();
                     }
                 @endphp
                 @foreach ($categories as $navbarCat)

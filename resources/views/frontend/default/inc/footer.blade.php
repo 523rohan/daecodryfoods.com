@@ -109,7 +109,7 @@
             <div class="row align-items-center g-3">
                 <div class="col-lg-4">
                     <div class="copyright-text text-light">
-                        {!! getSetting('copyright_text') !!} | Owner: Manoj D A
+                        {!! getSetting('copyright_text') !!}
                     </div>
                 </div>
                 <div class="col-lg-4 d-none d-lg-block">

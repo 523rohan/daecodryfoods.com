@@ -130,7 +130,8 @@ class PhonepeController extends Controller
             }
 
             $merchantOrderId = $this->buildMerchantOrderId();
-            $redirectUrl = route('phonepe.callback');
+            // Pass merchantOrderId in the URL to ensure it's available in the callback even if session is lost
+            $redirectUrl = route('phonepe.callback', ['merchantOrderId' => $merchantOrderId]);
             
             $data = array(
                 'amount' => (int) round($amount * 100), // Amount in paise
@@ -261,7 +262,15 @@ class PhonepeController extends Controller
      */
     public function callback(Request $request)
     {
-        Log::info('PhonePe Callback received: ' . json_encode($request->all()));
+        Log::info('PhonePe Callback URL: ' . $request->fullUrl());
+        Log::info('PhonePe Callback Method: ' . $request->method());
+        Log::info('PhonePe Callback Params: ' . json_encode($request->all()));
+        
+        // Also log raw body in case PhonePe sends JSON without correct Content-Type
+        $rawBody = file_get_contents('php://input');
+        if ($rawBody) {
+            Log::info('PhonePe Callback Raw Body: ' . $rawBody);
+        }
 
         $gateway = \Modules\PaymentGateway\Entities\PaymentGateway::where('gateway', 'phonepe')->first();
         $gatewayDetails = $gateway

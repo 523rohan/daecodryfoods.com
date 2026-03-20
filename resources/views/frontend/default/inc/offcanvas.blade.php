@@ -58,12 +58,14 @@
                     <li>
                         <a href="{{ route('products.index') }}">{{ localize('Products') }}</a>
                     </li>
+                    {{--
                     <li>
                         <a href="{{ route('home.campaigns') }}">{{ localize('Campaigns') }}</a>
                     </li>
                     <li>
                         <a href="{{ route('home.coupons') }}">{{ localize('Coupons') }}</a>
                     </li>
+                    --}}
                 @endif
 
 

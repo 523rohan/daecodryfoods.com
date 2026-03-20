@@ -120,7 +120,8 @@
                         @else
                             {{ optional($shippingAddress)->address }},
                             {{ optional(optional($shippingAddress)->city)->name }},
-                            {{ optional(optional($shippingAddress)->state)->name }},<br>
+                            {{ optional(optional($shippingAddress)->state)->name }},
+                            {{ optional($shippingAddress)->pincode }},<br>
                             {{ optional(optional($shippingAddress)->country)->name }}<br>
                         @endif
                         @if ($order->orderGroup->alternative_phone_no)
@@ -163,7 +164,8 @@
                         <p style="font-size: 12px; color: #5b5b5b; line-height: 24px; vertical-align: top;">
                             {{ optional($billingAddress)->address }},
                             {{ optional(optional($billingAddress)->city)->name }},
-                            {{ optional(optional($billingAddress)->state)->name }},<br>
+                            {{ optional(optional($billingAddress)->state)->name }},
+                            {{ optional($billingAddress)->pincode }},<br>
                             {{ optional(optional($billingAddress)->country)->name }}
                         </p>
                     </td>

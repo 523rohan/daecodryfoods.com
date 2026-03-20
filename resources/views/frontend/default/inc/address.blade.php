@@ -8,4 +8,7 @@
 <strong>{{ localize('State') }}: </strong>{{ $address->state->name }}
 
 <br>
+<strong>{{ localize('Pincode') }}: </strong> {{ $address->pincode }}
+
+<br>
 <strong>{{ localize('Country') }}: </strong> {{ $address->country->name }}

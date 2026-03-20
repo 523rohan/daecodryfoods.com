@@ -49,11 +49,18 @@
                                          </select>
                                      </div>
                                  </div>
+                                 <div class="col-sm-6">
+                                     <div class="w-100 label-input-field">
+                                         <label>{{ localize('Pincode') }}</label>
+                                         <input type="text" name="pincode" value="{{ old('pincode') }}"
+                                             placeholder="{{ localize('Enter pincode') }}" required>
+                                     </div>
+                                 </div>
 
                                  <div class="col-sm-12">
                                      <div class="label-input-field">
                                          <label>{{ localize('Address') }}</label>
-                                         <textarea rows="4" placeholder="{{ localize('2/5 Elephant Road, New Town') }}" name="address" required></textarea>
+                                         <textarea rows="4" placeholder="{{ localize('House no, street, area, landmark') }}" name="address" required>{{ old('address') }}</textarea>
                                      </div>
                                  </div>
 

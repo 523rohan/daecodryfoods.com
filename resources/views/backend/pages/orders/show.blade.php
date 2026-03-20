@@ -167,6 +167,7 @@
                                                     {{ optional($shippingAddress)->address }},
                                                     {{ optional(optional($shippingAddress)->city)->name }},
                                                     {{ optional(optional($shippingAddress)->state)->name }},
+                                                    {{ optional($shippingAddress)->pincode }},
                                                     {{ optional(optional($shippingAddress)->country)->name }}
                                                 @endif
                                             </p>
@@ -182,6 +183,7 @@
                                                     {{ optional($billingAddress)->address }},
                                                     {{ optional(optional($billingAddress)->city)->name }},
                                                     {{ optional(optional($billingAddress)->state)->name }},
+                                                    {{ optional($billingAddress)->pincode }},
                                                     {{ optional(optional($billingAddress)->country)->name }}
                                                 </p>
                                             </div>

@@ -23,6 +23,7 @@ class AddressResource extends JsonResource
                 "state_name"=> $this->state->name,
                 "city_id"=>(int)$this->city_id,
                 "city_name"=>$this->city->name,
+                "pincode"=> $this->pincode,
                 "address"=> $this->address,
                 "is_default"=>(int) $this->is_default,
         ];

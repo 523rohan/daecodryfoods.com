@@ -11,6 +11,18 @@ use Illuminate\Http\Request;
 
 class AddressController extends Controller
 {
+    private function addressRules(): array
+    {
+        return [
+            'country_id' => ['required', 'integer', 'exists:countries,id'],
+            'state_id' => ['required', 'integer', 'exists:states,id'],
+            'city_id' => ['required', 'integer', 'exists:cities,id'],
+            'pincode' => ['required', 'string', 'max:20'],
+            'address' => ['required', 'string'],
+            'is_default' => ['nullable', 'in:0,1'],
+        ];
+    }
+
     # get states based on country
     public function getStates(Request $request)
     {
@@ -39,22 +51,25 @@ class AddressController extends Controller
     # store new address
     public function store(Request $request)
     {
+        $validated = $request->validate($this->addressRules());
+
         $userId = auth()->user()->id;
         $address                = new UserAddress;
         $address->user_id       = $userId;
-        $address->country_id    = $request->country_id;
-        $address->state_id      = $request->state_id;
-        $address->city_id       = $request->city_id;
+        $address->country_id    = $validated['country_id'];
+        $address->state_id      = $validated['state_id'];
+        $address->city_id       = $validated['city_id'];
+        $address->pincode       = $validated['pincode'];
 
-        if ($request->is_default == 1) {
+        if (($validated['is_default'] ?? 0) == 1) {
             $prevDefault = UserAddress::where('user_id', $userId)->where('is_default', 1)->first();
             if (!is_null($prevDefault)) {
                 $prevDefault->is_default = 0;
                 $prevDefault->save();
             }
         }
-        $address->is_default    = $request->is_default;
-        $address->address       = $request->address;
+        $address->is_default    = $validated['is_default'] ?? 0;
+        $address->address       = $validated['address'];
         $address->save();
         flash(localize('Address has been inserted successfully'))->success();
         return back();
@@ -80,21 +95,26 @@ class AddressController extends Controller
     # update address
     public function update(Request $request)
     {
-        $userId   = auth()->user()->id;
-        $address  = UserAddress::where('user_id', $userId)->where('id', $request->id)->first();
+        $validated = $request->validate(array_merge($this->addressRules(), [
+            'id' => ['required', 'integer'],
+        ]));
 
-        $address->country_id    = $request->country_id;
-        $address->state_id      = $request->state_id;
-        $address->city_id       = $request->city_id;
-        if ($request->is_default == 1) {
+        $userId   = auth()->user()->id;
+        $address  = UserAddress::where('user_id', $userId)->where('id', $validated['id'])->first();
+
+        $address->country_id    = $validated['country_id'];
+        $address->state_id      = $validated['state_id'];
+        $address->city_id       = $validated['city_id'];
+        $address->pincode       = $validated['pincode'];
+        if (($validated['is_default'] ?? 0) == 1) {
             $prevDefault = UserAddress::where('user_id', $userId)->where('is_default', 1)->first();
             if (!is_null($prevDefault)) {
                 $prevDefault->is_default = 0;
                 $prevDefault->save();
             }
         }
-        $address->is_default    = $request->is_default;
-        $address->address       = $request->address;
+        $address->is_default    = $validated['is_default'] ?? 0;
+        $address->address       = $validated['address'];
         $address->save();
         flash(localize('Address has been inserted successfully'))->success();
         return back();

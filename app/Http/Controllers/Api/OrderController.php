@@ -364,7 +364,26 @@ class OrderController extends Controller
         }
 
         try {
+            // Notify Customer
             Notification::send($user, new OrderPlacedNotification($orderGroup->order));
+
+            // Notify Admin(s)
+            $adminEmails = getSetting('admin_order_notification_email');
+            if ($adminEmails) {
+                $emails = array_map('trim', explode(',', $adminEmails));
+                foreach ($emails as $email) {
+                    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        try {
+                            Notification::route('mail', $email)->notify(new OrderPlacedNotification($orderGroup->order));
+                        } catch (\Exception $e) {
+                            Log::error('API Admin order notification email failed for: ' . $email, [
+                                'order_code' => $orderGroup->order_code,
+                                'message' => $e->getMessage(),
+                            ]);
+                        }
+                    }
+                }
+            }
         } catch (Throwable $e) {
             Log::error('API order confirmation email failed.', [
                 'order_code' => $orderGroup->order_code,

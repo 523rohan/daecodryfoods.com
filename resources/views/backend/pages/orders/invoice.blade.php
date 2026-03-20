@@ -1,442 +1,180 @@
-<html>
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ localize('INVOICE') }}</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />                
-    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ localize('Order Confirmation') }}</title>
     <style type="text/css">
-        @font-face {
-            font-family: 'THSarabunNew';
-            font-style: normal;
-            font-weight: normal;
-            src: url("{{ asset('fonts/'.$font_family) }}") format('truetype');
-        }
-
-        body {
-            font-family: 'THSarabunNew', sans-serif;                                                
-        }
-
-        * {
-            box-sizing: border-box;
-
-        }
-
-        pre,
-        p {
-            padding: 0;
-            margin: 0;
-
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            padding: 1px;
-
-        }
-
-        td,
-        th {
-            text-align: left;
-
-        }
-
-        .visibleMobile {
-            display: none;
-
-        }
-
-        .hiddenMobile {
-            display: block;
-
+        /* RESET STYLES */
+        body { margin: 0; padding: 0; min-width: 100%; width: 100% !important; height: 100% !important; background-color: #F8FAFC; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+        table { border-spacing: 0; border-collapse: collapse; width: 100%; }
+        td { padding: 0; vertical-align: top; }
+        img { border: 0; line-height: 100%; outline: none; text-decoration: none; display: block; }
+        p, h1, h2, h3 { margin: 0; }
+        
+        /* LAYOUT */
+        .wrapper { width: 100%; table-layout: fixed; background-color: #F8FAFC; padding: 40px 0; }
+        .container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
+        
+        /* HEADER */
+        .header { padding: 40px 40px 30px; text-align: center; border-bottom: 1px solid #F1F5F9; }
+        .logo { margin: 0 auto 20px; max-height: 48px; width: auto; }
+        .header-title { font-size: 24px; font-weight: 800; color: #1E293B; letter-spacing: -0.02em; }
+        .order-meta { font-size: 14px; color: #64748B; margin-top: 8px; }
+        
+        /* CONTENT */
+        .content { padding: 40px; }
+        
+        /* INFO GRID */
+        .section-title { font-size: 12px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+        .info-card { background-color: #F8FAFC; border-radius: 8px; padding: 20px; margin-bottom: 30px; }
+        .info-text { font-size: 14px; color: #334155; line-height: 1.6; }
+        .info-name { font-weight: 700; color: #1E293B; margin-bottom: 4px; display: block; }
+        
+        /* ITEMS TABLE */
+        .items-header { border-bottom: 2px solid #F1F5F9; padding-bottom: 12px; margin-bottom: 16px; }
+        .item-row { border-bottom: 1px solid #F1F5F9; padding: 16px 0; }
+        .item-name { font-size: 15px; font-weight: 600; color: #1E293B; margin-bottom: 4px; }
+        .item-variation { font-size: 13px; color: #64748B; }
+        .item-price { font-size: 14px; color: #475569; font-weight: 500; }
+        
+        /* TOTALS */
+        .totals-container { margin-top: 30px; padding-top: 20px; border-top: 2px solid #F1F5F9; }
+        .total-item { margin-bottom: 8px; font-size: 14px; color: #64748B; }
+        .total-value { font-weight: 600; color: #334155; float: right; }
+        .grand-total { margin-top: 16px; padding-top: 16px; border-top: 1px solid #F1F5F9; font-size: 18px; font-weight: 800; color: #1E293B; }
+        .grand-total-value { float: right; color: #10B981; } /* Premium Green for total */
+        
+        /* FOOTER */
+        .footer { padding: 40px; text-align: center; background-color: #F1F5F9; }
+        .footer-text { font-size: 13px; color: #64748B; line-height: 1.6; }
+        
+        /* RESPONSIVE */
+        @media screen and (max-width: 600px) {
+            .wrapper { padding: 20px 10px; }
+            .content { padding: 25px; }
+            .header { padding: 30px 25px 20px; }
+            .info-col { width: 100% !important; display: block; margin-bottom: 20px; }
         }
     </style>
 </head>
-
 <body>
-
-    
-    {{-- header start --}}
-    <table style="width: 100%; table-layout: fixed">      
-        <tr>
-            <td colspan="4"
-                style="border-right: 1px solid #e4e4e4; width: 300px; color: #323232; line-height: 1.5; vertical-align: top;">
-                
-                <p style="font-size: 15px; color: #5b5b5b; font-weight: bold; line-height: 1; vertical-align: top; ">
-                    {{ localize('INVOICE') }}</p>
-                <br>
-                <p style="font-size: 12px; color: #5b5b5b; line-height: 24px; vertical-align: top;">
-                    {{ localize('Invoice No') }} : {{ getSetting('order_code_prefix') }}
-                    {{ $order->orderGroup->order_code }}<br>
-                    {{ localize('Order Date') }} : {{ date('d M, Y', strtotime($order->created_at)) }}
-                </p>
-
-                @if ($order->location_id != null)
-                    <p>
-                        {{ optional($order->location)->name }}
-                    </p>
+    <div class="wrapper">
+        <div class="container">
+            <!-- HEADER -->
+            <div class="header">
+                @php
+                    $logo = getSetting('admin_panel_logo');
+                @endphp
+                @if($logo)
+                    <img src="{{ uploadedAsset($logo) }}" alt="{{ getSetting('system_title') }}" class="logo" />
+                @else
+                    <h1 style="color: #10B981; margin-bottom: 10px;">{{ getSetting('system_title') }}</h1>
                 @endif
-            </td>
-            <td colspan="4" align="right"
-                style="width: 300px; text-align: right; padding-left: 50px; line-height: 1.5; color: #323232;">
-                <img src="{{ uploadedAsset(getSetting('favicon')) }}" alt="logo" border="0" />
-                <p style="font-size: 12px;font-weight: bold; color: #5b5b5b; line-height: 1; vertical-align: top; ">
-                    {{ getSetting('system_title') }}</p>
-                <p style="font-size: 12px; color: #5b5b5b; line-height: 24px; vertical-align: top;">
-                    {{ getSetting('topbar_location') }}<br>
-                    {{ localize('Phone') }}: {{ getSetting('navbar_contact_number') }}
-                </p>
-            </td>
-        </tr>
-        <tr class="visibleMobile">
-            <td height="10"></td>
-        </tr>
-        <tr>
-            <td colspan="10" style="border-bottom:1px solid #e4e4e4"></td>
-        </tr>
-    </table>
-    {{-- header end --}}
+                <h2 class="header-title">{{ localize('Order Confirmed!') }}</h2>
+                <p class="order-meta">{{ localize('Order ID') }}: #{{ getSetting('order_code_prefix') }}{{ $order->orderGroup->order_code }} &bull; {{ date('M d, Y', strtotime($order->created_at)) }}</p>
+            </div>
 
-    {{-- billing and shipping start --}}
-    <table class="table" style="width: 100%;">
-        <tbody style="display: table-header-group">
-            <tr class="visibleMobile">
-                <td height="20"></td>
-            </tr>
-            <tr style=" margin: 0;">
-                <td colspan="4" style="width: 300px;">
-                    <p
-                        style="font-size: 12px; font-weight: bold; color: #5b5b5b; line-height: 1; vertical-align: top; ">
-                        {{ localize('SHIPPING INFORMATION') }}</p>
-
-                    @php
-                        $shippingAddress = $order->orderGroup->shippingAddress;
-                    @endphp
-                    <p style="font-size: 12px; color: #5b5b5b; line-height: 24px; vertical-align: top;">
-
-                        @if ($order->orderGroup->is_pos_order)
-                            {{ $order->orderGroup->pos_order_address }}
-                        @else
-                            {{ optional($shippingAddress)->address }},
-                            {{ optional(optional($shippingAddress)->city)->name }},
-                            {{ optional(optional($shippingAddress)->state)->name }},
-                            {{ optional($shippingAddress)->pincode }},<br>
-                            {{ optional(optional($shippingAddress)->country)->name }}<br>
-                        @endif
-                        @if ($order->orderGroup->alternative_phone_no)
-                            <br>
-                            {{ localize('Alternative Phone') }}: {{ $order->orderGroup->alternative_phone_no }}
-                        @endif
-                        <br>
-                        {{ localize('Logistic') }}: {{ $order->logistic_name }}
-                        <br>
-                        @php
-                            $deliveryInfo = json_decode($order->scheduled_delivery_info);
-                        @endphp
-
-                    <p class="mb-0">{{ localize('Delivery Type') }}:
-                        <span
-                            class="badge bg-primary">{{ Str::title(Str::replace('_', ' ', $order->shipping_delivery_type)) }}</span>
-
-
-                    </p>
-
-                    @if ($order->shipping_delivery_type == getScheduledDeliveryType())
-                        <p class="mb-0">
-                            {{ localize('Delivery Time') }}:
-                            {{ date('d F', $deliveryInfo->scheduled_date) }},
-                            {{ $deliveryInfo->timeline }}</p>
-                    @endif
-                    </p>
-
-                </td>
-
-
-                @if (!$order->orderGroup->is_pos_order)
-                    <td colspan="4" style="width: 300px;">
-                        <p
-                            style="font-size: 11px; font-weight: bold; color: #5b5b5b; line-height: 1; vertical-align: top; ">
-                            {{ localize('BILLING INFORMATION') }}</p>
-                        @php
-                            $billingAddress = $order->orderGroup->billingAddress;
-                        @endphp
-                        <p style="font-size: 12px; color: #5b5b5b; line-height: 24px; vertical-align: top;">
-                            {{ optional($billingAddress)->address }},
-                            {{ optional(optional($billingAddress)->city)->name }},
-                            {{ optional(optional($billingAddress)->state)->name }},
-                            {{ optional($billingAddress)->pincode }},<br>
-                            {{ optional(optional($billingAddress)->country)->name }}
-                        </p>
-                    </td>
-                @endif
-
-
-            </tr>
-
-        </tbody>
-    </table>
-    {{-- billing and shipping end --}}
-
-    {{-- item details start --}}
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="fullTable"
-        bgcolor="#ffffff">
-        <tbody>
-            <tr>
-                <td>
-                    <table width="600" border="0" cellpadding="0" cellspacing="0" align="center"
-                        class="fullTable" bgcolor="#ffffff">
-                        <tbody>
-                            <tr class="visibleMobile">
-                                <td height="40"></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center"
-                                        class="fullPadding">
-                                        <tbody>
-                                            <tr>
-                                                <th style="font-size: 12px; color: #000000; font-weight: normal;
-                  line-height: 1; vertical-align: top; padding: 0 10px 7px 0;"
-                                                    width="52%" align="left">
-                                                    {{ localize('Item') }}
-                                                </th>
-                                                <th style="font-size: 12px; color: #000000; font-weight: normal;
-                  line-height: 1; vertical-align: top; padding: 0 0 7px;"
-                                                    align="left">
-                                                    {{ localize('Price') }}
-                                                </th>
-                                                <th style="font-size: 12px; color: #000000; font-weight: normal;
-                  line-height: 1; vertical-align: top; padding: 0 0 7px; text-align: center; "
-                                                    align="center">
-                                                    {{ localize('Qty') }}
-                                                </th>
-                                                <th style="font-size: 12px; color: #000000; font-weight:
-                  normal; line-height: 1; vertical-align: top; padding: 0 0 7px; text-align: right; "
-                                                    align="right">
-                                                    {{ localize('Subtotal') }}
-                                                </th>
-                                            </tr>
-                                            <tr>
-                                                <td height="1" style="background: #e4e4e4;" colspan="4"></td>
-                                            </tr>
-
-                                            @foreach ($order->orderItems as $key => $item)
-                                                @php
-                                                    $product = $item->product_variation->productWithTrashed;
-                                                @endphp
-                                                <tr>
-                                                    <td style="font-size: 12px; color: #5b5b5b;  line-height: 18px;  vertical-align: top; padding:10px 0;"
-                                                        class="article">
-                                                        <div>{{ $product->collectLocalization('name') }}</div>
-                                                        <div class="text-muted">
-                                                            @foreach (generateVariationOptions($item->product_variation->combinations) as $variation)
-                                                                <span class="fs-xs">
-                                                                    {{ $variation['name'] }}:
-                                                                    @foreach ($variation['values'] as $value)
-                                                                        {{ $value['name'] }}
-                                                                    @endforeach
-                                                                    @if (!$loop->last)
-                                                                        ,
-                                                                    @endif
-                                                                </span>
-                                                            @endforeach
-                                                        </div>
-                                                    </td>
-                                                    <td
-                                                        style="font-size: 12px; color: #646a6e;  line-height:
-              18px;  vertical-align: top; padding:10px 0;">
-                                                        {{ formatPrice($item->unit_price) }}</td>
-                                                    <td style="font-size: 12px; color: #646a6e;  line-height:
-              18px;  vertical-align: top; padding:10px 0; text-align: center;"
-                                                        align="center">{{ $item->qty }}</td>
-                                                    <td style="font-size: 12px; color: #1e2b33;  line-height:
-              18px;  vertical-align: top; padding:10px 0; text-transform: capitalize !important;"
-                                                        align="right">
-                                                        @if ($item->refundRequest && $item->refundRequest->refund_status == 'refunded')
-                                                            ({{ $item->refundRequest->refund_status }})
-                                                        @endif
-                                                        <strong>{{ formatPrice($item->total_price) }}
-                                                        </strong>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td height="1" style="background: #e4e4e4;" colspan="4"></td>
-                                                </tr>
-                                            @endforeach
-
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td height="20"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    {{-- item details end --}}
-
-    {{-- item total start --}}
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="fullTable"
-        bgcolor="#ffffff">
-        <tbody>
-            <tr>
-                <td>
-                    <table width="600" border="0" cellpadding="0" cellspacing="0" align="center"
-                        class="fullTable" bgcolor="#ffffff">
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <!-- Table Total -->
-                                    <table width="100%" border="0" cellpadding="0" cellspacing="0"
-                                        align="center" class="fullPadding">
-                                        <tbody>
-                                            <tr>
-                                                <td
-                                                    style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                    {{ localize('Subtotal') }}
-                                                </td>
-                                                <td style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; white-space:nowrap;"
-                                                    width="80">
-                                                    {{ formatPrice($order->orderGroup->sub_total_amount) }}
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td
-                                                    style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                    {{ localize('Tips') }}
-                                                </td>
-                                                <td style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; white-space:nowrap;"
-                                                    width="80">
-                                                    {{ formatPrice($order->orderGroup->total_tips_amount) }}
-                                                </td>
-                                            </tr>
-
-                                            <tr>
-                                                <td
-                                                    style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                    {{ localize('Shipping Cost') }}
-                                                </td>
-                                                <td
-                                                    style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                    {{ formatPrice($order->orderGroup->total_shipping_cost) }}
-                                                </td>
-                                            </tr>
-
-                                            @if ($order->orderGroup->total_coupon_discount_amount > 0)
-                                                <tr>
-                                                    <td
-                                                        style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                        {{ localize('Coupon Discount') }}
-                                                    </td>
-                                                    <td
-                                                        style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                        {{ formatPrice($order->orderGroup->total_coupon_discount_amount) }}
-                                                    </td>
-                                                </tr>
-                                            @endif
-
-                                            <tr>
-                                                <td
-                                                    style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                    {{ localize('Tax') }}
-                                                </td>
-                                                <td
-                                                    style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                    {{ formatPrice($order->orderGroup->total_tax_amount) }}
-                                                </td>
-                                            </tr>
-
-                                            @if ($order->orderGroup->is_pos_order)
-                                                <tr>
-                                                    <td
-                                                        style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                        {{ localize('Discount') }}
-                                                    </td>
-                                                    <td
-                                                        style="font-size: 12px; color: #646a6e; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                        {{ formatPrice($order->orderGroup->total_discount_amount) }}
-                                                    </td>
-                                                </tr>
-                                            @endif
-                                            <tr>
-                                                <td
-                                                    style="font-size: 12px; color: #000; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                    <strong>{{ localize('Grand Total') }}</strong>
-                                                </td>
-                                                <td
-                                                    style="font-size: 12px; color: #000; line-height: 22px; vertical-align: top; text-align:right; ">
-                                                    <strong>{{ formatPrice($order->orderGroup->grand_total_amount) }}</strong>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <!-- /Table Total -->
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    {{-- item total end --}}
-
-    {{-- footer start --}}
-    <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center" class="fullTable"
-        bgcolor="#ffffff">
-
-        <tr>
-            <td>
-                <table width="600" border="0" cellpadding="0" cellspacing="0" align="center"
-                    class="fullTable" bgcolor="#ffffff" style="border-radius: 0 0 10px 10px;">
+            <!-- CONTENT -->
+            <div class="content">
+                <!-- SHIPPING & BILLING -->
+                <table width="100%">
                     <tr>
-                    <tr class="hiddenMobile">
-                        <td height="30"></td>
+                        <td class="info-col" width="50%" style="padding-right: 15px;">
+                            <div class="section-title">{{ localize('Shipping To') }}</div>
+                            <div class="info-card">
+                                <span class="info-name">{{ optional($order->user)->name }}</span>
+                                <div class="info-text">
+                                    @if ($order->orderGroup->is_pos_order)
+                                        {{ $order->orderGroup->pos_order_address }}
+                                    @else
+                                        @php $shippingAddress = $order->orderGroup->shippingAddress; @endphp
+                                        {{ optional($shippingAddress)->address }}<br>
+                                        {{ optional(optional($shippingAddress)->city)->name }}, {{ optional(optional($shippingAddress)->state)->name }}<br>
+                                        {{ optional($shippingAddress)->pincode }}<br>
+                                        {{ optional(optional($shippingAddress)->country)->name }}
+                                    @endif
+                                </div>
+                            </div>
+                        </td>
+                        <td class="info-col" width="50%" style="padding-left: 15px;">
+                            <div class="section-title">{{ localize('Payment Info') }}</div>
+                            <div class="info-card">
+                                <span class="info-name">{{ localize('Method') }}</span>
+                                <div class="info-text">
+                                    {{ Str::title(Str::replace('_', ' ', $order->orderGroup->payment_method)) }}<br>
+                                    <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background-color: #DCFCE7; color: #166534; font-size: 12px; font-weight: 700; margin-top: 4px;">{{ Str::upper($order->payment_status) }}</span>
+                                </div>
+                                @if($order->logistic_name)
+                                    <div class="section-title" style="margin-top: 15px; margin-bottom: 4px;">{{ localize('Logistic') }}</div>
+                                    <div class="info-text">{{ $order->logistic_name }}</div>
+                                @endif
+                            </div>
+                        </td>
                     </tr>
-                    <tr class="visibleMobile">
-                        <td height="20"></td>
-                    </tr>
-                    <td>
-                        <table width="100%" border="0" cellpadding="0" cellspacing="0" align="center"
-                            class="fullPadding">
-                            <tbody>
-                                <tr>
-                                    <td
-                                        style="font-size: 12px; color: #5b5b5b; line-height: 18px; vertical-align: top; text-align: left;">
-                                        <p
-                                            style="font-size: 12px; color: #5b5b5b; line-height: 18px; vertical-align: top; text-align: left;">
-                                            {{ localize('Hello') }}
-                                            <strong>{{ optional($order->user)->name }},</strong>
-                                            <br>
-                                            {{ getSetting('invoice_thanksgiving') }}
-                                        </p>
-                                        <br><br>
-                                        <p
-                                            style="font-size: 12px; color: #5b5b5b; line-height: 18px; vertical-align: top; text-align: left;">
-                                            {{ localize('Best Regards') }},
-                                            <br>{{ getSetting('system_title') }} <br>
-                                            {{ localize('Email') }}: {{ getSetting('topbar_email') }}<br>
-                                            {{ localize('Website') }}: {{ env('APP_URL') }}
-                                        </p>
+                </table>
 
-                                    </td>
-                                </tr>
-                            </tbody>
+                <!-- ITEMS -->
+                <div class="section-title" style="margin-top: 10px;">{{ localize('Order Summary') }}</div>
+                <div class="items-header"></div>
+                
+                @foreach ($order->orderItems as $item)
+                    @php $product = $item->product_variation->productWithTrashed; @endphp
+                    <div class="item-row">
+                        <table width="100%">
+                            <tr>
+                                <td>
+                                    <div class="item-name">{{ $product->collectLocalization('name') }}</div>
+                                    @php $variations = generateVariationOptions($item->product_variation->combinations); @endphp
+                                    @if(count($variations) > 0)
+                                        <div class="item-variation">
+                                            @foreach ($variations as $variation)
+                                                {{ $variation['name'] }}: @foreach ($variation['values'] as $value) {{ $value['name'] }} @endforeach{{ !$loop->last ? ', ' : '' }}
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                    <div style="font-size: 13px; color: #94A3B8; margin-top: 4px;">{{ localize('Qty') }}: {{ $item->qty }} &times; {{ formatPrice($item->unit_price) }}</div>
+                                </td>
+                                <td align="right" style="vertical-align: middle;">
+                                    <div class="item-price">{{ formatPrice($item->total_price) }}</div>
+                                </td>
+                            </tr>
                         </table>
-                    </td>
-        </tr>
-    </table>
-    </td>
-    </tr>
-    </table>
-    {{-- footer end --}}
+                    </div>
+                @endforeach
 
+                <!-- TOTALS -->
+                <div class="totals-container">
+                    <div class="total-item">{{ localize('Subtotal') }} <span class="total-value">{{ formatPrice($order->orderGroup->sub_total_amount) }}</span></div>
+                    @if($order->orderGroup->total_tips_amount > 0)
+                        <div class="total-item">{{ localize('Tips') }} <span class="total-value">{{ formatPrice($order->orderGroup->total_tips_amount) }}</span></div>
+                    @endif
+                    <div class="total-item">{{ localize('Shipping') }} <span class="total-value">{{ formatPrice($order->orderGroup->total_shipping_cost) }}</span></div>
+                    @if ($order->orderGroup->total_coupon_discount_amount > 0)
+                        <div class="total-item" style="color: #EF4444;">{{ localize('Coupon Discount') }} <span class="total-value">-{{ formatPrice($order->orderGroup->total_coupon_discount_amount) }}</span></div>
+                    @endif
+                    <div class="total-item">{{ localize('Tax') }} <span class="total-value">{{ formatPrice($order->orderGroup->total_tax_amount) }}</span></div>
+                    @if ($order->orderGroup->is_pos_order && $order->orderGroup->total_discount_amount > 0)
+                        <div class="total-item" style="color: #EF4444;">{{ localize('POS Discount') }} <span class="total-value">-{{ formatPrice($order->orderGroup->total_discount_amount) }}</span></div>
+                    @endif
+                    
+                    <div class="grand-total">
+                        {{ localize('Grand Total') }} <span class="grand-total-value">{{ formatPrice($order->orderGroup->grand_total_amount) }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer">
+                <p class="footer-text"><strong>{{ localize('Thank you for your order!') }}</strong></p>
+                <p class="footer-text">{{ getSetting('invoice_thanksgiving') }}</p>
+                <div style="margin-top: 20px; border-top: 1px solid #E2E8F0; padding-top: 20px;">
+                    <p class="footer-text" style="font-weight: 600; color: #1E293B;">{{ getSetting('system_title') }}</p>
+                    <p class="footer-text">{{ localize('Email') }}: {{ getSetting('topbar_email') }} &bull; {{ localize('Phone') }}: {{ getSetting('navbar_contact_number') }}</p>
+                    <p class="footer-text">{{ env('APP_URL') }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
-
 </html>

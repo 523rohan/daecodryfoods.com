@@ -53,6 +53,15 @@
                                     <input type="text" id="site_address" name="site_address" class="form-control"
                                         value="{{ getSetting('site_address') }}">
                                 </div>
+
+                                <div class="mb-3">
+                                    <label for="admin_order_notification_email" class="form-label">{{ localize('Admin Order Notification Email') }}</label>
+                                    <input type="hidden" name="types[]" value="admin_order_notification_email">
+                                    <input type="email" id="admin_order_notification_email" name="admin_order_notification_email" class="form-control"
+                                        placeholder="{{ localize('admin@example.com, sales@example.com') }}"
+                                        value="{{ getSetting('admin_order_notification_email') }}">
+                                    <small class="text-muted">{{ localize('Multiple emails can be separated by commas.') }}</small>
+                                </div>
                             </div>
                         </div>
                         <!--general settings-->

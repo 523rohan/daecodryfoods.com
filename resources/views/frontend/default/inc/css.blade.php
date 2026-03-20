@@ -13,6 +13,12 @@
 <link rel="stylesheet" href="{{ staticAsset('frontend/common/css/summernote-custom.css') }}">
 
 <style>
+    @media (min-width: 992px) {
+        .footer-copyright .copyright-text {
+            white-space: nowrap;
+        }
+    }
+
     @media (min-width: 1200px) {
         .choose-us-section::after {
             background-image: url({{ uploadedAsset(getSetting('halal_why_choose_us_large_img')) }});

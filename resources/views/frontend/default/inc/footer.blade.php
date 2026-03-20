@@ -107,12 +107,12 @@
         <span class="gradient-spacer d-block mb-3"></span>
         <div class="container">
             <div class="row align-items-center g-3">
-                <div class="col-lg-4">
+                <div class="col-lg-5">
                     <div class="copyright-text text-light">
                         {!! getSetting('copyright_text') !!}
                     </div>
                 </div>
-                <div class="col-lg-4 d-none d-lg-block">
+                <div class="col-lg-3 d-none d-lg-block">
                     <div class="logo-wrapper text-center">
                         <a href="{{ route('home') }}" class="logo"><img
                                 src="{{ uploadedAsset(getSetting('footer_logo')) }}" alt="footer logo"

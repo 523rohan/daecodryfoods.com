@@ -106,13 +106,23 @@
 
                                         @php
                                             $cities = $logisticZone->cities;
+                                            $maxCities = 4;
+                                            $firstCities = $cities->take($maxCities);
+                                            $remaining = $cities->count() - $firstCities->count();
                                         @endphp
                                         <td>
-                                            @forelse ($cities as $city)
-                                                <span class="badge bg-secondary rounded-pill">{{ $city->name }}</span>
-                                            @empty
+                                            @if ($cities->isEmpty())
                                                 <span class="badge bg-secondary rounded-pill">{{ localize('n/a') }}</span>
-                                            @endforelse
+                                            @else
+                                                @foreach ($firstCities as $city)
+                                                    <span class="badge bg-secondary rounded-pill">{{ $city->name }}</span>
+                                                @endforeach
+                                                @if ($remaining > 0)
+                                                    <span class="badge bg-light text-dark rounded-pill">
+                                                        +{{ $remaining }} {{ localize('more') }}
+                                                    </span>
+                                                @endif
+                                            @endif
                                         </td>
 
                                         <td>

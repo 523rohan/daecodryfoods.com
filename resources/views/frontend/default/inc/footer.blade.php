@@ -107,19 +107,12 @@
         <span class="gradient-spacer d-block mb-3"></span>
         <div class="container">
             <div class="row align-items-center g-3">
-                <div class="col-lg-5">
+                <div class="col-lg-6">
                     <div class="copyright-text text-light">
                         {!! getSetting('copyright_text') !!}
                     </div>
                 </div>
-                <div class="col-lg-3 d-none d-lg-block">
-                    <div class="logo-wrapper text-center">
-                        <a href="{{ route('home') }}" class="logo"><img
-                                src="{{ uploadedAsset(getSetting('footer_logo')) }}" alt="footer logo"
-                                class="img-fluid"></a>
-                    </div>
-                </div>
-                <div class="col-lg-4">
+                <div class="col-lg-6">
                     <div class="footer-payments-info d-flex align-items-center justify-content-lg-end gap-2">
                         <div
                             class="rounded-1 d-inline-flex align-items-center justify-content-center p-2 flex-shrink-0">

@@ -84,7 +84,7 @@
                             </span>
                             <div>
                                 <span class="d-block mb-1">{{ localize('Phone') }}:</span>
-                                {{ getSetting('navbar_contact_number') }}
+                                <a href="tel:{{ getSetting('navbar_contact_number') }}" class="text-white">{{ getSetting('navbar_contact_number') }}</a>
                             </div>
                         </li>
                         <li class="text-white pb-2 fs-xs d-flex align-items-center gap-2">
@@ -95,7 +95,7 @@
                             </span>
                             <div>
                                 <span class="d-block mb-1">{{ localize('Email') }}:</span>
-                                {{ getSetting('topbar_email') }}
+                                <a href="mailto:{{ getSetting('topbar_email') }}" class="text-white">{{ getSetting('topbar_email') }}</a>
                             </div>
                         </li>
                     </ul>

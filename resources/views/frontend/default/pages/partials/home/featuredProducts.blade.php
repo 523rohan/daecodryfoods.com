@@ -1,4 +1,4 @@
-<section class="featured-products pt-120 pb-200 bg-shade position-relative overflow-hidden z-1">
+<section class="featured-products pt-80 pb-80 bg-shade position-relative overflow-hidden z-1">
     {{--
     <img src="{{ staticAsset('frontend/default/assets/img/shapes/roll-1.png') }}" alt="roll"
         class="position-absolute roll-1 z--1" data-parallax='{"y": -120}'>
@@ -34,9 +34,9 @@
 
             <!-- banner -->
             <div class="col-xxl-4 col-lg-6 order-3 order-xxl-2 d-none d-xl-block d-none-1399">
-                <div class="product-card-lg bg-light rounded-2 d-flex flex-column h-100">
-                    <a href="{{ getSetting('featured_banner_link') }}" class="my-auto">
-                        <img src="{{ uploadedAsset(getSetting('featured_center_banner')) }}" alt="">
+                <div class="product-card-lg bg-light rounded-2 d-flex flex-column h-100 overflow-hidden">
+                    <a href="{{ getSetting('featured_banner_link') }}" class="my-auto h-100 w-100">
+                        <img src="{{ uploadedAsset(getSetting('featured_center_banner')) }}" alt="" class="img-fluid w-100 h-100 object-fit-cover">
                     </a>
                 </div>
             </div>

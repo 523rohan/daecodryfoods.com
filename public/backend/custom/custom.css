@@ -38,12 +38,11 @@
     color: #4eb529;
 }
 /* Admin Side Bar Logo Visibility */
-#sidebar .tt-brand-favicon {
-    display: none;
-}
-#sidebar.collapse .tt-brand-favicon {
-    display: block !important;
+#sidebar .tt-brand-logo {
+    display: block;
 }
 #sidebar.collapse .tt-brand-logo {
-    display: none !important;
+    max-height: 35px !important;
+    max-width: 50px !important;
+    margin-left: 0 !important;
 }

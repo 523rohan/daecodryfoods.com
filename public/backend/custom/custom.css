@@ -37,5 +37,13 @@
     border-color: #4eb529;
     color: #4eb529;
 }
-
-
+/* Admin Side Bar Logo Visibility */
+#sidebar .tt-brand-favicon {
+    display: none;
+}
+#sidebar.collapse .tt-brand-favicon {
+    display: block !important;
+}
+#sidebar.collapse .tt-brand-logo {
+    display: none !important;
+}

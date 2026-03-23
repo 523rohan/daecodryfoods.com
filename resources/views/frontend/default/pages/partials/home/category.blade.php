@@ -16,7 +16,9 @@
 
                 @foreach ($categories as $category)
                     @php
-                        $productsCount = \App\Models\ProductCategory::where('category_id', $category->id)->count();
+                        $productsCount = \App\Models\Product::whereHas('categories', function ($q) use ($category) {
+                            $q->where('categories.id', $category->id);
+                        })->isPublished()->count();
                     @endphp
                     <div class="col-xxl-2 col-lg-3 col-md-4 col-sm-6">
                         <div

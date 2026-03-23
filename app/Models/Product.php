@@ -126,4 +126,14 @@ class Product extends Model
         return $q;
     }
 
+    # video_link alias
+    public function getVideoLinkAttribute()
+    {
+        return $this->vedio_link;
+    }
+
+    public function setVideoLinkAttribute($value)
+    {
+        $this->attributes['vedio_link'] = $value;
+    }
 }

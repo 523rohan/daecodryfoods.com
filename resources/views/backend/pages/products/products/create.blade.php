@@ -121,8 +121,8 @@
                         <div class="mb-4 card">
                             <div class="card-body">
                                 <label for="name"
-                                    class="form-label">{{ localize('Product Youtube Vedio Embeded Code') }}</label>
-                                <input class="form-control" type="text" id="vedio_link" name="vedio_link">
+                                    class="form-label">{{ localize('Product Youtube Video Embedded Code') }}</label>
+                                <input class="form-control" type="text" id="video_link" name="video_link">
                             </div>
 
                         </div>

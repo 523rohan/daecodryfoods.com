@@ -191,7 +191,7 @@ class ProductsController extends Controller
 
             $product->description = $request->description;
             $product->short_description = $request->short_description;
-            $product->vedio_link = $request->vedio_link;
+            $product->video_link = $request->video_link;
 
             # min-max price
             if ($request->has('is_variant') && $request->has('variations')) {
@@ -386,7 +386,7 @@ class ProductsController extends Controller
                     $product->thumbnail_image = $request->image;
                     $product->gallery_images = $request->images;
                     $product->size_guide = $request->size_guide;
-                    $product->vedio_link = $request->vedio_link;
+                    $product->video_link = $request->video_link;
 
                     # min-max price
                     if ($request->has('is_variant') && $request->has('variations')) {
@@ -657,7 +657,7 @@ class ProductsController extends Controller
 
                     $product->description = $temporaryProduct->description;
                     $product->short_description = $temporaryProduct->short_description;
-                    $product->vedio_link = $temporaryProduct->vedio_link;
+                    $product->video_link = $temporaryProduct->video_link;
 
                     # min-max price
 

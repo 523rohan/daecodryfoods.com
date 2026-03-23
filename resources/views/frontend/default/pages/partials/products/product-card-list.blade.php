@@ -12,8 +12,10 @@
 
 
     <div class="thumbnail position-relative text-center p-4 flex-shrink-0">
-        <img src="{{ uploadedAsset($product->thumbnail_image) }}" alt="{{ $product->collectLocalization('name') }}"
-            class="img-fluid">
+        <a href="{{ route('products.show', $product->slug) }}">
+            <img src="{{ uploadedAsset($product->thumbnail_image) }}"
+                alt="{{ $product->collectLocalization('name') }}" class="img-fluid">
+        </a>
     </div>
     <div class="card-content w-100">
 

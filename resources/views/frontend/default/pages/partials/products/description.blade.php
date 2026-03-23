@@ -2,7 +2,7 @@
     <ul class="nav nav-tabs border-bottom justify-content-center gap-5 pt-info-tab-nav">
         <li><a href="#description" class="active" data-bs-toggle="tab">{{ localize('Description') }}</a></li>
         <li><a href="#info" data-bs-toggle="tab">{{ localize('Additional Information') }}</a></li>
-        <li><a href="#vedio" data-bs-toggle="tab">{{ localize('Vedio Gallery') }}</a></li>
+        <li><a href="#video" data-bs-toggle="tab">{{ localize('Video Gallery') }}</a></li>
 
     </ul>
     <div class="tab-content">
@@ -15,9 +15,9 @@
             @endif
         </div>
 
-        <div class="tab-pane fade px-4 py-5" id="vedio">
+        <div class="tab-pane fade px-4 py-5" id="video">
            
-            {!! $product->vedio_link !!}
+            {!! $product->video_link !!}
 
           
         </div>

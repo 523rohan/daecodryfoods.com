@@ -56,4 +56,12 @@
             justify-content: center;
         }
     }
+
+    /* login section mobile fix */
+    @media (max-width: 1399.98px) {
+        .login-section {
+            align-items: flex-start; /* move to top */
+            padding: 0 !important; /* remove padding */
+        }
+    }
 </style>

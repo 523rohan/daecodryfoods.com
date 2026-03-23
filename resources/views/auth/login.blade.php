@@ -13,15 +13,16 @@
                 <div class="col-lg-5 col-12 tt-login-img"
                     data-background="{{ staticAsset('frontend/default/assets/img/banner/login-banner.jpg') }}"></div>
                 <div class="col-lg-5 col-12 bg-white d-flex p-0 tt-login-col shadow">
-                    <form class="tt-login-form-wrap p-3 p-md-6 p-lg-6 py-7 w-100" action="{{ route('login') }}" method="POST"
-                        id="login-form">
+                    <form class="tt-login-form-wrap p-3 p-md-6 p-lg-6 py-7 w-100" action="{{ route('login') }}"
+                        method="POST" id="login-form">
                         @csrf
                         @if (getSetting('enable_recaptcha') == 1)
                             {!! RecaptchaV3::field('recaptcha_token') !!}
                         @endif
                         <div class="mb-7">
                             <a href="{{ route('home') }}">
-                                <img src="{{ uploadedAsset(getSetting('navbar_logo')) }}" alt="logo" style="max-height: 120px; width: auto;">
+                                <img src="{{ uploadedAsset(getSetting('navbar_logo')) }}" alt="logo"
+                                    style="max-height: 120px; width: auto;">
                             </a>
                         </div>
                         <h2 class="mb-4 h3">{{ localize('Hey there!') }}
@@ -38,14 +39,15 @@
                                         <input type="email" id="email" name="email"
                                             placeholder="{{ localize('Enter your email') }}" class="theme-input mb-1"
                                             value="{{ old('email') }}" required>
-                                        <small class="">
-                                            <a href="javascript:void(0);" class="fs-sm login-with-phone-btn"
-                                                onclick="handleLoginWithPhone()">
-                                                {{ localize('Login with phone?') }}</a>
-                                        </small>
+                                        <!-- <small class="">
+                                                    <a href="javascript:void(0);" class="fs-sm login-with-phone-btn"
+                                                        onclick="handleLoginWithPhone()">
+                                                        {{ localize('Login with phone?') }}</a>
+                                                </small> -->
                                     </span>
 
-                                    <span class="login-phone @if (old('login_with') == 'email' || old('login_with') == '') d-none @endif">
+                                    <span
+                                        class="login-phone @if (old('login_with') == 'email' || old('login_with') == '') d-none @endif">
                                         <label class="fw-bold text-dark fs-sm mb-1">{{ localize('Phone') }}</label>
                                         <input type="text" id="phone" name="phone" placeholder="+xxxxxxxxxx"
                                             class="theme-input mb-1" value="{{ old('phone') }}">
@@ -86,8 +88,7 @@
                             <div class="row mt-5">
                                 <div class="col-12">
                                     <label class="fw-bold">Admin Access</label>
-                                    <div
-                                        class="d-flex flex-wrap align-items-center justify-content-between border-bottom pb-3">
+                                    <div class="d-flex flex-wrap align-items-center justify-content-between border-bottom pb-3">
                                         <small>admin@themetags.com</small>
                                         <small>123456</small>
                                         <button class="btn btn-sm btn-secondary py-0 px-2" type="button"
@@ -187,7 +188,7 @@
 
         // disable login button
         function handleSubmit() {
-            $('#login-form').on('submit', function(e) {
+            $('#login-form').on('submit', function (e) {
                 $('.sign-in-btn').prop('disabled', true);
             });
         }

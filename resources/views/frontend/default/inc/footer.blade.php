@@ -7,7 +7,7 @@
                 <div class="gshop_subscribe_form text-center">
                     <h4 class="text-white gshop-title mb-3">{{ localize('Quick support on WhatsApp') }}</h4>
                     <div class="mt-5 text-center">
-                        <a href="https://wa.me/918073131565?text=Hello"
+                        <a href="https://wa.me/918073131565?text=Hi%20can%20i%20get%20my%20order%20details"
                             target="_blank" rel="noopener noreferrer"
                             class="btn btn-secondary border-0">{{ localize('Chat on WhatsApp') }}</a>
                     </div>
@@ -95,8 +95,8 @@
                                 <i class="fab fa-whatsapp"></i>
                             </span>
                             <div>
-                                <span class="d-block mb-1">{{ localize('WhatsApp') }}:</span>
-                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', getSetting('navbar_contact_number')) }}"
+                                <span class="d-block mb-1">{{ localize('Hello') }}:</span>
+                                <a href="https://wa.me/918073131565?text=hello"
                                     target="_blank" class="text-white">{{ getSetting('navbar_contact_number') }}</a>
                             </div>
                         </li>

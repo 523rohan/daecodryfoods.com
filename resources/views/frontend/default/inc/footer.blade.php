@@ -7,7 +7,7 @@
                 <div class="gshop_subscribe_form text-center">
                     <h4 class="text-white gshop-title mb-3">{{ localize('Quick support on WhatsApp') }}</h4>
                     <div class="mt-5 text-center">
-                        <a href="https://wa.me/919686839395?text=Hi,%20can%20you%20help%20me%20with%20my%20order%3F"
+                        <a href="https://wa.me/918073131565?text=Hello"
                             target="_blank" rel="noopener noreferrer"
                             class="btn btn-secondary border-0">{{ localize('Chat on WhatsApp') }}</a>
                     </div>

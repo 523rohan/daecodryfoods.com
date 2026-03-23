@@ -39,7 +39,10 @@
                     <div class="col-xxl-2 col-lg-3 col-md-4 col-sm-6">
                         <div class="gshop-animated-iconbox py-5 px-4 text-center border rounded-3 position-relative overflow-hidden">
                             <div class="animated-icon d-inline-flex align-items-center justify-content-center rounded-circle position-relative">
-                                <img src="{{ uploadedAsset($category->collectLocalization('thumbnail_image')) ?? null }}" alt="flower" class="img-fluid">
+                                <a href="{{ route('products.index') }}?&category_id={{ $category->id ?? '' }}">
+                                    <img src="{{ uploadedAsset($category->collectLocalization('thumbnail_image')) ?? null }}"
+                                        alt="flower" class="img-fluid">
+                                </a>
                             </div>
                             <a href="{{ route('products.index') }}?&category_id={{ $category->id ?? ''}}" class="text-dark fs-sm fw-bold d-block mt-3">{{ $category->collectLocalization('name') }}</a>
                             <span class="total-count position-relative ps-3 fs-sm fw-medium doted-primary"> {{ $productCount }} {{ localize('Items') ?? ''}}</span>

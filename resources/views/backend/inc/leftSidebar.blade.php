@@ -3,7 +3,7 @@
         <a href="{{ auth()->user()->user_type != 'deliveryman' ? route('admin.dashboard') : route('deliveryman.dashboard') }}"
             class="tt-brand-link">
             <img src="{{ uploadedAsset(getSetting('favicon')) }}" class="tt-brand-favicon ms-1" alt="favicon" />
-            <img src="{{ uploadedAsset(getSetting('admin_panel_logo')) }}" class="tt-brand-logo ms-2" alt="logo" />
+            <img src="{{ uploadedAsset(getSetting('admin_panel_logo')) }}" class="tt-brand-logo ms-2" alt="logo" style="max-height: 50px; width: auto;" />
         </a>
         <a href="javascript:void(0);" class="tt-toggle-sidebar">
             <span><i data-feather="chevron-left"></i></span>

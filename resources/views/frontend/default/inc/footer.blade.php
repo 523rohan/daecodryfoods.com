@@ -95,7 +95,7 @@
                                 <i class="fab fa-whatsapp"></i>
                             </span>
                             <div>
-                                <span class="d-block mb-1">{{ localize('Hello') }}:</span>
+                                <span class="d-block mb-1">{{ localize('WhatsApp') }}:</span>
                                 <a href="https://wa.me/918073131565?text=hello"
                                     target="_blank" class="text-white">{{ getSetting('navbar_contact_number') }}</a>
                             </div>

@@ -165,10 +165,8 @@
         <div class="gshop-navbar bg-white rounded ps-lg-5 position-relative">
             <div class="row align-items-center">
                 <div class="col-xxl-2 col-xl-3 col-md-3 col-5">
-                    <a href="{{ route('home') }}" class="logo" style="position: relative; display: block; height: 75px;">
-                        <img src="{{ uploadedAsset(getSetting('navbar_logo')) }}" alt="logo" class="navbar-logo" 
-                            style="max-height: 115px; width: auto; position: absolute; top: 50%; transform: translateY(-50%); z-index: 100; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.08));">
-                    </a>
+                    <a href="{{ route('home') }}" class="logo"><img
+                            src="{{ uploadedAsset(getSetting('navbar_logo')) }}" alt="logo" class="img-fluid navbar-logo" style="max-height: 85px; width: auto;"></a>
                 </div>
                 <div class="col-xxl-10 col-xl-9 col-md-9 col-7">
                     <div class="gshop-navbar-right d-flex align-items-center justify-content-end position-relative">

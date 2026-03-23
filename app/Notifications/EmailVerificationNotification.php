@@ -10,8 +10,9 @@ use Illuminate\Support\Facades\URL;
 use App\Mail\EmailManager;
 use Auth;
 use App\Models\User;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class EmailVerificationNotification extends Notification
+class EmailVerificationNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -36,7 +37,8 @@ class EmailVerificationNotification extends Notification
 
         return (new MailMessage)
             ->view('emails.verification', ['array' => $array])
-            ->subject(localize('Email Verification - ').env('APP_NAME'));
+            ->from(config('mail.from.address'), config('mail.from.name'))
+            ->subject(localize('Email Verification - ') . env('APP_NAME'));
     }
 
     public function toArray($notifiable)

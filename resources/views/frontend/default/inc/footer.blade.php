@@ -84,7 +84,20 @@
                             </span>
                             <div>
                                 <span class="d-block mb-1">{{ localize('Phone') }}:</span>
-                                <a href="tel:{{ getSetting('navbar_contact_number') }}" class="text-white">{{ getSetting('navbar_contact_number') }}</a>
+                                <a href="tel:{{ getSetting('navbar_contact_number') }}"
+                                    class="text-white">{{ getSetting('navbar_contact_number') }}</a>
+                            </div>
+                        </li>
+                        <li class="text-white pb-2 fs-xs d-flex align-items-center gap-2">
+                            <span
+                                class="icon-wrapper d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0"
+                                style="width: 30px; height: 30px; background: rgba(255,255,255,0.1);">
+                                <i class="fab fa-whatsapp"></i>
+                            </span>
+                            <div>
+                                <span class="d-block mb-1">{{ localize('WhatsApp') }}:</span>
+                                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', getSetting('navbar_contact_number')) }}"
+                                    target="_blank" class="text-white">{{ getSetting('navbar_contact_number') }}</a>
                             </div>
                         </li>
                         <li class="text-white pb-2 fs-xs d-flex align-items-center gap-2">

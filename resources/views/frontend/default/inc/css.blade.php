@@ -34,4 +34,26 @@
     .about-section > img.position-absolute {
         display: none !important;
     }
+    /* Hero Section Mobile Fix */
+    @media (max-width: 991.98px) {
+        .hero-img {
+            position: relative !important;
+            top: 0 !important;
+            transform: none !important;
+            right: 0 !important;
+            margin-top: 30px;
+            max-height: 300px;
+            width: auto;
+        }
+
+        .hero-left-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .hero-btns {
+            justify-content: center;
+        }
+    }
 </style>

@@ -79,7 +79,7 @@
     <div class="mobile-menu">
         <button class="offcanvas-close"><i class="fa-solid fa-xmark"></i></button>
         <a href="{{ route('home') }}" class="d-inline-block mb-5"><img
-                src="{{ uploadedAsset(getSetting('navbar_logo')) }}" alt="logo"></a>
+                src="{{ uploadedAsset(getSetting('navbar_logo')) }}" class="img-fluid" style="max-width: 200px; height: auto" alt="logo"></a>
         <nav class="mobile-menu-wrapper scrollbar">
             <ul>
                 @php

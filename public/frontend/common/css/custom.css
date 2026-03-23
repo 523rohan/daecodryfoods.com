@@ -381,3 +381,45 @@ html:not([dir="rtl"]) .toast-close-button {
     padding-top: 5px !important;
     padding-bottom: 5px !important;
 }
+
+/* Mobile Cart Layout Fix */
+@media (max-width: 991.98px) {
+    .cart-table thead {
+        display: none;
+    }
+
+    .cart-table tbody tr {
+        display: block;
+        margin-bottom: 20px;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        padding: 15px;
+        background: #fff;
+    }
+
+    .cart-table tbody td {
+        display: block;
+        width: 100% !important;
+        text-align: center;
+        border: none;
+        padding: 8px 0 !important;
+        height: auto !important;
+    }
+
+    .cart-table tbody td.product-title {
+        text-align: center !important;
+    }
+
+    .cart-table tbody td:not(:last-child) {
+        border-bottom: 1px solid #f9f9f9;
+        margin-bottom: 5px;
+    }
+
+    .cart-table .product-qty {
+        justify-content: center;
+    }
+    
+    .cart-table .close-btn {
+        margin-left: 0 !important;
+    }
+}

@@ -11,11 +11,10 @@
     @endif
 
     <div class="thumbnail position-relative text-center p-4">
-        <a href="{{ route('products.show', $product->slug) }}">
-            <img src="{{ uploadedAsset($product->thumbnail_image) }}"
-                alt="{{ $product->collectLocalization('name') }}" class="img-fluid">
-        </a>
-        <div class="product-btns position-absolute d-flex gap-2 flex-column">
+        <a href="{{ route('products.show', $product->slug) }}" class="stretched-link"></a>
+        <img src="{{ uploadedAsset($product->thumbnail_image) }}"
+            alt="{{ $product->collectLocalization('name') }}" class="img-fluid">
+        <div class="product-btns position-absolute d-flex gap-2 flex-column" style="z-index: 2;">
             @if (Auth::check() && Auth::user()->user_type == 'customer')
                 <a href="javascript:void(0);" class="rounded-btn"><i class="fa-regular fa-heart"
                         onclick="addToWishlist({{ $product->id }})"></i></a>

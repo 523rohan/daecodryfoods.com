@@ -1,13 +1,12 @@
 <div class="meat-card meat-card--row">
-    <div class="meat-card__img text-center">
-        <a href="javascript:void(0);" class="link d-inline-block text-center">
-            <img src="{{ uploadedAsset($product->thumbnail_image) }}" alt="product"
-                class="img-fluid w-100 h-100 object-fit-contain">
-        </a>
+    <div class="meat-card__img text-center position-relative">
+        <a href="{{ route('products.show', $product->slug) }}" class="stretched-link"></a>
+        <img src="{{ uploadedAsset($product->thumbnail_image) }}" alt="product"
+            class="img-fluid w-100 h-100 object-fit-contain">
     </div>
        
     
-    <div class="product-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center gap-1 rounded-2">
+    <div class="product-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center gap-1 rounded-2" style="z-index: 2;">
         @if (isLoggedIn() && isCustomer())
             <a href="javascript:void(0);" class="rounded-btn fs-xs" onclick="addToWishlist({{ $product->id }})"><i
                     class="fa-regular fa-heart"></i></a>

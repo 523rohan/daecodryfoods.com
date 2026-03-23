@@ -12,6 +12,7 @@
 
 
     <div class="thumbnail position-relative text-center p-4 flex-shrink-0">
+        <a href="{{ route('products.show', $product->slug) }}" class="stretched-link"></a>
         <img src="{{ uploadedAsset($product->thumbnail_image) }}" alt="{{ $product->collectLocalization('name') }}"
             class="img-fluid">
     </div>

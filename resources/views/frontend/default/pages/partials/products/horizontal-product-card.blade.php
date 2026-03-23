@@ -1,9 +1,9 @@
 <div class="horizontal-product-card d-sm-flex align-items-center p-3 bg-white rounded-2 border card-md gap-3">
     <div class="thumbnail position-relative rounded-2">
-        <a href="{{ route('products.show', $product->slug) }}"><img src="{{ uploadedAsset($product->thumbnail_image) }}"
-                alt="product" class="img-fluid"></a>
+        <a href="{{ route('products.show', $product->slug) }}" class="stretched-link"></a>
+        <img src="{{ uploadedAsset($product->thumbnail_image) }}" alt="product" class="img-fluid">
         <div
-            class="product-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center gap-1 rounded-2">
+            class="product-overlay position-absolute start-0 top-0 w-100 h-100 d-flex align-items-center justify-content-center gap-1 rounded-2" style="z-index: 2;">
             @if (isLoggedIn() && isCustomer())
                 <a href="javascript:void(0);" class="rounded-btn fs-xs" onclick="addToWishlist({{ $product->id }})"><i
                         class="fa-regular fa-heart"></i></a>

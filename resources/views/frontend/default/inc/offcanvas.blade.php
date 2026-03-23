@@ -58,6 +58,9 @@
                     <li>
                         <a href="{{ route('products.index') }}">{{ localize('Products') }}</a>
                     </li>
+                    <li>
+                        <a href="{{ route('customers.wishlist') }}">{{ localize('Your Wishlist') }}</a>
+                    </li>
                     {{--
                     <li>
                         <a href="{{ route('home.campaigns') }}">{{ localize('Campaigns') }}</a>

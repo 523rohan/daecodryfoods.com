@@ -1,10 +1,9 @@
 <div class="meat-card meat-card--secondary">
-    <div class="meat-card__img text-center">
-        <a href="{{ route('products.show', $product->slug) }}" class="link d-inline-block text-center">
-            <img src="{{ uploadedAsset($product->thumbnail_image) }}" alt="{{ $product->collectLocalization('name') }}"
-                class="img-fluid w-100 h-100 object-fit-contain">
-        </a>
-        <ul class="list gap-2 meat-card__icon-list">
+    <div class="meat-card__img text-center position-relative">
+        <a href="{{ route('products.show', $product->slug) }}" class="stretched-link"></a>
+        <img src="{{ uploadedAsset($product->thumbnail_image) }}" alt="{{ $product->collectLocalization('name') }}"
+            class="img-fluid w-100 h-100 object-fit-contain">
+        <ul class="list gap-2 meat-card__icon-list" style="z-index: 2;">
             <li>                                                       
                 <a href="javascript:void(0);" class="link d-grid place-content-center w-9 h-9 rounded-circle light-bg clr-heading :two-bg :clr-light drop-shadow">
                     <i class="fa-regular fa-heart" onclick="addToWishlist({{ $product->id }})"></i>

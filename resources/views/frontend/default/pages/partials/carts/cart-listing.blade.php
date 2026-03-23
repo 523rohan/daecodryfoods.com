@@ -1,6 +1,6 @@
 @forelse ($carts as $cart)
     <tr>
-        <td class="h-100px">
+        <td>
             <img src="{{ uploadedAsset($cart->product_variation->product->thumbnail_image) }}"
                 alt="{{ $cart->product_variation->product->collectLocalization('name') }}" class="img-fluid"
                 width="100">

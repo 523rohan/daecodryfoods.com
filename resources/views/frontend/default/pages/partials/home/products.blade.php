@@ -1,7 +1,7 @@
 <section class="pt-60 pb-60">
     <div class="container">
         <div class="row justify-content-center justify-content-xl-between g-4">
-            <div class="col-xl-9">
+            <div class="col-xl-8">
                 <div class="row g-4">
                     <div class="col-lg-6">
                         <div class="product-listing-box bg-white rounded-2">
@@ -52,10 +52,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xl-3 d-none d-xl-block">
-                <a href="{{ getSetting('best_selling_banner_link') }}" class="d-block h-100">
+            <div class="col-xl-4 d-none d-xl-block">
+                <a href="{{ getSetting('best_selling_banner_link') }}" class="d-block h-100 bg-white rounded-2 overflow-hidden">
                     <img src="{{ uploadedAsset(getSetting('best_selling_banner')) }}" alt=""
-                        class="img-fluid rounded-2 w-100 h-100 object-fit-cover">
+                        class="img-fluid w-100 h-100 object-fit-contain">
                 </a>
             </div>
         </div>

@@ -34,9 +34,9 @@
 
             <!-- banner -->
             <div class="col-xxl-4 col-lg-6 order-3 order-xxl-2 d-none d-xl-block d-none-1399">
-                <div class="product-card-lg bg-light rounded-2 d-flex flex-column h-100 overflow-hidden">
+                <div class="product-card-lg bg-white rounded-2 d-flex flex-column h-100 overflow-hidden">
                     <a href="{{ getSetting('featured_banner_link') }}" class="my-auto h-100 w-100">
-                        <img src="{{ uploadedAsset(getSetting('featured_center_banner')) }}" alt="" class="img-fluid w-100 h-100 object-fit-cover">
+                        <img src="{{ uploadedAsset(getSetting('featured_center_banner')) }}" alt="" class="img-fluid w-100 h-100 object-fit-contain">
                     </a>
                 </div>
             </div>

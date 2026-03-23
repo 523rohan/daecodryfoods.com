@@ -17,7 +17,8 @@
 
                         <div class="mb-7">
                             <a href="{{ route('home') }}">
-                                <img src="{{ uploadedAsset(getSetting('navbar_logo')) }}" alt="logo" style="max-height: 120px; width: auto;">
+                                <img src="{{ uploadedAsset(getSetting('navbar_logo')) }}" alt="logo"
+                                    style="max-height: 120px; width: auto;">
                             </a>
                         </div>
                         <h2 class="mb-4 h3">{{ localize('Reset Password') }}
@@ -43,11 +44,11 @@
                                             class="theme-input mb-1 @error('email') is-invalid @enderror"
                                             value="{{ old('email') }}" required>
 
-                                        <small class="">
-                                            <a href="javascript:void(0);" class="fs-sm reset-with-phone-btn"
-                                                onclick="handleResetWithPhone()">
-                                                {{ localize('Reset with phone?') }}</a>
-                                        </small>
+                                        <!-- <small class="">
+                                                <a href="javascript:void(0);" class="fs-sm reset-with-phone-btn"
+                                                    onclick="handleResetWithPhone()">
+                                                    {{ localize('Reset with phone?') }}</a>
+                                            </small> -->
                                     </span>
 
                                     @error('email')
@@ -56,7 +57,8 @@
                                         </span>
                                     @enderror
 
-                                    <span class="reset-phone @if (old('reset_with') == 'email' || old('reset_with') == '') d-none @endif">
+                                    <span
+                                        class="reset-phone @if (old('reset_with') == 'email' || old('reset_with') == '') d-none @endif">
                                         <label class="fw-bold text-dark fs-sm mb-1">{{ localize('Phone') }}</label>
                                         <input type="text" id="phone" name="phone" placeholder="+xxxxxxxxxx"
                                             class="theme-input mb-1" value="{{ old('phone') }}">

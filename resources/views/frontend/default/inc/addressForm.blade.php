@@ -134,7 +134,8 @@
          $(document).ready(function() {
              if ($("input[name='shipping_address_id']").is(':checked')) {
                  let city_id = $("input[name='shipping_address_id']:checked").data('city_id');
-                 getLogistics(city_id);
+                 let state_id = $("input[name='shipping_address_id']:checked").data('state_id');
+                 getLogistics(city_id, state_id);
              }
          });
 

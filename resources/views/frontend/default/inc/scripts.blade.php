@@ -450,10 +450,10 @@
     }
 
     // get logistics to check out
-    function getLogistics(city_id) {
-        if (!city_id) {
+    function getLogistics(city_id, state_id) {
+        if (!city_id && !state_id) {
             $('.checkout-logistics').html(
-                '<div class="col-12 mt-5"><div class="tt-address-content"><div class="alert alert-warning text-center">{{ localize('City is optional for saving address, but required for delivery serviceability. Please edit the address and select a city before checkout.') }}</div></div></div>'
+                '<div class="col-12 mt-5"><div class="tt-address-content"><div class="alert alert-warning text-center">{{ localize('Please select an address for delivery serviceability.') }}</div></div></div>'
             );
             $('.checkout-sidebar').html(`@include('frontend.default.pages.partials.checkout.orderSummary', ['carts' => $carts ?? []])`);
             return;
@@ -466,7 +466,8 @@
             url: "{{ route('checkout.getLogistic') }}",
             type: 'POST',
             data: {
-                city_id: city_id
+                city_id: city_id,
+                state_id: state_id
             },
             success: function(data) {
                 $('.checkout-sidebar').empty();
@@ -481,7 +482,7 @@
     function initializeCheckoutDefaults() {
         const selectedShippingAddress = $('.checkout-form input[name=shipping_address_id]:checked');
         if (selectedShippingAddress.length === 1) {
-            getLogistics(selectedShippingAddress.data('city_id'));
+            getLogistics(selectedShippingAddress.data('city_id'), selectedShippingAddress.data('state_id'));
         }
 
         syncBillingAddressWithShipping();
@@ -534,6 +535,7 @@
 
     $(document).on('change', '.checkout-form input[name=shipping_address_id]', function() {
         syncBillingAddressWithShipping();
+        getLogistics($(this).data('city_id'), $(this).data('state_id'));
     });
 
     //  get logistics to check out -- onchange
@@ -570,8 +572,8 @@
         }
 
         const selectedShippingAddress = $('.checkout-form input[name=shipping_address_id]:checked');
-        if (!selectedShippingAddress.data('city_id')) {
-            notifyMe('error', '{{ localize('Please edit the selected address and choose a city for delivery') }}');
+        if (!selectedShippingAddress.data('city_id') && !selectedShippingAddress.data('state_id')) {
+            notifyMe('error', '{{ localize('Please edit the selected address and choose a location for delivery') }}');
             e.preventDefault();;
             return false;
         }

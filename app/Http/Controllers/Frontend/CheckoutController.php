@@ -59,7 +59,24 @@ class CheckoutController extends Controller
     # checkout logistic
     public function getLogistic(Request $request)
     {
-        $logisticZoneCities = LogisticZoneCity::where('city_id', $request->city_id)->distinct('logistic_id')->get();
+        $city_id = $request->city_id;
+        $state_id = $request->state_id;
+
+        $query = LogisticZoneCity::query();
+
+        if ($city_id) {
+            $query->where('city_id', $city_id);
+        } elseif ($state_id) {
+            $query->whereIn('city_id', function ($q) use ($state_id) {
+                $q->select('id')->from('cities')->where('state_id', $state_id);
+            });
+        } else {
+            // Fallback for empty location
+            $query->where('city_id', 0);
+        }
+
+        $logisticZoneCities = $query->distinct('logistic_id')->get();
+
         return [
             'logistics' => getRender('inc.logistics', ['logisticZoneCities' => $logisticZoneCities]),
             'summary'   => getRender('pages.partials.checkout.orderSummary', ['carts' => Cart::where('user_id', auth()->user()->id)->where('location_id', session('stock_location_id'))->get()])
@@ -94,15 +111,22 @@ class CheckoutController extends Controller
                 }
 
                 $shippingAddress = $user->addresses()->find($request->shipping_address_id);
-                if (!$shippingAddress || !$shippingAddress->city_id) {
-                    flash(localize('Please update your shipping address and select a city for delivery'))->error();
+                if (!$shippingAddress || (!$shippingAddress->city_id && !$shippingAddress->state_id)) {
+                    flash(localize('Please update your shipping address and select a location for delivery'))->error();
                     return back();
                 }
 
                 if (!$request->filled('chosen_logistic_zone_id') && $shippingAddress) {
-                    $availableLogistics = LogisticZoneCity::where('city_id', $shippingAddress->city_id)
-                        ->distinct('logistic_id')
-                        ->get();
+                    $query = LogisticZoneCity::query();
+                    if ($shippingAddress->city_id) {
+                        $query->where('city_id', $shippingAddress->city_id);
+                    } else {
+                        $query->whereIn('city_id', function ($q) use ($shippingAddress) {
+                            $q->select('id')->from('cities')->where('state_id', $shippingAddress->state_id);
+                        });
+                    }
+
+                    $availableLogistics = $query->distinct('logistic_id')->get();
 
                     if ($availableLogistics->count() === 1) {
                         $request->merge([

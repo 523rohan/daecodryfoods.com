@@ -28,6 +28,7 @@
                 </div>
             </div>
 
+{{-- 
             <div class="col-sm-6">
                 <div class="w-100 label-input-field">
                     <label>{{ localize('City') }} ({{ localize('Optional') }})</label>
@@ -40,6 +41,7 @@
                     </select>
                 </div>
             </div>
+            --}}
             <div class="col-sm-6">
                 <div class="w-100 label-input-field">
                     <label>{{ localize('Default Address?') }}</label>

@@ -49,9 +49,10 @@
                                         <div class="tt-address-content">
                                             <input type="radio" class="tt-custom-radio" name="shipping_address_id"
                                                 id="shipping-{{ $address->id }}" value="{{ $address->id }}"
-                                                onchange="getLogistics('{{ $address->city_id ?? '' }}')"
+                                                onchange="getLogistics('{{ $address->city_id ?? '' }}', '{{ $address->state_id ?? '' }}')"
                                                 @if ($address->is_default || $singleAddress) checked @endif
-                                                data-city_id="{{ $address->city_id ?? '' }}">
+                                                data-city_id="{{ $address->city_id ?? '' }}"
+                                                data-state_id="{{ $address->state_id ?? '' }}">
 
                                             <label for="shipping-{{ $address->id }}"
                                                 class="tt-address-info bg-white rounded p-4 position-relative">

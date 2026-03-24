@@ -75,7 +75,7 @@ class CheckoutController extends Controller
             $query->where('city_id', 0);
         }
 
-        $logisticZoneCities = $query->distinct('logistic_id')->get();
+        $logisticZoneCities = $query->get()->unique('logistic_id');
 
         return [
             'logistics' => getRender('inc.logistics', ['logisticZoneCities' => $logisticZoneCities]),
@@ -126,7 +126,7 @@ class CheckoutController extends Controller
                         });
                     }
 
-                    $availableLogistics = $query->distinct('logistic_id')->get();
+                    $availableLogistics = $query->get()->unique('logistic_id');
 
                     if ($availableLogistics->count() === 1) {
                         $request->merge([

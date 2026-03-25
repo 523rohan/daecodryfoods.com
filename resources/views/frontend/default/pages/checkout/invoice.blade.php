@@ -24,8 +24,8 @@
                                     </span>
                                 </div>
                                 <div>
-                                    <a href="javascript:void(0);" onclick="window.print();" class="btn btn-primary btn-sm">
-                                        <i class="fas fa-print me-1"></i> {{ localize('Print / Download') }}
+                                    <a href="{{ route('checkout.invoice.download', $orderGroup->order_code) }}" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-download me-1"></i> {{ localize('Download Invoice') }}
                                     </a>
                                 </div>
                             </div>
@@ -124,16 +124,20 @@
                     </div>
                     <div class="table-responsive mt-6">
                         <table class="table invoice-table">
-                            <tr>
-                                <th>{{ localize('S/L') }}</th>
-                                <th>{{ localize('Products') }}</th>
-                                <th>{{ localize('U.Price') }}</th>
-                                <th>{{ localize('QTY') }}</th>
-                                <th>{{ localize('T.Price') }}</th>
-                                @if (getSetting('enable_refund_system') == 1)
-                                    <th>{{ localize('Refund') }}</th>
-                                @endif
-                            </tr>
+                            <thead>
+                                <tr>
+                                    <th>{{ localize('S/L') }}</th>
+                                    <th>{{ localize('Products') }}</th>
+                                    <th>{{ localize('Base Price') }}</th>
+                                    <th>{{ localize('Tax') }}</th>
+                                    <th>{{ localize('U.Price') }}</th>
+                                    <th>{{ localize('QTY') }}</th>
+                                    <th>{{ localize('Total') }}</th>
+                                    @if (getSetting('enable_refund_system') == 1)
+                                        <th>{{ localize('Refund') }}</th>
+                                    @endif
+                                </tr>
+                            </thead>
                             @foreach ($orderItems as $key => $item)
                                 @php
                                     $product = $item->product_variation->productWithTrashed;
@@ -164,6 +168,12 @@
                                             </div>
                                         </div>
                                     </td>
+                                    @php
+                                        $taxPerUnit = variationTaxAmount($product, $item->product_variation);
+                                        $basePricePerUnit = $item->unit_price - $taxPerUnit;
+                                    @endphp
+                                    <td>{{ formatPrice($basePricePerUnit) }}</td>
+                                    <td>{{ formatPrice($taxPerUnit) }}</td>
                                     <td>{{ formatPrice($item->unit_price) }}</td>
                                     <td>{{ $item->qty }}</td>
                                     <td>{{ formatPrice($item->total_price) }}</td>

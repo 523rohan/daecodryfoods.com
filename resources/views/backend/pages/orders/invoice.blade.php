@@ -134,6 +134,14 @@
                                         </div>
                                     @endif
                                     <div style="font-size: 13px; color: #94A3B8; margin-top: 4px;">{{ localize('Qty') }}: {{ $item->qty }} &times; {{ formatPrice($item->unit_price) }}</div>
+                                    @php
+                                        $taxPerUnit = variationTaxAmount($product, $item->product_variation);
+                                        $basePricePerUnit = $item->unit_price - $taxPerUnit;
+                                    @endphp
+                                    <div style="font-size: 12px; color: #94A3B8;">
+                                        {{ localize('Base') }}: {{ formatPrice($basePricePerUnit) }} | 
+                                        {{ localize('Tax') }}: {{ formatPrice($taxPerUnit) }}
+                                    </div>
                                 </td>
                                 <td align="right" style="vertical-align: middle;">
                                     <div class="item-price">{{ formatPrice($item->total_price) }}</div>
@@ -149,7 +157,7 @@
                     @if($order->orderGroup->total_tips_amount > 0)
                         <div class="total-item">{{ localize('Tips') }} <span class="total-value">{{ formatPrice($order->orderGroup->total_tips_amount) }}</span></div>
                     @endif
-                    <div class="total-item">{{ localize('Shipping') }} <span class="total-value">{{ formatPrice($order->orderGroup->total_shipping_cost) }}</span></div>
+                    <div class="total-item">{{ localize('Logistic Charge') }} <span class="total-value">{{ formatPrice($order->orderGroup->total_shipping_cost) }}</span></div>
                     @if ($order->orderGroup->total_coupon_discount_amount > 0)
                         <div class="total-item" style="color: #EF4444;">{{ localize('Coupon Discount') }} <span class="total-value">-{{ formatPrice($order->orderGroup->total_coupon_discount_amount) }}</span></div>
                     @endif

@@ -153,6 +153,7 @@ Route::group(['prefix' => '', 'middleware' => ['customer', 'verified', 'isBanned
     Route::post('/shipping-amount', [CheckoutController::class, 'getShippingAmount'])->name('checkout.getShippingAmount');
     Route::post('/checkout-complete', [CheckoutController::class, 'complete'])->name('checkout.complete');
     Route::get('/orders/invoice/{code}', [CheckoutController::class, 'invoice'])->name('checkout.invoice');
+    Route::get('/orders/invoice-download/{code}', [CheckoutController::class, 'downloadInvoice'])->name('checkout.invoice.download');
     Route::get('/orders/{code}/invoice', [CheckoutController::class, 'success'])->name('checkout.success');
 
     # address

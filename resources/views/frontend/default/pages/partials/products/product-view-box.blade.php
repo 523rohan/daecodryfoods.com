@@ -75,6 +75,11 @@
                             <i class="fa-solid fa-heart"></i>
                         </button>
 
+                        <button type="button" class="btn btn-outline-secondary btn-md"
+                            onclick="shareProduct('{{ $product->collectLocalization('name') }}', '{{ route('products.show', $product->slug) }}')">
+                            <i class="fa-solid fa-share-nodes"></i>
+                        </button>
+
                         <div class="flex-grow-1"></div>
                         @if (getSetting('enable_reward_points') == 1)
                             <span class="fw-bold" data-bs-toggle="tooltip" data-bs-placement="top"

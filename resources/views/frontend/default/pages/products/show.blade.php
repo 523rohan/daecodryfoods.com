@@ -130,3 +130,20 @@
     ])
     <!--related products slider end-->
 @endsection
+@section('scripts')
+    <script>
+        "use strict";
+
+        function shareProduct(title, url) {
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    url: url
+                }).catch(console.error);
+            } else {
+                navigator.clipboard.writeText(url);
+                notifyMe('success', '{{ localize("Link copied to clipboard") }}');
+            }
+        }
+    </script>
+@endsection

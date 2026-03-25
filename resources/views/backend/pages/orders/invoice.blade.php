@@ -56,6 +56,10 @@
             .header { padding: 30px 25px 20px; }
             .info-col { width: 100% !important; display: block; margin-bottom: 20px; }
         }
+        
+        .address-text { font-size: 13px; color: #475569; line-height: 1.5; }
+        .product-table-head { background-color: #F8FAFC; border-bottom: 2px solid #E2E8F0; }
+        .product-table-head th { padding: 12px 8px; font-size: 11px; font-weight: 700; color: #64748B; text-transform: uppercase; text-align: left; }
     </style>
 </head>
 <body>
@@ -88,11 +92,17 @@
                                     @if ($order->orderGroup->is_pos_order)
                                         {{ $order->orderGroup->pos_order_address }}
                                     @else
-                                        @php $shippingAddress = $order->orderGroup->shippingAddress; @endphp
-                                        {{ optional($shippingAddress)->address }}<br>
-                                        {{ optional(optional($shippingAddress)->city)->name }}, {{ optional(optional($shippingAddress)->state)->name }}<br>
-                                        {{ optional($shippingAddress)->pincode }}<br>
-                                        {{ optional(optional($shippingAddress)->country)->name }}
+                                        @php 
+                                            $shippingAddress = $order->orderGroup->shippingAddress; 
+                                            $shipCity = $shippingAddress->city_id ? optional($shippingAddress->city)->name : $shippingAddress->city;
+                                        @endphp
+                                        @if($shippingAddress)
+                                            <div class="address-text">
+                                                {{ $shippingAddress->address }}@if($shippingAddress->landmark), {{ $shippingAddress->landmark }}@endif<br>
+                                                {{ $shipCity }}@if($shippingAddress->state_id), {{ optional($shippingAddress->state)->name }}@endif @if($shippingAddress->pincode) - {{ $shippingAddress->pincode }}@endif<br>
+                                                {{ optional($shippingAddress->country)->name }}
+                                            </div>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
@@ -118,38 +128,47 @@
                 <div class="section-title" style="margin-top: 10px;">{{ localize('Order Summary') }}</div>
                 <div class="items-header"></div>
                 
-                @foreach ($order->orderItems as $item)
-                    @php $product = $item->product_variation->productWithTrashed; @endphp
-                    <div class="item-row">
-                        <table width="100%">
-                            <tr>
-                                <td>
-                                    <div class="item-name">{{ $product->collectLocalization('name') }}</div>
-                                    @php $variations = generateVariationOptions($item->product_variation->combinations); @endphp
-                                    @if(count($variations) > 0)
-                                        <div class="item-variation">
-                                            @foreach ($variations as $variation)
-                                                {{ $variation['name'] }}: @foreach ($variation['values'] as $value) {{ $value['name'] }} @endforeach{{ !$loop->last ? ', ' : '' }}
-                                            @endforeach
-                                        </div>
-                                    @endif
-                                    <div style="font-size: 13px; color: #94A3B8; margin-top: 4px;">{{ localize('Qty') }}: {{ $item->qty }} &times; {{ formatPrice($item->unit_price) }}</div>
-                                    @php
-                                        $taxPerUnit = variationTaxAmount($product, $item->product_variation);
-                                        $basePricePerUnit = $item->unit_price - $taxPerUnit;
-                                    @endphp
-                                    <div style="font-size: 12px; color: #94A3B8;">
-                                        {{ localize('Base') }}: {{ formatPrice($basePricePerUnit) }} | 
-                                        {{ localize('Tax') }}: {{ formatPrice($taxPerUnit) }}
+                @php 
+                    $orderItems = $order->orderItems;
+                @endphp
+                <table width="100%" style="margin-top: 20px;">
+                    <thead class="product-table-head">
+                        <tr>
+                            <th width="50%">{{ localize('Product') }}</th>
+                            <th width="15%" align="center">{{ localize('Base') }}</th>
+                            <th width="10%" align="center">{{ localize('Tax') }}</th>
+                            <th width="10%" align="center">{{ localize('Qty') }}</th>
+                            <th width="15%" align="right">{{ localize('Total') }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($orderItems as $item)
+                        @php 
+                            $product = $item->product_variation->productWithTrashed;
+                            $taxPerUnit = variationTaxAmount($product, $item->product_variation);
+                            $basePricePerUnit = $item->unit_price - $taxPerUnit;
+                        @endphp
+                        <tr class="item-row">
+                            <td style="padding: 15px 8px;">
+                                <div class="item-name">{{ $product->collectLocalization('name') }}</div>
+                                @php $variations = generateVariationOptions($item->product_variation->combinations); @endphp
+                                @if(count($variations) > 0)
+                                    <div class="item-variation">
+                                        @foreach ($variations as $variation)
+                                            {{ $variation['name'] }}: @foreach ($variation['values'] as $value) {{ $value['name'] }} @endforeach{{ !$loop->last ? ', ' : '' }}
+                                        @endforeach
                                     </div>
-                                </td>
-                                <td align="right" style="vertical-align: middle;">
-                                    <div class="item-price">{{ formatPrice($item->total_price) }}</div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                @endforeach
+                                @endif
+                                <div style="font-size: 11px; color: #94A3B8; margin-top: 4px;">{{ localize('Unit Price') }}: {{ formatPrice($item->unit_price) }}</div>
+                            </td>
+                            <td align="center" style="padding: 15px 8px; vertical-align: middle; color: #475569; font-size: 13px;">{{ formatPrice($basePricePerUnit) }}</td>
+                            <td align="center" style="padding: 15px 8px; vertical-align: middle; color: #475569; font-size: 13px;">{{ formatPrice($taxPerUnit) }}</td>
+                            <td align="center" style="padding: 15px 8px; vertical-align: middle; color: #1E293B; font-weight: 600; font-size: 14px;">{{ $item->qty }}</td>
+                            <td align="right" style="padding: 15px 8px; vertical-align: middle; font-weight: 700; color: #1E293B; font-size: 14px;">{{ formatPrice($item->total_price) }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
                 <!-- TOTALS -->
                 <div class="totals-container">

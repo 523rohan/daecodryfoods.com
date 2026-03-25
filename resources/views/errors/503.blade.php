@@ -4,7 +4,7 @@
 @endsection
 @section('contents')
     <section class="section-404 ptb-120 position-relative overflow-hidden z-1">
-        <img src="{{ staticAsset('frontend/default/assets/img/shapes/frame-circle.svg') }}" alt="frame circle"
+        <!-- <img src="{{ staticAsset('frontend/default/assets/img/shapes/frame-circle.svg') }}" alt="frame circle"
             class="position-absolute z--1 frame-circle d-none d-sm-block">
         <img src="{{ staticAsset('frontend/default/assets/img/shapes/cauliflower.png') }}" alt="cauliflower"
             class="position-absolute cauliflower z--1 d-none d-sm-block">
@@ -19,7 +19,7 @@
         <img src="{{ staticAsset('frontend/default/assets/img/shapes/tomato-slice.svg') }}" alt="tomato"
             class="position-absolute tomato-slice z--1 d-none d-sm-block">
         <img src="{{ staticAsset('frontend/default/assets/img/shapes/onion.png') }} " alt="onion"
-            class="position-absolute onion z--1 d-none d-sm-block">
+            class="position-absolute onion z--1 d-none d-sm-block"> -->
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-xl-6">

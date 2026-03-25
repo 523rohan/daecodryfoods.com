@@ -12,6 +12,8 @@ use App\Models\OrderGroup;
 use App\Models\CouponUsage;
 use App\Models\RewardPoint;
 use App\Models\LogisticZone;
+use App\Http\Controllers\Backend\Orders\OrdersController;
+use niklasravnsborg\LaravelPdf\Facades\Pdf;
 use Illuminate\Http\Request;
 use App\Models\LogisticZoneCity;
 use Illuminate\Support\Facades\DB;
@@ -406,6 +408,23 @@ class CheckoutController extends Controller
         $orderGroup = OrderGroup::where('user_id', auth()->user()->id)->where('order_code', $code)->first();
         $user = auth()->user();
         return view('frontend.default.pages.checkout.invoice', ['orderGroup' => $orderGroup]);
+    }
+
+    # download invoice
+    public function downloadInvoice($code)
+    {
+        $orderGroup = OrderGroup::where('user_id', auth()->user()->id)->where('order_code', $code)->first();
+        if (!$orderGroup) {
+            abort(404);
+        }
+        $order = $orderGroup->order;
+        if (!$order) {
+            abort(404);
+        }
+
+        $data = (new OrdersController)->invoiceData($order->id);
+        $pdf = Pdf::loadView('backend.pages.orders.invoice', $data, [], []);
+        return $pdf->download(getSetting('order_code_prefix') . $data['orderCode'] . '.pdf');
     }
 
     # update payment status

@@ -84,7 +84,7 @@
     @endphp
     <!-- PWA  -->
     <meta name="theme-color" content="#6eb356"/>
-    <link rel="apple-touch-icon" href="{{ staticAsset('/pwa.png') }}"/>
+    <link rel="apple-touch-icon" href="{{ staticAsset('/frontend/default/assets/img/logo.png') }}"/>
     <link rel="manifest" href="{{ staticAsset('/manifest.json') }}"/>
 
     <!-- recaptcha -->

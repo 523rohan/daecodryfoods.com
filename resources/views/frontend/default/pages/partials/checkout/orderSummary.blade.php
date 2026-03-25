@@ -12,10 +12,12 @@
         @php
             $isTaxInclusive = getSetting('taxes_inclusive') == '1';
         @endphp
-        <tr>
-            <td>{{ $isTaxInclusive ? '' : '(+) ' }}{{ localize('Tax') }}{{ $isTaxInclusive ? ' (' . localize('Included') . ')' : '' }}:</td>
-            <td class="text-end">{{ formatPrice(getTotalTax($carts)) }}</td>
-        </tr>
+        @if (!$isTaxInclusive)
+            <tr>
+                <td>(+) {{ localize('Tax') }}:</td>
+                <td class="text-end">{{ formatPrice(getTotalTax($carts)) }}</td>
+            </tr>
+        @endif
 
         @if (isset($shippingAmount))
             <tr>

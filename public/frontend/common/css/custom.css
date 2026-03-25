@@ -339,8 +339,13 @@ html:not([dir="rtl"]) .toast-close-button {
     bottom: 140px !important;
 }
 
+.scroll-top-btn {
+    right: 10px;
+}
+
 .scroll-top-btn.active {
     bottom: 80px;
+    right: 10px;
 }
 
 .object-fit-cover {

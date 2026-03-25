@@ -60,6 +60,20 @@
                         placeholder="{{ localize('Enter pincode') }}" required>
                 </div>
             </div>
+            <div class="col-sm-6">
+                <div class="w-100 label-input-field">
+                    <label>{{ localize('City') }} ({{ localize('Optional') }})</label>
+                    <input type="text" name="city" value="{{ $address->city }}"
+                        placeholder="{{ localize('Enter city') }}">
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="w-100 label-input-field">
+                    <label>{{ localize('Landmark') }} ({{ localize('Optional') }})</label>
+                    <input type="text" name="landmark" value="{{ $address->landmark }}"
+                        placeholder="{{ localize('Enter landmark') }}">
+                </div>
+            </div>
 
             <div class="col-sm-12">
                 <div class="label-input-field">

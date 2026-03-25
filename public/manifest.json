@@ -1,14 +1,14 @@
 {
-    "name": "Grostore",
-    "short_name": "Grostore",
+    "name": "Deaco Dry Foods",
+    "short_name": "Deaco Dry Foods",
     "start_url": "/",
     "background_color": "#6777ef",
-    "description": "Grostore",
+    "description": "Deaco Dry Foods",
     "display": "fullscreen",
     "theme_color": "#6eb356",
     "icons": [
         {
-            "src": "pwa.png",
+            "src": "frontend/default/assets/img/logo.png",
             "sizes": "512x512",
             "type": "image/png",
             "purpose": "any maskable"

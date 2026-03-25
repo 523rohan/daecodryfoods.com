@@ -16,11 +16,18 @@
                 <div class="invoice-box bg-white rounded p-4 p-sm-6">
                     <div class="row g-5 justify-content-between">
                         <div class="col-lg-6">
-                            <div class="invoice-title d-flex align-items-center">
-                                <h3>{{ localize('Invoice') }}</h3>
-                                <span class="badge rounded-pill bg-primary-light text-primary fw-medium ms-3">
-                                    {{ ucwords(str_replace('_', ' ', $order->delivery_status)) }}
-                                </span>
+                            <div class="invoice-title d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center">
+                                    <h3>{{ localize('Invoice') }}</h3>
+                                    <span class="badge rounded-pill bg-primary-light text-primary fw-medium ms-3">
+                                        {{ ucwords(str_replace('_', ' ', $order->delivery_status)) }}
+                                    </span>
+                                </div>
+                                <div>
+                                    <a href="javascript:void(0);" onclick="window.print();" class="btn btn-primary btn-sm">
+                                        <i class="fas fa-print me-1"></i> {{ localize('Print / Download') }}
+                                    </a>
+                                </div>
                             </div>
                             <table class="invoice-table-sm">
                                 <tr>
@@ -37,7 +44,7 @@
                         <div class="col-lg-5 col-md-8">
                             <div class="text-lg-end">
                                 <a href="{{ route('home') }}"><img src="{{ uploadedAsset(getSetting('navbar_logo')) }}"
-                                        alt="logo" class="img-fluid"></a>
+                                        alt="logo" class="img-fluid" style="max-height: 80px;"></a>
                                 <h6 class="mb-0 text-gray mt-4">{{ getSetting('site_address') }}</h6>
                             </div>
                         </div>
@@ -76,22 +83,40 @@
                                         @php
                                             $shippingAddress = $orderGroup->shippingAddress;
                                         @endphp
-                                        <p class="mb-0">{{ optional($shippingAddress)->address }},
-                                            {{ optional(optional($shippingAddress)->city)->name }},
-                                            {{ optional(optional($shippingAddress)->state)->name }},
-                                            {{ optional($shippingAddress)->pincode }},
-                                            {{ optional(optional($shippingAddress)->country)->name }}</p>
+                                        @if($shippingAddress)
+                                            <p class="mb-0">
+                                                {{ $shippingAddress->address }}
+                                                @if($shippingAddress->landmark), {{ $shippingAddress->landmark }}@endif
+                                                <br>
+                                                {{ $shippingAddress->city ?: optional($shippingAddress->city()->first())->name }},
+                                                {{ optional($shippingAddress->state)->name }}
+                                                @if($shippingAddress->pincode), {{ $shippingAddress->pincode }}@endif
+                                                <br>
+                                                {{ optional($shippingAddress->country)->name }}
+                                            </p>
+                                        @else
+                                            <p class="mb-0 text-muted">{{ localize('Address not found') }}</p>
+                                        @endif
                                     </div>
                                     <div class="ms-4">
                                         <h6 class="mb-2">{{ localize('Billing Address') }}</h6>
                                         @php
                                             $billingAddress = $orderGroup->billingAddress;
                                         @endphp
-                                        <p class="mb-0">{{ optional($billingAddress)->address }},
-                                            {{ optional(optional($billingAddress)->city)->name }},
-                                            {{ optional(optional($billingAddress)->state)->name }},
-                                            {{ optional($billingAddress)->pincode }},
-                                            {{ optional(optional($billingAddress)->country)->name }}</p>
+                                        @if($billingAddress)
+                                            <p class="mb-0">
+                                                {{ $billingAddress->address }}
+                                                @if($billingAddress->landmark), {{ $billingAddress->landmark }}@endif
+                                                <br>
+                                                {{ $billingAddress->city ?: optional($billingAddress->city()->first())->name }},
+                                                {{ optional($billingAddress->state)->name }}
+                                                @if($billingAddress->pincode), {{ $billingAddress->pincode }}@endif
+                                                <br>
+                                                {{ optional($billingAddress->country)->name }}
+                                            </p>
+                                        @else
+                                            <p class="mb-0 text-muted">{{ localize('Address not found') }}</p>
+                                        @endif
                                     </div>
                                 </div>
                             @endif
@@ -268,6 +293,35 @@
 
 
 @section('scripts')
+    <style>
+        @media print {
+
+            .tt-sidebar,
+            .navbar,
+            .footer-section,
+            .btn,
+            .breadcrumb-section,
+            .offcanvas,
+            header {
+                display: none !important;
+            }
+
+            .invoice-section {
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .invoice-box {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+            }
+
+            body {
+                background: white !important;
+            }
+        }
+    </style>
     <script>
         "use strict";
 

@@ -65,8 +65,8 @@
                                 <div class="col-sm-6">
                                     <div class="label-input-field">
                                         <label>{{ localize('New Password') }}</label>
-                                        <div class="position-relative">
-                                            <input type="password" name="password" placeholder="******" required>
+                                        <div class="position-relative" style="display: block;">
+                                            <input type="password" name="password" placeholder="******" style="padding-right: 45px;" required>
                                             <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePassword(this)"></i>
                                         </div>
                                     </div>
@@ -74,8 +74,8 @@
                                 <div class="col-sm-6">
                                     <div class="label-input-field">
                                         <label>{{ localize('Re-type Password') }}</label>
-                                        <div class="position-relative">
-                                            <input type="password" name="password_confirmation" placeholder="******" required>
+                                        <div class="position-relative" style="display: block;">
+                                            <input type="password" name="password_confirmation" placeholder="******" style="padding-right: 45px;" required>
                                             <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePassword(this)"></i>
                                         </div>
                                     </div>

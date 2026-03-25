@@ -346,7 +346,8 @@ html:not([dir="rtl"]) .toast-close-button {
 .password-toggle-icon {
     position: absolute;
     right: 15px;
-    bottom: 15px;
+    top: 50%;
+    transform: translateY(-50%);
     cursor: pointer;
     color: #6c757d;
     z-index: 10;

@@ -63,17 +63,21 @@
                             <input type="hidden" name="type" value="password">
                             <div class="row g-4">
                                 <div class="col-sm-6">
-                                    <div class="label-input-field position-relative">
+                                    <div class="label-input-field">
                                         <label>{{ localize('New Password') }}</label>
-                                        <input type="password" name="password" placeholder="******" required>
-                                        <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePassword(this)"></i>
+                                        <div class="position-relative">
+                                            <input type="password" name="password" placeholder="******" required>
+                                            <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePassword(this)"></i>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <div class="label-input-field position-relative">
+                                    <div class="label-input-field">
                                         <label>{{ localize('Re-type Password') }}</label>
-                                        <input type="password" name="password_confirmation" placeholder="******" required>
-                                        <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePassword(this)"></i>
+                                        <div class="position-relative">
+                                            <input type="password" name="password_confirmation" placeholder="******" required>
+                                            <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePassword(this)"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

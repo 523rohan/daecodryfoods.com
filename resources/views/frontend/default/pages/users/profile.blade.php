@@ -65,18 +65,22 @@
                                 <div class="col-sm-6">
                                     <div class="label-input-field">
                                         <label>{{ localize('New Password') }}</label>
-                                        <div class="position-relative" style="display: block;">
-                                            <input type="password" name="password" placeholder="******" style="padding-right: 45px;" required>
-                                            <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePassword(this)"></i>
+                                        <div style="position: relative; width: 100%; display: block;">
+                                            <input type="password" name="password" placeholder="******" style="padding-right: 45px; width: 100%;" required>
+                                            <span onclick="togglePassword(this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6c757d; z-index: 10;">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="label-input-field">
                                         <label>{{ localize('Re-type Password') }}</label>
-                                        <div class="position-relative" style="display: block;">
-                                            <input type="password" name="password_confirmation" placeholder="******" style="padding-right: 45px;" required>
-                                            <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePassword(this)"></i>
+                                        <div style="position: relative; width: 100%; display: block;">
+                                            <input type="password" name="password_confirmation" placeholder="******" style="padding-right: 45px; width: 100%;" required>
+                                            <span onclick="togglePassword(this)" style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6c757d; z-index: 10;">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -96,12 +100,13 @@
 
         function togglePassword(el) {
             const input = el.parentElement.querySelector('input');
+            const icon = el.querySelector('i');
             if (input.type === 'password') {
                 input.type = 'text';
-                el.classList.replace('fa-eye', 'fa-eye-slash');
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
             } else {
                 input.type = 'password';
-                el.classList.replace('fa-eye-slash', 'fa-eye');
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
             }
         }
     </script>

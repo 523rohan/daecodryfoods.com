@@ -7,6 +7,25 @@
         </div>
         <div class="col-xl-6">
             <div class="product-info">
+                @if ($product->categories()->count() > 0)
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <div class="tt-category-tag">
+                            @foreach ($product->categories as $category)
+                                <a href="{{ route('products.index') }}?&category_id={{ $category->id }}"
+                                    class="text-muted fs-xxs">{{ $category->collectLocalization('name') }}</a>
+                            @endforeach
+                        </div>
+                        <a href="javascript:void(0);" onclick="shareProduct('{{ $product->collectLocalization('name') }}', '{{ route('products.show', $product->slug) }}')" class="text-muted fs-lg" title="{{ localize('Share') }}">
+                            <i class="fa-solid fa-share-nodes"></i>
+                        </a>
+                    </div>
+                @else
+                    <div class="text-end mb-1">
+                        <a href="javascript:void(0);" onclick="shareProduct('{{ $product->collectLocalization('name') }}', '{{ route('products.show', $product->slug) }}')" class="text-muted fs-lg" title="{{ localize('Share') }}">
+                            <i class="fa-solid fa-share-nodes"></i>
+                        </a>
+                    </div>
+                @endif
                 <h3 class="mt-1 mb-3 h5">{{ $product->collectLocalization('name') }}</h3>
 
                 <!-- pricing -->
@@ -75,11 +94,6 @@
                             <i class="fa-solid fa-heart"></i>
                         </button>
 
-                        <button type="button" class="btn btn-outline-secondary btn-md"
-                            onclick="shareProduct('{{ $product->collectLocalization('name') }}', '{{ route('products.show', $product->slug) }}')">
-                            <i class="fa-solid fa-share-nodes"></i>
-                        </button>
-
                         <div class="flex-grow-1"></div>
                         @if (getSetting('enable_reward_points') == 1)
                             <span class="fw-bold" data-bs-toggle="tooltip" data-bs-placement="top"
@@ -89,16 +103,7 @@
                         @endif
                     </div>
 
-                    <!--product category start-->
-                    @if ($product->categories()->count() > 0)
-                        <div class="tt-category-tag mt-4">
-                            @foreach ($product->categories as $category)
-                                <a href="{{ route('products.index') }}?&category_id={{ $category->id }}"
-                                    class="text-muted fs-xxs">{{ $category->collectLocalization('name') }}</a>
-                            @endforeach
-                        </div>
-                    @endif
-                    <!--product category end-->
+                    <!--product category removed from bottom-->
                 </form>
 
             </div>

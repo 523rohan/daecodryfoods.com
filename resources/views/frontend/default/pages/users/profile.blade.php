@@ -63,15 +63,17 @@
                             <input type="hidden" name="type" value="password">
                             <div class="row g-4">
                                 <div class="col-sm-6">
-                                    <div class="label-input-field">
+                                    <div class="label-input-field position-relative">
                                         <label>{{ localize('New Password') }}</label>
                                         <input type="password" name="password" placeholder="******" required>
+                                        <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePassword(this)"></i>
                                     </div>
                                 </div>
                                 <div class="col-sm-6">
-                                    <div class="label-input-field">
+                                    <div class="label-input-field position-relative">
                                         <label>{{ localize('Re-type Password') }}</label>
                                         <input type="password" name="password_confirmation" placeholder="******" required>
+                                        <i class="fa-solid fa-eye password-toggle-icon" onclick="togglePassword(this)"></i>
                                     </div>
                                 </div>
                             </div>
@@ -82,4 +84,21 @@
             </div>
         </div>
     </section>
+@endsection
+
+@section('scripts')
+    <script>
+        "use strict";
+
+        function togglePassword(el) {
+            const input = el.parentElement.querySelector('input');
+            if (input.type === 'password') {
+                input.type = 'text';
+                el.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                el.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+    </script>
 @endsection

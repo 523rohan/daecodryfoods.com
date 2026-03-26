@@ -66,7 +66,18 @@
     <meta property="og:title" content="{{ getSetting('global_meta_title') }}" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ route('home') }}" />
-    <meta property="og:image" content="{{ uploadedAsset(getSetting('global_meta_image')) }}" />
+    @php
+        $ogImage = uploadedAsset(getSetting('global_meta_image'));
+        if (!$ogImage || $ogImage == noImage()) {
+            $ogImage = uploadedAsset(getSetting('navbar_logo'));
+        }
+        if (!$ogImage || $ogImage == noImage()) {
+            $ogImage = staticAsset('frontend/default/assets/img/logo.png');
+        }
+    @endphp
+    <meta property="og:image" content="{{ $ogImage }}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:description" content="{{ getSetting('global_meta_description') }}" />
     <meta property="og:site_name" content="{{ env('APP_NAME') }}" />
     <meta property="fb:app_id" content="{{ env('FACEBOOK_PIXEL_ID') }}">

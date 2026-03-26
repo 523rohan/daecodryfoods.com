@@ -42,7 +42,8 @@ class ReportsController extends Controller
             $startDate = date("Y-m-d", strtotime($date_var[0]));
             $endDate = date("Y-m-d", strtotime($date_var[1]) + 86400); // 1 day in seconds
 
-            $productsQuery = $productsQuery->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
+            $productsQuery = $productsQuery->leftJoin('product_variations', 'products.id', '=', 'product_variations.product_id')
+                ->leftJoin('order_items', 'product_variations.id', '=', 'order_items.product_variation_id')
                 ->where('order_items.created_at', '>=', $startDate)
                 ->where('order_items.created_at', '<=', $endDate)
                 ->select('products.*', DB::raw('SUM(order_items.qty) as period_sale_count'))

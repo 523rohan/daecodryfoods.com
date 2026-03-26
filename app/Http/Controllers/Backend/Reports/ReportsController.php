@@ -29,17 +29,37 @@ class ReportsController extends Controller
     {
         $searchKey  = null;
         $order = 'DESC';
+        $date_var = null;
 
         if ($request->order == "ASC") {
             $order = 'ASC';
         }
-        $products = Product::shop()->orderBy('total_sale_count', $order);
+
+        $productsQuery = Product::shop();
+
+        if (Str::contains($request->date_range, 'to') && $request->date_range != null) {
+            $date_var = explode(" to ", $request->date_range);
+            $startDate = date("Y-m-d", strtotime($date_var[0]));
+            $endDate = date("Y-m-d", strtotime($date_var[1]) + 86400); // 1 day in seconds
+
+            $productsQuery = $productsQuery->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
+                ->where('order_items.created_at', '>=', $startDate)
+                ->where('order_items.created_at', '<=', $endDate)
+                ->select('products.*', DB::raw('SUM(order_items.quantity) as period_sale_count'))
+                ->groupBy('products.id')
+                ->orderBy('period_sale_count', $order);
+        } else {
+            $productsQuery = $productsQuery->orderBy('total_sale_count', $order)
+                ->select('products.*', DB::raw('total_sale_count as period_sale_count'));
+        }
+
         if ($request->search != null) {
-            $products = $products->where('name', 'like', '%' . $request->search . '%');
+            $productsQuery = $productsQuery->where('products.name', 'like', '%' . $request->search . '%');
             $searchKey = $request->search;
         }
-        $products = $products->paginate(paginationNumber(30), ['name', 'thumbnail_image', 'slug', 'total_sale_count']);
-        return view('backend.pages.reports.sales', compact('products', 'order', 'searchKey'));
+
+        $products = $productsQuery->paginate(paginationNumber(30));
+        return view('backend.pages.reports.sales', compact('products', 'order', 'searchKey', 'date_var'));
     }
 
     # orders

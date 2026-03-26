@@ -41,6 +41,22 @@
 
                                     <div class="col-auto">
                                         <div class="input-group">
+                                            @php
+                                                $start_date = date('m/d/Y', strtotime('first day of this month'));
+                                                $end_date = date('m/d/Y', strtotime('today'));
+                                                if (isset($date_var)) {
+                                                    $start_date = date('m/d/Y', strtotime($date_var[0]));
+                                                    $end_date = date('m/d/Y', strtotime($date_var[1]));
+                                                }
+                                            @endphp
+                                            <input class="form-control date-range-picker date-range" type="text"
+                                                placeholder="{{ localize('Start date - End date') }}" name="date_range"
+                                                data-startdate="'{{ $start_date }}'" data-enddate="'{{ $end_date }}'">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-auto">
+                                        <div class="input-group">
                                             <select class="form-select select2" name="order"
                                                 data-minimum-results-for-search="Infinity">
                                                 <option value="DESC"
@@ -96,7 +112,7 @@
                                         </td>
 
                                         <td class="text-end">
-                                            {{ $product->total_sale_count }}
+                                            {{ $product->period_sale_count ?? 0 }}
                                         </td>
                                     </tr>
                                 @endforeach

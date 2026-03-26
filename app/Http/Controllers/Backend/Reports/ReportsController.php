@@ -8,7 +8,10 @@ use App\Models\Order;
 use App\Models\OrderGroup;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Exports\OrdersReportExport;
+use App\Exports\ProductSalesReportExport;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 use Str;
 use DB;
 
@@ -17,8 +20,8 @@ class ReportsController extends Controller
     # construct
     public function __construct()
     {
-        $this->middleware(['permission:product_sale_reports'])->only('index');
-        $this->middleware(['permission:order_reports'])->only('orders');
+        $this->middleware(['permission:product_sale_reports'])->only(['index', 'exportSales']);
+        $this->middleware(['permission:order_reports'])->only(['orders', 'exportOrders']);
         $this->middleware(['permission:category_sale_reports'])->only('categoryWise');
         $this->middleware(['permission:sales_amount_reports'])->only('amountWise');
         $this->middleware(['permission:delivery_status_reports'])->only('deliveryStatus');
@@ -154,5 +157,17 @@ class ReportsController extends Controller
         $orders = $orderQuery->groupBy('delivery_status')->selectRaw('delivery_status, count(delivery_status) as total_order')->paginate(paginationNumber(30));
 
         return view('backend.pages.reports.deliveryStatus', compact('orders', 'totalOrders', 'date_var'));
+    }
+
+    # export product sales
+    public function exportSales(Request $request)
+    {
+        return Excel::download(new ProductSalesReportExport($request), 'product-sales-report.xlsx');
+    }
+
+    # export orders
+    public function exportOrders(Request $request)
+    {
+        return Excel::download(new OrdersReportExport($request), 'orders-report.xlsx');
     }
 }

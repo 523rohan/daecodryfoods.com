@@ -444,7 +444,9 @@ Route::group(
         # reports
         Route::group(['prefix' => 'reports'], function () {
             Route::get('/product-sales', [ReportsController::class, 'index'])->name('admin.reports.sales');
+            Route::get('/product-sales/export', [ReportsController::class, 'exportSales'])->name('admin.reports.sales.export');
             Route::get('/orders', [ReportsController::class, 'orders'])->name('admin.reports.orders');
+            Route::get('/orders/export', [ReportsController::class, 'exportOrders'])->name('admin.reports.orders.export');
             Route::get('/category-wise-sales', [ReportsController::class, 'categoryWise'])->name('admin.reports.categorySales');
             Route::get('/sales-amount-report', [ReportsController::class, 'amountWise'])->name('admin.reports.salesAmount');
             Route::get('/delivery-status-report', [ReportsController::class, 'deliveryStatus'])->name('admin.reports.deliveryStatus');

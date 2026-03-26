@@ -13,41 +13,41 @@
         p, h1, h2, h3 { margin: 0; }
         
         /* LAYOUT */
-        .wrapper { width: 100%; table-layout: fixed; background-color: #F8FAFC; padding: 40px 0; }
+        .wrapper { width: 100%; table-layout: fixed; background-color: #F8FAFC; padding: 20px 0; }
         .container { max-width: 600px; margin: 0 auto; background-color: #FFFFFF; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
         
         /* HEADER */
-        .header { padding: 40px 40px 30px; text-align: center; border-bottom: 1px solid #F1F5F9; }
-        .logo { margin: 0 auto 20px; max-height: 48px; width: auto; }
-        .header-title { font-size: 24px; font-weight: 800; color: #1E293B; letter-spacing: -0.02em; }
-        .order-meta { font-size: 14px; color: #64748B; margin-top: 8px; }
+        .header { padding: 25px 40px 15px; text-align: center; border-bottom: 1px solid #F1F5F9; }
+        .logo { margin: 0 auto 15px; max-height: 40px; width: auto; }
+        .header-title { font-size: 20px; font-weight: 800; color: #1E293B; letter-spacing: -0.02em; }
+        .order-meta { font-size: 13px; color: #64748B; margin-top: 6px; }
         
         /* CONTENT */
-        .content { padding: 40px; }
+        .content { padding: 20px 40px; }
         
         /* INFO GRID */
-        .section-title { font-size: 12px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
-        .info-card { background-color: #F8FAFC; border-radius: 8px; padding: 20px; margin-bottom: 30px; }
-        .info-text { font-size: 14px; color: #334155; line-height: 1.6; }
-        .info-name { font-weight: 700; color: #1E293B; margin-bottom: 4px; display: block; }
+        .section-title { font-size: 11px; font-weight: 700; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
+        .info-card { background-color: #F8FAFC; border-radius: 8px; padding: 15px; margin-bottom: 20px; }
+        .info-text { font-size: 13px; color: #334155; line-height: 1.5; }
+        .info-name { font-weight: 700; color: #1E293B; margin-bottom: 2px; display: block; }
         
         /* ITEMS TABLE */
-        .items-header { border-bottom: 2px solid #F1F5F9; padding-bottom: 12px; margin-bottom: 16px; }
-        .item-row { border-bottom: 1px solid #F1F5F9; padding: 16px 0; }
-        .item-name { font-size: 15px; font-weight: 600; color: #1E293B; margin-bottom: 4px; }
-        .item-variation { font-size: 13px; color: #64748B; }
-        .item-price { font-size: 14px; color: #475569; font-weight: 500; }
+        .items-header { border-bottom: 2px solid #F1F5F9; padding-bottom: 8px; margin-bottom: 10px; }
+        .item-row { border-bottom: 1px solid #F1F5F9; padding: 10px 0; }
+        .item-name { font-size: 14px; font-weight: 600; color: #1E293B; margin-bottom: 2px; }
+        .item-variation { font-size: 12px; color: #64748B; }
+        .item-price { font-size: 13px; color: #475569; font-weight: 500; }
         
         /* TOTALS */
-        .totals-container { margin-top: 30px; padding-top: 20px; border-top: 2px solid #F1F5F9; }
-        .total-item { margin-bottom: 8px; font-size: 14px; color: #64748B; }
+        .totals-container { margin-top: 20px; padding-top: 15px; border-top: 2px solid #F1F5F9; }
+        .total-item { margin-bottom: 6px; font-size: 13px; color: #64748B; }
         .total-value { font-weight: 600; color: #334155; float: right; }
-        .grand-total { margin-top: 16px; padding-top: 16px; border-top: 1px solid #F1F5F9; font-size: 18px; font-weight: 800; color: #1E293B; }
+        .grand-total { margin-top: 12px; padding-top: 12px; border-top: 1px solid #F1F5F9; font-size: 16px; font-weight: 800; color: #1E293B; }
         .grand-total-value { float: right; color: #10B981; } /* Premium Green for total */
         
         /* FOOTER */
-        .footer { padding: 40px; text-align: center; background-color: #F1F5F9; }
-        .footer-text { font-size: 13px; color: #64748B; line-height: 1.6; }
+        .footer { padding: 25px 40px; text-align: center; background-color: #F1F5F9; }
+        .footer-text { font-size: 12px; color: #64748B; line-height: 1.5; }
         
         /* RESPONSIVE */
         @media screen and (max-width: 600px) {
@@ -196,12 +196,10 @@
 
             <!-- FOOTER -->
             <div class="footer">
-                <p class="footer-text"><strong>{{ localize('Thank you for your order!') }}</strong></p>
-                <p class="footer-text">{{ getSetting('invoice_thanksgiving') }}</p>
-                <div style="margin-top: 20px; border-top: 1px solid #E2E8F0; padding-top: 20px;">
+                <p class="footer-text"><strong>{{ localize('Thank you for your order!') }}</strong> &bull; {{ getSetting('invoice_thanksgiving') }}</p>
+                <div style="margin-top: 10px; border-top: 1px solid #E2E8F0; padding-top: 10px;">
                     <p class="footer-text" style="font-weight: 600; color: #1E293B;">{{ getSetting('system_title') }}</p>
-                    <p class="footer-text">{{ localize('Email') }}: {{ getSetting('topbar_email') }} &bull; {{ localize('Phone') }}: {{ getSetting('navbar_contact_number') }}</p>
-                    <p class="footer-text">{{ env('APP_URL') }}</p>
+                    <p class="footer-text">{{ localize('Email') }}: {{ getSetting('topbar_email') }} &bull; {{ localize('Phone') }}: {{ getSetting('navbar_contact_number') }} &bull; {{ env('APP_URL') }}</p>
                 </div>
             </div>
         </div>

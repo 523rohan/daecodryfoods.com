@@ -323,6 +323,7 @@ Route::group(
         # customers
         Route::group(['prefix' => 'customers'], function () {
             Route::get('/', [CustomersController::class, 'index'])->name('admin.customers.index');
+            Route::get('/export', [CustomersController::class, 'export'])->name('admin.customers.export');
             Route::post('/update-banned-customer', [CustomersController::class, 'updateBanStatus'])->name('admin.customers.updateBanStatus');
         });
 

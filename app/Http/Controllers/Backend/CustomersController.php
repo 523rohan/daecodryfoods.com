@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Exports\CustomersExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomersController extends Controller
 {
@@ -12,7 +14,7 @@ class CustomersController extends Controller
     # construct
     public function __construct()
     {
-        $this->middleware(['permission:customers'])->only('index');
+        $this->middleware(['permission:customers'])->only(['index', 'export']);
         $this->middleware(['permission:ban_customers'])->only(['updateBanStatus']);
     }
 
@@ -47,5 +49,11 @@ class CustomersController extends Controller
             return 1;
         }
         return 0;
+    }
+
+    # export customers
+    public function export(Request $request)
+    {
+        return Excel::download(new CustomersExport($request), 'customers.xlsx');
     }
 }

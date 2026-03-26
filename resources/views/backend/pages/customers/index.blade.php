@@ -14,6 +14,13 @@
                             <div class="tt-page-title">
                                 <h2 class="h5 mb-lg-0">{{ localize('Customers') }}</h2>
                             </div>
+                            <div class="tt-action">
+                                <a href="{{ route('admin.customers.export') }}?{{ http_build_query(request()->all()) }}"
+                                    class="btn btn-primary">
+                                    <i data-feather="download" width="18"></i>
+                                    {{ localize('Export to Excel') }}
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

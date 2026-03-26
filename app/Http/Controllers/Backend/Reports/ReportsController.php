@@ -45,7 +45,7 @@ class ReportsController extends Controller
             $productsQuery = $productsQuery->leftJoin('order_items', 'products.id', '=', 'order_items.product_id')
                 ->where('order_items.created_at', '>=', $startDate)
                 ->where('order_items.created_at', '<=', $endDate)
-                ->select('products.*', DB::raw('SUM(order_items.quantity) as period_sale_count'))
+                ->select('products.*', DB::raw('SUM(order_items.qty) as period_sale_count'))
                 ->groupBy('products.id')
                 ->orderBy('period_sale_count', $order);
         } else {

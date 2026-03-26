@@ -77,15 +77,27 @@
 
                                 <div class="mb-3">
                                     <label for="password" class="form-label">{{ localize('Password') }}</label>
-                                    <input class="form-control" type="password" id="password"
-                                        placeholder="{{ localize('Type password') }}" name="password">
+                                    <div class="position-relative">
+                                        <input class="form-control" type="password" id="password"
+                                            placeholder="{{ localize('Type password') }}" name="password">
+                                        <span class="position-absolute end-0 top-50 translate-middle-y me-2 mt-2 cursor-pointer toggle-password"
+                                            onclick="togglePasswordVisibility(this)">
+                                            <i data-feather="eye" class="fs-sm"></i>
+                                        </span>
+                                    </div>
                                 </div>
 
                                 <div class="mb-3">
                                     <label for="password_confirmation"
                                         class="form-label">{{ localize('Confirm Password') }}</label>
-                                    <input class="form-control" type="password" id="password_confirmation"
-                                        placeholder="{{ localize('Re-type password') }}" name="password_confirmation">
+                                    <div class="position-relative">
+                                        <input class="form-control" type="password" id="password_confirmation"
+                                            placeholder="{{ localize('Re-type password') }}" name="password_confirmation">
+                                        <span class="position-absolute end-0 top-50 translate-middle-y me-2 mt-2 cursor-pointer toggle-password"
+                                            onclick="togglePasswordVisibility(this)">
+                                            <i data-feather="eye" class="fs-sm"></i>
+                                        </span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -136,5 +148,20 @@
             getChosenFilesCount();
             showSelectedFilePreviewOnLoad();
         });
+
+        function togglePasswordVisibility(el) {
+            const input = $(el).closest('.position-relative').find('input');
+            const type = input.attr('type') === 'password' ? 'text' : 'password';
+            input.attr('type', type);
+
+            // toggle icon
+            const icon = $(el).find('i');
+            if (type === 'password') {
+                icon.attr('data-feather', 'eye');
+            } else {
+                icon.attr('data-feather', 'eye-off');
+            }
+            feather.replace();
+        }
     </script>
 @endsection

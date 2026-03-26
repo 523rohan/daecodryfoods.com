@@ -110,7 +110,7 @@
     <!--preloader start-->
     @if (getSetting('enable_preloader') != '0')
     <div id="preloader">
-        <img src="{{ uploadedAsset(getSetting('frontend_preloader')) ?? staticAsset('frontend/default/assets/img/preloader.gif') }}" alt="preloader" class="img-fluid" max-width="180">
+        <img src="{{ uploadedAsset(getSetting('frontend_preloader')) ?? staticAsset('frontend/default/assets/img/preloader.gif') }}" alt="preloader" class="img-fluid" style="max-width: 180px;">
     </div>
     @endif
     <!--preloader end-->

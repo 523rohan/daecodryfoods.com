@@ -38,11 +38,11 @@
 <body>
 
     <!--preloader start-->
-    @if (getSetting('enable_preloader') != '0')
+    @if (getSetting('enable_preloader') != '0' && !request()->is('admin/pos*'))
         <div id="preloader" class="bg-light-subtle">
             <div class="preloader-wrap">
                 <img src="{{ uploadedAsset(getSetting('admin_panel_preloader') ?? getSetting('navbar_logo')) }}"
-                    class="img-fluid" max-width="180">
+                    class="img-fluid" style="max-width: 180px;">
                 <div class="loading-bar"></div>
             </div>
         </div>
@@ -50,14 +50,14 @@
     <!--preloader end-->
 
     <!--sidebar section start-->
-    @if (!Route::is('admin.pos.index'))
+    @if (!request()->is('admin/pos*'))
         @include('backend.inc.leftSidebar')
     @endif
     <!--sidebar section end-->
 
     <!--main content wrapper start-->
     <main class="tt-main-wrapper bg-secondary-subtle"
-        @if (!Route::is('admin.pos.index')) id="content" @else  id="pos-content" @endif>
+        @if (!request()->is('admin/pos*')) id="content" @else  id="pos-content" @endif>
         <!--header section start-->
         @include('backend.inc.navbar')
         <!--header section end-->

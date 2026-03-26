@@ -8,7 +8,14 @@
       $discountInputValue = 0;
       
       $discountType = 'flat';
-      $subtotal = getSubTotal($carts, false, '', false) + getTotalTax($carts);
+      $isTaxInclusive = getSetting('taxes_inclusive') == '1';
+      $subTotalWithoutTax = getSubTotal($carts, false, '', false);
+      $totalTax = getTotalTax($carts);
+      if ($isTaxInclusive) {
+          $subtotal = $subTotalWithoutTax;
+      } else {
+          $subtotal = $subTotalWithoutTax + $totalTax;
+      }
       
       // to convert input price to base price
       if (Session::has('currency_code')) {

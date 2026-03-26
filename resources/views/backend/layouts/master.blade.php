@@ -20,6 +20,7 @@
 
     <!--favicon icon-->
     <link rel="shortcut icon" href="{{ staticAsset('backend/assets/img/favicon.png') }}">
+    <link rel="apple-touch-icon" href="{{ staticAsset('backend/assets/img/favicon.png') }}">
 
     <!--title-->
     <title>

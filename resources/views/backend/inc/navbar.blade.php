@@ -26,7 +26,7 @@
                         <div class="tt-brand pe-3">
                             <a href="{{ route('admin.dashboard') }}">
                                 <img src="{{ uploadedAsset(getSetting('favicon')) }}" class="tt-brand-favicon"
-                                    alt="favicon" />
+                                    style="width: 35px;" alt="favicon" />
                             </a>
                         </div>
                     </div>

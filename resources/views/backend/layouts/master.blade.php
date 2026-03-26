@@ -38,6 +38,10 @@
             #preloader, .preloader, .loading-bar, .tt-preloader {
                 display: none !important;
             }
+            .tt-brand-favicon {
+                max-width: 35px !important;
+                height: auto !important;
+            }
         </style>
     @endif
 </head>

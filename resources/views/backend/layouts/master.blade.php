@@ -19,8 +19,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!--favicon icon-->
-    <link rel="shortcut icon" href="{{ staticAsset('backend/assets/img/favicon.png') }}">
-    <link rel="apple-touch-icon" href="{{ staticAsset('backend/assets/img/favicon.png') }}">
+    <link rel="icon" href="{{ uploadedAsset(getSetting('favicon')) }}" type="image/png" sizes="16x16">
+    <link rel="apple-touch-icon" href="{{ uploadedAsset(getSetting('favicon')) }}">
 
     <!--title-->
     <title>

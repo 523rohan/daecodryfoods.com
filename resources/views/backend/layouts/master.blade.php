@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="light">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-bs-theme="light" @if (request()->is('admin/pos*')) class="pos-page" @endif>
 
 <head>
     <!-- Google tag (gtag.js) -->
@@ -33,6 +33,13 @@
     @php
         echo getSetting('backend_header_custom_css');
     @endphp
+    @if (request()->is('admin/pos*'))
+        <style>
+            #preloader, .preloader, .loading-bar, .tt-preloader {
+                display: none !important;
+            }
+        </style>
+    @endif
 </head>
 
 <body>

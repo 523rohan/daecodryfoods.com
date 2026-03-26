@@ -179,10 +179,9 @@
         <!--page's script-->
 
         <!--for pwa-->
-        <script src="{{ url('/') . '/public/sw.js' }}"></script>
         <script>
-            if (!navigator.serviceWorker?.controller) {
-                navigator.serviceWorker?.register("./public/sw.js").then(function(reg) {
+            if ('serviceWorker' in navigator && !navigator.serviceWorker?.controller) {
+                navigator.serviceWorker?.register("{{ staticAsset('sw.js') }}").then(function(reg) {
                     // console.log("Service worker has been registered for scope: " + reg.scope);
                 });
             }

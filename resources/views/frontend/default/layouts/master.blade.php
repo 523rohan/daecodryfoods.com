@@ -39,6 +39,7 @@
 
     <!--favicon icon-->
     <link rel="icon" href="{{ uploadedAsset(getSetting('favicon')) }}" type="image/png" sizes="16x16">
+    <link rel="icon" href="{{ uploadedAsset(getSetting('favicon')) }}" type="image/png" sizes="32x32">
 
     <!--title-->
     <title>
@@ -95,7 +96,16 @@
     @endphp
     <!-- PWA  -->
     <meta name="theme-color" content="#6eb356"/>
-    <link rel="apple-touch-icon" href="{{ staticAsset('/frontend/default/assets/img/logo.png') }}"/>
+    @php
+        $favicon = uploadedAsset(getSetting('favicon'));
+        if (!$favicon || $favicon == noImage()) {
+            $favicon = uploadedAsset(getSetting('navbar_logo'));
+        }
+        if (!$favicon || $favicon == noImage()) {
+            $favicon = staticAsset('frontend/default/assets/img/Logo1.png');
+        }
+    @endphp
+    <link rel="apple-touch-icon" href="{{ $favicon }}"/>
     <link rel="manifest" href="{{ staticAsset('/manifest.json') }}"/>
 
     <!-- recaptcha -->

@@ -26,7 +26,7 @@
                             </a>
                         </div>
                         <h2 class="mb-4 h3">{{ localize('Hey there!') }}
-                            <br>{{ localize('Welcome back to Grostore.') }}
+                            <br>{{ localize('Welcome back to') }} {{ getSetting('system_title') }}.
                         </h2>
 
                         <div class="row g-3">

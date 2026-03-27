@@ -64,4 +64,36 @@
             padding: 0 !important; /* remove padding */
         }
     }
+
+    /* Mobile Header Cleanup */
+    @media (max-width: 991.98px) {
+        .gshop-navbar {
+            padding-top: 5px !important;
+            padding-bottom: 5px !important;
+            border-radius: 0 !important;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+        }
+        
+        .navbar-logo {
+            max-height: 55px !important;
+            width: auto !important;
+            transform: scale(1.15);
+            transform-origin: left center;
+        }
+
+        .gshop-offcanvas-btn {
+            width: 40px !important;
+            height: 40px !important;
+            border-radius: 6px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0 !important;
+        }
+
+        .gshop-offcanvas-btn svg {
+            width: 18px !important;
+            height: 18px !important;
+        }
+    }
 </style>

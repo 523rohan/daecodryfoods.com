@@ -19,7 +19,7 @@ class TicketCategory extends Model
     }
     public function staff():BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id')->withDefault([
+        return $this->belongsTo(User::class, 'assign_staff', 'id')->withDefault([
             'name'=>'not found'
         ]);
     }

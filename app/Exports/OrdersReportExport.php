@@ -43,6 +43,13 @@ class OrdersReportExport implements FromCollection, WithHeadings, WithMapping
         return [
             "Order Code",
             "Customer Name",
+            "Customer Email",
+            "Customer Phone",
+            "Address",
+            "City",
+            "State",
+            "Pincode",
+            "Country",
             "Placed On",
             "Items Qty",
             "Payment Status",
@@ -53,9 +60,31 @@ class OrdersReportExport implements FromCollection, WithHeadings, WithMapping
 
     public function map($order): array
     {
+        $address = "";
+        $city = "";
+        $state = "";
+        $pincode = "";
+        $country = "";
+
+        if($order->orderGroup && $order->orderGroup->shippingAddress) {
+            $addr = $order->orderGroup->shippingAddress;
+            $address = $addr->address;
+            $city = $addr->city?->name ?? $addr->city;
+            $state = $addr->state?->name ?? $addr->state;
+            $pincode = $addr->pincode;
+            $country = $addr->country?->name ?? $addr->country;
+        }
+
         return [
             $order->orderGroup->order_code,
-            optional($order->user)->name,
+            $order->user ? $order->user->name : localize('Guest'),
+            $order->user ? $order->user->email : '',
+            $order->orderGroup->phone_no,
+            $address,
+            $city,
+            $state,
+            $pincode,
+            $country,
             date('d M, Y', strtotime($order->created_at)),
             $order->orderItems()->count(),
             $order->payment_status,

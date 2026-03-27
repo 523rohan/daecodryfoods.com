@@ -102,24 +102,45 @@
                         <table class="table tt-footable border-top align-middle" data-use-parent-width="true">
                             <thead>
                                 <tr>
-                                    <th class="text-center">{{ localize('S/L') }}
-                                    </th>
-                                    <th>{{ localize('Placed On') }}</th>
-                                    <th data-breakpoints="xs">{{ localize('Items') }}</th>
-                                    <th data-breakpoints="xs">{{ localize('Payment Status') }}</th>
-                                    <th data-breakpoints="xs">{{ localize('Delivery Status') }}</th>
-                                    <th data-breakpoints="xs" class="text-end">{{ localize('Amount') }}</th>
+                                     <th class="text-center">{{ localize('S/L') }}
+                                     </th>
+                                     <th>{{ localize('Order Code') }}</th>
+                                     <th>{{ localize('Customer') }}</th>
+                                     <th>{{ localize('Placed On') }}</th>
+                                     <th data-breakpoints="xs">{{ localize('Items') }}</th>
+                                     <th data-breakpoints="xs">{{ localize('Payment Status') }}</th>
+                                     <th data-breakpoints="xs">{{ localize('Delivery Status') }}</th>
+                                     <th data-breakpoints="xs" class="text-end">{{ localize('Amount') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($orders as $key => $order)
                                     <tr>
-                                        <td class="text-center">
-                                            {{ $key + 1 + ($orders->currentPage() - 1) * $orders->perPage() }}</td>
+                                         <td class="text-center">
+                                             {{ $key + 1 + ($orders->currentPage() - 1) * $orders->perPage() }}</td>
 
-                                        <td>
-                                            <span class="fs-sm">{{ date('d M, Y', strtotime($order->created_at)) }}</span>
-                                        </td>
+                                         <td>
+                                             <span class="fs-sm">{{ getSetting('order_code_prefix') }}{{ $order->orderGroup->order_code }}</span>
+                                         </td>
+
+                                         <td>
+                                             <div class="d-flex align-items-center">
+                                                 <div class="avatar avatar-sm">
+                                                     <img class="rounded-circle"
+                                                         src="{{ uploadedAsset($order->user ? $order->user->avatar : '') }}"
+                                                         onerror="this.src='{{ staticAsset('backend/assets/img/placeholder-thumb.png') }}'"
+                                                         alt="" />
+                                                 </div>
+                                                 <div class="ms-2">
+                                                     <h6 class="fs-sm mb-0">{{ $order->user ? $order->user->name : localize('Guest') }}</h6>
+                                                     <span class="text-muted fs-xs">{{ $order->user ? $order->user->email : '' }}</span>
+                                                 </div>
+                                             </div>
+                                         </td>
+
+                                         <td>
+                                             <span class="fs-sm">{{ date('d M, Y', strtotime($order->created_at)) }}</span>
+                                         </td>
 
 
 

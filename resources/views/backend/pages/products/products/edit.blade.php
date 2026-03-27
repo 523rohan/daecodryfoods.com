@@ -197,7 +197,7 @@
                                             $productTags = $product->tags()->pluck('tag_id');
                                         @endphp
                                         <select class="select2 form-control" multiple="multiple"
-                                            data-placeholder="{{ localize('Select Categories') }}" name="tag_ids[]">
+                                            data-placeholder="{{ localize('Select Tags') }}" name="tag_ids[]">
                                             @foreach ($tags as $tag)
                                                 <option value="{{ $tag->id }}"
                                                     {{ $productTags->contains($tag->id) ? 'selected' : '' }}>

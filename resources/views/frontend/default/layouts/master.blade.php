@@ -201,9 +201,15 @@
 
         <!--for pwa-->
         <script>
-            if ('serviceWorker' in navigator && !navigator.serviceWorker?.controller) {
-                navigator.serviceWorker?.register("{{ staticAsset('sw.js') }}").then(function(reg) {
-                    // console.log("Service worker has been registered for scope: " + reg.scope);
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register("{{ staticAsset('sw.js') }}")
+                        .then(reg => {
+                            // console.log("Service worker registered", reg);
+                        })
+                        .catch(err => {
+                            console.error("Service worker registration failed", err);
+                        });
                 });
             }
         </script>

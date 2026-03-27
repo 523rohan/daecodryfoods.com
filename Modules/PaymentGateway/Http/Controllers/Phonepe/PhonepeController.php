@@ -262,6 +262,8 @@ class PhonepeController extends Controller
                 CURLOPT_CUSTOMREQUEST => 'POST',
                 CURLOPT_POSTFIELDS => http_build_query([
                     'grant_type' => 'client_credentials',
+                    'client_id' => $clientId,
+                    'client_secret' => $clientSecret,
                     'client_version' => $clientVersion
                 ]),
                 CURLOPT_HTTPHEADER => array(

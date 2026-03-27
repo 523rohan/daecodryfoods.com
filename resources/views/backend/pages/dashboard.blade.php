@@ -168,15 +168,15 @@
                                                 <span class="text-primary"> <i data-feather="shopping-bag"></i></span>
                                             </div>
                                         </div>
-                                        <div class="ms-3">
-                                            <h4 class="mb-1">{{ \App\Models\Order::count() }}</h4>
-                                            <span class="text-muted">{{ localize('Total Orders') }}</span>
-                                        </div>
+                                         <div class="ms-3">
+                                             <h4 class="mb-1">{{ \App\Models\Order::whereHas('orderGroup', function($q) { $q->where('is_pos_order', 0); })->count() }}</h4>
+                                             <span class="text-muted">{{ localize('Total Orders') }}</span>
+                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderPendingStatus() }}"
+                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderPendingStatus() }}&payment_status={{ paidPaymentStatus() }}"
                             class="col-lg-3 col-sm-6">
                             <div class="card h-100 flex-column">
                                 <div class="card-body">
@@ -194,42 +194,42 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderProcessingStatus() }}"
-                            class="col-lg-3 col-sm-6">
-                            <div class="card h-100 flex-column">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar avatar-lg">
-                                            <div class="text-center bg-soft-info rounded-circle">
-                                                <span class="text-info"> <i data-feather="refresh-cw"></i></span>
-                                            </div>
-                                        </div>
-                                        <div class="ms-3">
-                                            <h4 class="mb-1">{{ \App\Models\Order::isProcessing()->count() }}</h4>
-                                            <span class="text-muted">{{ localize('Order Processing') }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderDeliveredStatus() }}"
-                            class="col-lg-3 col-sm-6">
-                            <div class="card h-100 flex-column">
-                                <div class="card-body">
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar avatar-lg">
-                                            <div class="text-center bg-soft-success rounded-circle">
-                                                <span class="text-success"> <i data-feather="check-circle"></i></span>
-                                            </div>
-                                        </div>
-                                        <div class="ms-3">
-                                            <h4 class="mb-1">{{ \App\Models\Order::isDelivered()->count() }}</h4>
-                                            <span class="text-muted">{{ localize('Total Delivered') }}</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
+                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderProcessingStatus() }}&payment_status={{ paidPaymentStatus() }}"
+                             class="col-lg-3 col-sm-6">
+                             <div class="card h-100 flex-column">
+                                 <div class="card-body">
+                                     <div class="d-flex align-items-center">
+                                         <div class="avatar avatar-lg">
+                                             <div class="text-center bg-soft-info rounded-circle">
+                                                 <span class="text-info"> <i data-feather="refresh-cw"></i></span>
+                                             </div>
+                                         </div>
+                                         <div class="ms-3">
+                                             <h4 class="mb-1">{{ \App\Models\Order::isProcessing()->isPaid()->count() }}</h4>
+                                             <span class="text-muted">{{ localize('Order Processing') }}</span>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </a>
+                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderDeliveredStatus() }}&payment_status={{ paidPaymentStatus() }}"
+                             class="col-lg-3 col-sm-6">
+                             <div class="card h-100 flex-column">
+                                 <div class="card-body">
+                                     <div class="d-flex align-items-center">
+                                         <div class="avatar avatar-lg">
+                                             <div class="text-center bg-soft-success rounded-circle">
+                                                 <span class="text-success"> <i data-feather="check-circle"></i></span>
+                                             </div>
+                                         </div>
+                                         <div class="ms-3">
+                                             <h4 class="mb-1">{{ \App\Models\Order::isDelivered()->isPaid()->count() }}</h4>
+                                             <span class="text-muted">{{ localize('Total Delivered') }}</span>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                         </a>
                     </div>
                 @endcan
 
@@ -879,6 +879,13 @@
                     show: false,
                 },
 
+            },
+            yaxis: {
+                labels: {
+                    formatter: function(val) {
+                        return val.toFixed(2);
+                    }
+                }
             }
         };
         var chart = new ApexCharts(document.querySelector("#thisMonthChart"), options);

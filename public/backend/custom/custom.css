@@ -48,9 +48,10 @@
 }
 
 /* Admin Mobile Logo Responsiveness */
-@media (max-width: 767.98px) {
-    .tt-mobile-toggle-brand .tt-brand-favicon {
+@media (max-width: 991.98px) {
+    header.tt-top-fixed .tt-mobile-toggle-brand .tt-brand img.tt-brand-favicon {
         max-width: 100px !important;
-        height: auto !important;
+        max-height: 40px !important;
+        width: auto !important;
     }
 }

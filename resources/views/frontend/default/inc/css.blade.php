@@ -96,4 +96,20 @@
             height: 18px !important;
         }
     }
+
+    /* Desktop Header Cleanup */
+    @media (min-width: 992px) {
+        .gshop-navbar {
+            padding-top: 8px !important;
+            padding-bottom: 8px !important;
+            margin-top: 10px !important;
+        }
+
+        .navbar-logo {
+            max-height: 70px !important;
+            width: auto !important;
+            transform: scale(1.1);
+            transform-origin: left center;
+        }
+    }
 </style>

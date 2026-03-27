@@ -176,7 +176,7 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderPendingStatus() }}&payment_status={{ paidPaymentStatus() }}"
+                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderPlacedStatus() }},{{ orderPendingStatus() }}&payment_status={{ paidPaymentStatus() }}"
                             class="col-lg-3 col-sm-6">
                             <div class="card h-100 flex-column">
                                 <div class="card-body">

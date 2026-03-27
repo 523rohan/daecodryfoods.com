@@ -57,7 +57,12 @@ class OrdersController extends Controller
 
         if ($request->delivery_status != null) {
             $deliveryStatus = $request->delivery_status;
-            $orders = $orders->where('delivery_status', $deliveryStatus);
+            if (str_contains($deliveryStatus, ',')) {
+                $statusArray = explode(',', $deliveryStatus);
+                $orders = $orders->whereIn('delivery_status', $statusArray);
+            } else {
+                $orders = $orders->where('delivery_status', $deliveryStatus);
+            }
         }
 
         if ($request->payment_status != null) {

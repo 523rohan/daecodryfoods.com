@@ -95,21 +95,29 @@
             width: 18px !important;
             height: 18px !important;
         }
-    }
-
-    /* Desktop Header Cleanup */
+    /* Desktop Header Refinement - Grostore Style */
     @media (min-width: 992px) {
         .gshop-navbar {
-            padding-top: 8px !important;
-            padding-bottom: 8px !important;
-            margin-top: 10px !important;
+            padding-top: 15px !important;
+            padding-bottom: 15px !important;
+            border-radius: 12px !important;
+            box-shadow: 0 10px 35px rgba(0, 0, 0, 0.1) !important;
         }
 
         .navbar-logo {
-            max-height: 70px !important;
+            max-height: 95px !important;
             width: auto !important;
-            transform: scale(1.1);
-            transform-origin: left center;
+            transform: scale(1.2) !important;
+            transform-origin: left center !important;
+        }
+
+        .gshop-header-contact {
+            margin-left: 45px !important;
+        }
+
+        .gshop-navmenu ul li a {
+            font-weight: 700 !important;
+            font-size: 15px !important;
         }
     }
 </style>

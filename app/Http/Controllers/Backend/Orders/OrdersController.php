@@ -170,12 +170,12 @@ class OrdersController extends Controller
             $stock->save();
 
             $product = $orderItem->product_variation->product;
-            $product->total_sale_count += $orderItem->qty;
+            $product->total_sale_count -= $orderItem->qty;
             $product->save();
 
             if ($product->categories()->count() > 0) {
                 foreach ($product->categories as $category) {
-                    $category->total_sale_count += $orderItem->qty;
+                    $category->total_sale_count -= $orderItem->qty;
                     $category->save();
                 }
             }
@@ -192,12 +192,12 @@ class OrdersController extends Controller
             $stock->save();
 
             $product = $orderItem->product_variation->product;
-            $product->total_sale_count -= $orderItem->qty;
+            $product->total_sale_count += $orderItem->qty;
             $product->save();
 
             if ($product->categories()->count() > 0) {
                 foreach ($product->categories as $category) {
-                    $category->total_sale_count -= $orderItem->qty;
+                    $category->total_sale_count += $orderItem->qty;
                     $category->save();
                 }
             }

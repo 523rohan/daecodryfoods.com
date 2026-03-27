@@ -47,6 +47,9 @@ class ReportsController extends Controller
 
             $productsQuery = $productsQuery->leftJoin('product_variations', 'products.id', '=', 'product_variations.product_id')
                 ->leftJoin('order_items', 'product_variations.id', '=', 'order_items.product_variation_id')
+                ->leftJoin('orders', 'order_items.order_id', '=', 'orders.id')
+                ->where('orders.payment_status', paidPaymentStatus())
+                ->where('orders.delivery_status', '!=', orderCancelledStatus())
                 ->where('order_items.created_at', '>=', $startDate)
                 ->where('order_items.created_at', '<=', $endDate)
                 ->select('products.*', DB::raw('SUM(order_items.qty) as period_sale_count'))
@@ -95,7 +98,7 @@ class ReportsController extends Controller
         $orders = $orders->where('created_at', '>=', date("Y-m-d", strtotime($date_var[0])))->where('created_at', '<=',  date("Y-m-d", strtotime($date_var[1]) + 86400));
 
         $orderGroupIds = $orders->pluck('order_group_id');
-        $totalAmount = OrderGroup::whereIn('id', $orderGroupIds)->sum('grand_total_amount');
+        $totalAmount = OrderGroup::whereIn('id', $orderGroupIds)->where('payment_status', paidPaymentStatus())->sum('grand_total_amount');
         $orders = $orders->paginate(paginationNumber());
         return view('backend.pages.reports.orders', compact('orders', 'deliveryStatus', 'paymentStatus', 'date_var', 'totalAmount'));
     }
@@ -134,10 +137,15 @@ class ReportsController extends Controller
             $order = 'ASC';
         }
 
-        $orderItemsQuery = OrderItem::orderBy('total_price', $order)->where('created_at', '>=', date("Y-m-d", strtotime($date_var[0])))->where('created_at', '<=',  date("Y-m-d", strtotime($date_var[1]) + 86400));
+        $orderItemsQuery = OrderItem::orderBy('total_price', $order)
+            ->leftJoin('orders', 'order_items.order_id', '=', 'orders.id')
+            ->where('orders.payment_status', paidPaymentStatus())
+            ->where('orders.delivery_status', '!=', orderCancelledStatus())
+            ->where('order_items.created_at', '>=', date("Y-m-d", strtotime($date_var[0])))
+            ->where('order_items.created_at', '<=',  date("Y-m-d", strtotime($date_var[1]) + 86400));
 
         $totalPrice = $orderItemsQuery->sum('total_price');
-        $orderItems = $orderItemsQuery->groupBy('created_at')->selectRaw('created_at, sum(total_price) as total_price')->paginate(paginationNumber(30));
+        $orderItems = $orderItemsQuery->groupBy('order_items.created_at')->selectRaw('order_items.created_at, sum(order_items.total_price) as total_price')->paginate(paginationNumber(30));
 
         return view('backend.pages.reports.amountWise', compact('orderItems', 'totalPrice', 'order', 'date_var'));
     }

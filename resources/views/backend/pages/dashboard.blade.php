@@ -362,6 +362,8 @@
                     </div>
                 @endcan
 
+                {{-- Commented out stats section as requested --}}
+                {{-- 
                 <!-- counter in dashboard -->
                 <div class="row g-3 mb-3">
                     @can('manage_orders')
@@ -679,6 +681,7 @@
                     </a>
                 </div>
                 <!-- counter in dashboard -->
+                --}}
 
             </div>
         </section>

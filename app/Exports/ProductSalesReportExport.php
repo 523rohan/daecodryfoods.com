@@ -30,6 +30,9 @@ class ProductSalesReportExport implements FromCollection, WithHeadings, WithMapp
 
             $productsQuery = $productsQuery->leftJoin('product_variations', 'products.id', '=', 'product_variations.product_id')
                 ->leftJoin('order_items', 'product_variations.id', '=', 'order_items.product_variation_id')
+                ->leftJoin('orders', 'order_items.order_id', '=', 'orders.id')
+                ->where('orders.payment_status', paidPaymentStatus())
+                ->where('orders.delivery_status', '!=', orderCancelledStatus())
                 ->where('order_items.created_at', '>=', $startDate)
                 ->where('order_items.created_at', '<=', $endDate)
                 ->select('products.*', DB::raw('SUM(order_items.qty) as period_sale_count'))

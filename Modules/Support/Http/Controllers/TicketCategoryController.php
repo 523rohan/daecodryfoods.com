@@ -18,7 +18,7 @@ class TicketCategoryController extends Controller
     public function index(Request $request)
     {
         $categories = $this->getCategories($request);
-        $staffs= User::where('user_type', 'staffs')->get(['id', 'name']);
+        $staffs = User::where('user_type', 'staff')->where('is_banned', 0)->get(['id', 'name']);
         return view('support::category.index', compact('categories', 'staffs'));
     }
 
@@ -76,7 +76,7 @@ class TicketCategoryController extends Controller
     public function edit($id)
     {
         $category = $this->getCategory($id);
-        $staffs= User::where('user_type', 'staffs')->get(['id', 'name']);
+        $staffs = User::where('user_type', 'staff')->where('is_banned', 0)->get(['id', 'name']);
         return view('support::category.edit', compact('category', 'staffs'));
     }
 

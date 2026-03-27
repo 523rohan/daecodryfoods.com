@@ -166,7 +166,7 @@ class ReplyController extends Controller
                 if ($assignStaff) { 
                     $assignStaff->notify(new SupportTicketNotification($url, $msg));
                 }
-            } else if ($user->user_type == 'staffs') {
+            } else if ($user->user_type == 'staff') {
                     // admin           
                     $msg =  localize('Reply Ticket');
                    if($admin){

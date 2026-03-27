@@ -34,10 +34,10 @@
                         {{ localize('Select Staff') }}
                     </option>
                     @foreach ($staffs as $staff)
-                        
-                    <option value="" {{ isset($category) ? $category->assign_staff == $staff->id ? 'selected':'':''}}>
-                        {{ $staff->name }}
-                    </option>
+                        <option value="{{ $staff->id }}"
+                            {{ isset($category) ? ($category->assign_staff == $staff->id ? 'selected' : '') : '' }}>
+                            {{ $staff->name }}
+                        </option>
                     @endforeach
                    
                  

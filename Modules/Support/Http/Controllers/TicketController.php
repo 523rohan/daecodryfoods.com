@@ -101,7 +101,7 @@ class TicketController extends Controller
     }
     private function assignStaffs($staff_ids, $modelId)
     {
-        array_merge($staff_ids, auth()->user()->id);
+        $staff_ids = array_merge($staff_ids, [auth()->user()->id]);
         if($staff_ids) {
             foreach($staff_ids as $staff_id) {
                 $assignTicket = new AssignTicket();
@@ -228,7 +228,7 @@ class TicketController extends Controller
         $data = [];
         $data['categories'] = TicketCategory::where('is_active', 1)->get(['id', 'name']);
         $data['priorities'] = Priority::where('is_active', 1)->get(['id', 'name']);
-        $data['staffs']     = User::where('user_type', 'staffs')->where('is_banned', 1)->get(['id', 'name']);
+        $data['staffs']     = User::where('user_type', 'staff')->where('is_banned', 0)->get(['id', 'name']);
         return $data;
     }
     private function setNotification($category_id)

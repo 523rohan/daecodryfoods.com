@@ -8,16 +8,14 @@
     "theme_color": "#6eb356",
     "icons": [
         {
-            "src": "/frontend/default/assets/img/favicon.png",
+            "src": "frontend/default/assets/img/favicon.png",
             "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any"
+            "type": "image/png"
         },
         {
-            "src": "/frontend/default/assets/img/logo.png",
+            "src": "frontend/default/assets/img/favicon.png",
             "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/png"
         }
     ]
 }

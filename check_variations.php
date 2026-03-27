@@ -1,1 +1,0 @@
-<?php // Ready for deletion ?>

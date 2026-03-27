@@ -28,6 +28,39 @@ use App\Http\Controllers\Backend\Payments\Stripe\StripePaymentController;
 
 // vai ami change hoise
 
+Route::get('/manifest.json', function () {
+    $favicon = uploadedAsset(getSetting('favicon'));
+    $logo = uploadedAsset(getSetting('navbar_logo'));
+
+    $icons = [
+        [
+            "src" => $favicon,
+            "sizes" => "192x192",
+            "type" => "image/png",
+            "purpose" => "any"
+        ],
+        [
+            "src" => $logo,
+            "sizes" => "512x512",
+            "type" => "image/png",
+            "purpose" => "any"
+        ]
+    ];
+
+    $manifest = [
+        "name" => getSetting('system_title') ?? "Deaco Dry Foods",
+        "short_name" => getSetting('system_title') ?? "Deaco Dry Foods",
+        "start_url" => "/",
+        "background_color" => "#6777ef",
+        "description" => getSetting('global_meta_description') ?? "Deaco Dry Foods",
+        "display" => "standalone",
+        "theme_color" => "#6eb356",
+        "icons" => $icons
+    ];
+
+    return response()->json($manifest)->header('Content-Type', 'application/manifest+json');
+})->name('manifest.json');
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes

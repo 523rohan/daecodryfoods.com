@@ -102,11 +102,11 @@
             $favicon = uploadedAsset(getSetting('navbar_logo'));
         }
         if (!$favicon || $favicon == noImage()) {
-            $favicon = staticAsset('frontend/default/assets/img/Logo1.png');
+            $favicon = staticAsset('frontend/default/assets/img/logo.png');
         }
     @endphp
     <link rel="apple-touch-icon" href="{{ $favicon }}"/>
-    <link rel="manifest" href="{{ staticAsset('/manifest.json') }}"/>
+    <link rel="manifest" href="{{ route('manifest.json') }}"/>
 
     <!-- recaptcha -->
     @if (getSetting('enable_recaptcha') == 1)

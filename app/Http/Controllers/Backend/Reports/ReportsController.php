@@ -92,7 +92,7 @@ class ReportsController extends Controller
             $date_var = [date("d-m-Y", strtotime('7 days ago')), date("d-m-Y", strtotime('today'))];
         }
 
-        $orders = $orders->where('created_at', '>=', date("Y-m-d", strtotime($date_var[0])))->where('created_at', '<=',  date("Y-m-d", strtotime($date_var[1]) + 86400000));
+        $orders = $orders->where('created_at', '>=', date("Y-m-d", strtotime($date_var[0])))->where('created_at', '<=',  date("Y-m-d", strtotime($date_var[1]) + 86400));
 
         $orderGroupIds = $orders->pluck('order_group_id');
         $totalAmount = OrderGroup::whereIn('id', $orderGroupIds)->sum('grand_total_amount');
@@ -134,7 +134,7 @@ class ReportsController extends Controller
             $order = 'ASC';
         }
 
-        $orderItemsQuery = OrderItem::orderBy('total_price', $order)->where('created_at', '>=', date("Y-m-d", strtotime($date_var[0])))->where('created_at', '<=',  date("Y-m-d", strtotime($date_var[1]) + 86400000));
+        $orderItemsQuery = OrderItem::orderBy('total_price', $order)->where('created_at', '>=', date("Y-m-d", strtotime($date_var[0])))->where('created_at', '<=',  date("Y-m-d", strtotime($date_var[1]) + 86400));
 
         $totalPrice = $orderItemsQuery->sum('total_price');
         $orderItems = $orderItemsQuery->groupBy('created_at')->selectRaw('created_at, sum(total_price) as total_price')->paginate(paginationNumber(30));
@@ -151,7 +151,7 @@ class ReportsController extends Controller
             $date_var = [date("d-m-Y", strtotime('7 days ago')), date("d-m-Y", strtotime('today'))];
         }
 
-        $orderQuery = Order::where('created_at', '>=', date("Y-m-d", strtotime($date_var[0])))->where('created_at', '<=',  date("Y-m-d", strtotime($date_var[1]) + 86400000));
+        $orderQuery = Order::where('created_at', '>=', date("Y-m-d", strtotime($date_var[0])))->where('created_at', '<=',  date("Y-m-d", strtotime($date_var[1]) + 86400));
 
         $totalOrders = $orderQuery->count();
         $orders = $orderQuery->groupBy('delivery_status')->selectRaw('delivery_status, count(delivery_status) as total_order')->paginate(paginationNumber(30));

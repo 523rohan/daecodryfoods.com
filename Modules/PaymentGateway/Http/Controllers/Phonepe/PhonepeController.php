@@ -225,6 +225,9 @@ class PhonepeController extends Controller
             'client_version' => $clientVersion
         ];
 
+        Log::info('PhonePe Token Request URL: ' . $url);
+        Log::info('PhonePe Token Request Fields: ' . json_encode($fields));
+
         $response = curl_init();
         curl_setopt_array($response, array(
             CURLOPT_URL => $url,
@@ -232,19 +235,50 @@ class PhonepeController extends Controller
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => http_build_query($fields),
             CURLOPT_HTTPHEADER => array(
-                'Content-Type: application/x-www-form-urlencoded'
+                'Content-Type: application/x-www-form-urlencoded',
+                'Accept: application/json'
             ),
         ));
 
         $result = curl_exec($response);
         $curlError = curl_error($response);
+        $httpCode = curl_getinfo($response, CURLINFO_HTTP_CODE);
         curl_close($response);
 
         if (!empty($curlError)) {
             Log::error('PhonePe Token cURL Error: ' . $curlError);
         }
 
+        Log::info('PhonePe Token HTTP Status: ' . $httpCode);
         Log::info('PhonePe Token Response: ' . $result);
+
+        // Fallback: Try Basic Auth if 401 occurs with body params
+        if ($httpCode == 401) {
+            Log::info('PhonePe Token: Attempting Basic Auth fallback...');
+            $responseFallback = curl_init();
+            curl_setopt_array($responseFallback, array(
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => http_build_query([
+                    'grant_type' => 'client_credentials',
+                    'client_version' => $clientVersion
+                ]),
+                CURLOPT_HTTPHEADER => array(
+                    'Content-Type: application/x-www-form-urlencoded',
+                    'Accept: application/json',
+                    'Authorization: Basic ' . base64_encode($clientId . ':' . $clientSecret)
+                ),
+            ));
+            
+            $result = curl_exec($responseFallback);
+            $httpCode = curl_getinfo($responseFallback, CURLINFO_HTTP_CODE);
+            curl_close($responseFallback);
+            
+            Log::info('PhonePe Token Fallback HTTP Status: ' . $httpCode);
+            Log::info('PhonePe Token Fallback Response: ' . $result);
+        }
+
         $res = json_decode($result);
 
         if (!isset($res->access_token)) {

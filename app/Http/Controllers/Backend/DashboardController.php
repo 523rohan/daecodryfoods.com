@@ -37,29 +37,35 @@ class DashboardController extends Controller
         $yearStart = Carbon::now()->startOfYear();
 
         // today's earning 
-        $orderGroupIds = Order::where('delivery_status', '!=', orderCancelledStatus())->where('created_at', '>=', $dayStart)->pluck('order_group_id');
+        $orderGroupIds = Order::isPaid()->where('delivery_status', '!=', orderCancelledStatus())->where('created_at', '>=', $dayStart)->pluck('order_group_id');
         $todayEarning =  OrderGroup::whereIn('id', $orderGroupIds)->sum('grand_total_amount');
 
         // today's pending earning 
-        $orderGroupIds = Order::where('delivery_status', '!=', orderDeliveredStatus())->where('delivery_status', '!=', orderCancelledStatus())->where('created_at', '>=', $dayStart)->pluck('order_group_id');
+        $orderGroupIds = Order::isPaid()->where('delivery_status', '!=', orderDeliveredStatus())->where('delivery_status', '!=', orderCancelledStatus())->where('created_at', '>=', $dayStart)->pluck('order_group_id');
         $todayPendingEarning =  OrderGroup::whereIn('id', $orderGroupIds)->sum('grand_total_amount');
 
         // this year earning
-        $orderGroupIds = Order::where('delivery_status', '!=', orderCancelledStatus())->where('created_at', '>=', $yearStart)->pluck('order_group_id');
+        $orderGroupIds = Order::isPaid()->where('delivery_status', '!=', orderCancelledStatus())->where('created_at', '>=', $yearStart)->pluck('order_group_id');
         $thisYearEarning =  OrderGroup::whereIn('id', $orderGroupIds)->sum('grand_total_amount');
 
         // total earning
-        $orderGroupIds = Order::where('delivery_status', '!=', orderCancelledStatus())->pluck('order_group_id');
+        $orderGroupIds = Order::isPaid()->where('delivery_status', '!=', orderCancelledStatus())->pluck('order_group_id');
         $totalEarning = OrderGroup::whereIn('id', $orderGroupIds)->sum('grand_total_amount');
 
         // today's sale count
-        $todaySaleCount = OrderItem::where('created_at', '>=', $dayStart)->sum('qty');
+        $todaySaleCount = OrderItem::whereHas('order', function ($q) {
+            $q->isPaid();
+        })->where('created_at', '>=', $dayStart)->sum('qty');
 
         // this month sale count
-        $monthSaleCount = OrderItem::where('created_at', '>=', $monthStart)->sum('qty');
+        $monthSaleCount = OrderItem::whereHas('order', function ($q) {
+            $q->isPaid();
+        })->where('created_at', '>=', $monthStart)->sum('qty');
 
         // this year sale count
-        $yearSaleCount = OrderItem::where('created_at', '>=', $yearStart)->sum('qty');
+        $yearSaleCount = OrderItem::whereHas('order', function ($q) {
+            $q->isPaid();
+        })->where('created_at', '>=', $yearStart)->sum('qty');
 
         # --------------------------------------------------------------counters
 

@@ -375,10 +375,10 @@
                                                 <span class="text-info"> <i data-feather="arrow-down"></i></span>
                                             </div>
                                         </div>
-                                        <div class="ms-3">
-                                            <h4 class="mb-1">{{ \App\Models\Order::isPickedUp()->count() }}</h4>
-                                            <span class="text-muted">{{ localize('Picked Up Orders') }}</span>
-                                        </div>
+                                         <div class="ms-3">
+                                             <h4 class="mb-1">{{ \App\Models\Order::isPaid()->isPickedUp()->count() }}</h4>
+                                             <span class="text-muted">{{ localize('Picked Up Orders') }}</span>
+                                         </div>
                                     </div>
                                 </div>
                             </div>
@@ -413,10 +413,10 @@
                                                 <span class="text-warning"> <i data-feather="truck"></i></span>
                                             </div>
                                         </div>
-                                        <div class="ms-3">
-                                            <h4 class="mb-1">{{ \App\Models\Order::isOutForDelivery()->count() }}</h4>
-                                            <span class="text-muted">{{ localize('Out For Delivery') }}</span>
-                                        </div>
+                                         <div class="ms-3">
+                                             <h4 class="mb-1">{{ \App\Models\Order::isPaid()->isOutForDelivery()->count() }}</h4>
+                                             <span class="text-muted">{{ localize('Out For Delivery') }}</span>
+                                         </div>
                                     </div>
                                 </div>
                             </div>
@@ -543,10 +543,10 @@
                                             <span class="text-accent"> <i data-feather="shopping-cart"></i></span>
                                         </div>
                                     </div>
-                                    <div class="ms-3">
-                                        <h4 class="mb-1">{{ \App\Models\Product::sum('total_sale_count') }}</h4>
-                                        <span class="text-muted">{{ localize('Total Product Sale') }}</span>
-                                    </div>
+                                     <div class="ms-3">
+                                         <h4 class="mb-1">{{ \App\Models\OrderItem::whereHas('order', function($q){ $q->isPaid(); })->sum('qty') }}</h4>
+                                         <span class="text-muted">{{ localize('Total Product Sale') }}</span>
+                                     </div>
                                 </div>
                             </div>
                         </div>

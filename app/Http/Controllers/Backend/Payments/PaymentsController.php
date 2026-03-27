@@ -69,22 +69,28 @@ class PaymentsController extends Controller
     {
         if (session('payment_type') == 'order_payment') {
             $orderGroup = OrderGroup::where('order_code', session('order_code'))->first();
-            if (getSetting('enable_cod') == 1) {
-                $orderGroup->payment_method = "cod";
-                $orderGroup->save();
-                # order success 
-                clearOrderSession();
-                flash(localize('Payment failed, Please pay in cash on delivery'))->success();
-                return view('frontend.default.pages.checkout.invoice', ['orderGroup' => $orderGroup]);
-            } else {
-                # delete order
-                $orderGroup->order->orderItems()->delete();
-                $orderGroup->order()->delete();
-                $orderGroup->delete();
-                clearOrderSession();
-                flash(localize('Payment failed, please try again'))->error();
-                return redirect()->route('home');
+
+            if ($orderGroup && $orderGroup->order) {
+                # Mark as cancelled to indicate failure
+                $orderGroup->order->delivery_status = orderCancelledStatus();
+                $orderGroup->order->save();
+
+                # Record status change
+                try {
+                    \App\Models\OrderUpdate::create([
+                        'order_id' => $orderGroup->order->id,
+                        'user_id' => auth()->id() ?? $orderGroup->user_id,
+                        'note' => 'Payment failed or cancelled at gateway',
+                        'status' => orderCancelledStatus()
+                    ]);
+                } catch (\Throwable $th) {
+                    // Ignore if update creation fails
+                }
             }
+
+            clearOrderSession();
+            flash(localize('Payment failed, please try again'))->error();
+            return redirect()->route('home');
         }
     }
 }

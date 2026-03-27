@@ -187,7 +187,7 @@
                                             </div>
                                         </div>
                                         <div class="ms-3">
-                                            <h4 class="mb-1">{{ \App\Models\Order::isPlacedOrPending()->count() }}</h4>
+                                            <h4 class="mb-1">{{ \App\Models\Order::isPlacedOrPending()->isPaid()->count() }}</h4>
                                             <span class="text-muted">{{ localize('Order Pending') }}</span>
                                         </div>
                                     </div>

@@ -106,7 +106,7 @@
         }
     @endphp
     <link rel="apple-touch-icon" href="{{ $favicon }}"/>
-    <link rel="manifest" href="{{ route('manifest.json') }}"/>
+    <link rel="manifest" href="/manifest.json"/>
 
     <!-- recaptcha -->
     @if (getSetting('enable_recaptcha') == 1)
@@ -203,7 +203,7 @@
         <script>
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register("{{ staticAsset('sw.js') }}")
+                    navigator.serviceWorker.register("/sw.js")
                         .then(reg => {
                             // console.log("Service worker registered", reg);
                         })

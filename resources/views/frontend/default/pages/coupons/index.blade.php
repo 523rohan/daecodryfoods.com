@@ -24,94 +24,147 @@
 
     <style>
         .tt-coupon-single {
+            border-radius: 24px;
+            background: #ffffff;
+            border: 1px solid #f0f0f0;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             overflow: hidden;
-            border-radius: 20px;
-            min-height: 320px;
-            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
             position: relative;
         }
 
         .tt-coupon-single:hover {
-            transform: translateY(-8px);
+            transform: translateY(-10px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
         }
 
-        .coupon-glass {
-            background: rgba(255, 255, 255, 0.88);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 16px;
-            height: 100%;
+        .coupon-banner-wrap {
+            width: 100%;
+            height: 200px;
+            padding: 30px;
+            background: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .coupon-banner-wrap img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .tt-coupon-single:hover .coupon-banner-wrap img {
+            transform: scale(1.05);
+        }
+
+        .perforation-line {
+            height: 0;
+            border-top: 3px dashed #f0f0f0;
+            position: relative;
+            margin: 0 20px;
+        }
+
+        /* The "Ticket" cut-outs on the sides */
+        .perforation-line::before,
+        .perforation-line::after {
+            content: '';
+            position: absolute;
+            top: -12px;
+            /* Half of width */
+            width: 24px;
+            height: 24px;
+            background: #f9fbff;
+            /* Match section background */
+            border-radius: 50%;
+            border: 1px solid #f0f0f0;
+            z-index: 2;
+        }
+
+        .perforation-line::before {
+            left: -33px;
+        }
+
+        .perforation-line::after {
+            right: -33px;
+        }
+
+        .coupon-details {
+            padding: 30px;
+            text-align: center;
+            flex-grow: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+            justify-content: space-between;
         }
 
         .discount-val {
-            font-size: 3.5rem;
+            font-size: 3rem;
             line-height: 1;
-            color: #d63384;
-            /* Deep pink/red */
+            color: #ff4757;
             font-weight: 900;
-            letter-spacing: -2px;
+            letter-spacing: -1.5px;
         }
 
         .coupon-code-wrapper {
             border: 2px dashed #6eb356;
-            padding: 8px 16px;
-            border-radius: 12px;
-            background: #fafff8;
+            padding: 10px 20px;
+            border-radius: 14px;
+            background: #f8fff4;
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            margin-top: 15px;
-            margin-bottom: 20px;
+            gap: 15px;
+            margin: 20px auto;
         }
 
         .copyCode {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', system-ui, sans-serif;
             font-weight: 800;
-            color: #2d3436;
-            font-size: 1.25rem;
-            letter-spacing: 1px;
+            color: #2f3542;
+            font-size: 1.35rem;
+            letter-spacing: 0.5px;
         }
 
         .copyBtn {
             cursor: pointer;
-            padding: 6px 14px;
+            padding: 7px 16px;
             background: #6eb356;
             color: white !important;
-            border-radius: 8px;
-            font-size: 0.85rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
             font-weight: 700;
             text-transform: uppercase;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(110, 179, 86, 0.3);
+            box-shadow: 0 4px 15px rgba(110, 179, 86, 0.25);
         }
 
         .copyBtn:hover {
             background: #5a9645;
-            transform: scale(1.05);
+            transform: translateY(-2px);
         }
 
         .timing-countdown li {
             background: #fff !important;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-            min-width: 55px;
-            padding: 8px 5px !important;
-            border: 1px solid #f1f1f1;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            min-width: 60px;
+            padding: 10px 5px !important;
+            border: 1px solid #f5f5f5;
+            border-radius: 12px !important;
         }
 
         .off-tag {
             background: #ff7675;
             color: white;
-            padding: 2px 10px;
+            padding: 4px 14px;
             border-radius: 50px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
             font-weight: 800;
             text-transform: uppercase;
-            margin-left: 5px;
         }
     </style>
 
@@ -128,12 +181,20 @@
 
                 @forelse ($coupons as $coupon)
                     <div class="col-lg-4 col-md-6">
-                        <div class="card shadow-sm border-0 tt-coupon-single p-3"
-                            style="background: url('{{ uploadedAsset($coupon->banner) }}') no-repeat center center / cover">
-                            <div class="coupon-glass p-4 text-center">
+                        <div class="tt-coupon-single shadow-sm border-0">
+                            <!-- Top Image Section -->
+                            <div class="coupon-banner-wrap">
+                                <img src="{{ uploadedAsset($coupon->banner) }}" alt="{{ $coupon->code }}">
+                            </div>
+
+                            <!-- Perforation effect -->
+                            <div class="perforation-line"></div>
+
+                            <!-- Bottom Details Section -->
+                            <div class="coupon-details">
                                 <div class="offer-text">
                                     <span
-                                        class="up-to d-block text-muted text-uppercase fw-bold fs-xs mb-1">{{ localize('UP TO') }}</span>
+                                        class="up-to d-block text-muted text-uppercase fw-bold fs-xs mb-2">{{ localize('UP TO') }}</span>
                                     <div class="d-flex align-items-center justify-content-center flex-wrap gap-2">
                                         <span class="discount-val">
                                             {{ $coupon->discount_type != 'flat' ? (int) $coupon->discount_value : formatPrice($coupon->discount_value) }}@if ($coupon->discount_type != 'flat')<small
@@ -151,23 +212,23 @@
                                     </div>
                                 </div>
 
-                                <div class="mt-2">
+                                <div class="mt-auto">
                                     <ul class="timing-countdown countdown-timer d-flex justify-content-center gap-2 mb-0"
                                         data-date="{{ date('m/d/Y', $coupon->end_date) }} 23:59:59">
-                                        <li class="list-inline-item rounded-3">
-                                            <h5 class="mb-0 days fs-sm fw-bold">00</h5>
+                                        <li class="list-inline-item">
+                                            <h5 class="mb-0 days fs-sm fw-bold text-dark">00</h5>
                                             <span class="gshop-subtitle fs-xxs d-block">{{ localize('Days') }}</span>
                                         </li>
-                                        <li class="list-inline-item rounded-3">
-                                            <h5 class="mb-0 hours fs-sm fw-bold">00</h5>
+                                        <li class="list-inline-item">
+                                            <h5 class="mb-0 hours fs-sm fw-bold text-dark">00</h5>
                                             <span class="gshop-subtitle fs-xxs d-block">{{ localize('Hrs') }}</span>
                                         </li>
-                                        <li class="list-inline-item rounded-3">
-                                            <h5 class="mb-0 minutes fs-sm fw-bold">00</h5>
+                                        <li class="list-inline-item">
+                                            <h5 class="mb-0 minutes fs-sm fw-bold text-dark">00</h5>
                                             <span class="gshop-subtitle fs-xxs d-block">{{ localize('Min') }}</span>
                                         </li>
-                                        <li class="list-inline-item rounded-3">
-                                            <h5 class="mb-0 seconds fs-sm fw-bold">00</h5>
+                                        <li class="list-inline-item">
+                                            <h5 class="mb-0 seconds fs-sm fw-bold text-dark">00</h5>
                                             <span class="gshop-subtitle fs-xxs d-block">{{ localize('Sec') }}</span>
                                         </li>
                                     </ul>

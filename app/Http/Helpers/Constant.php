@@ -1574,3 +1574,70 @@ if (!function_exists('CountProductsByCategoryAndThemeId')) {
 }
 
 
+
+if (!function_exists('adjustOrderStockAndCounts')) {
+    /**
+     * Centralized function to adjust stock, sale counts, and coupon usage
+     *
+     * @param Order $order
+     * @param string $action 'increment' (order placed/reactivated) or 'decrement' (order cancelled/failed)
+     * @return void
+     */
+    function adjustOrderStockAndCounts($order, $action = 'increment')
+    {
+        $multiplier = ($action === 'increment') ? 1 : -1;
+
+        # 1. Adjust Coupon Usage
+        if ($order->applied_coupon_code) {
+            $coupon = \App\Models\Coupon::where('code', $order->applied_coupon_code)->first();
+            if ($coupon) {
+                $coupon->total_usage_count += $multiplier;
+                if ($coupon->total_usage_count < 0) $coupon->total_usage_count = 0;
+                $coupon->save();
+
+                # Adjust User Specific Usage
+                if ($order->user_id) {
+                    $couponUsage = \App\Models\CouponUsage::where('user_id', $order->user_id)
+                        ->where('coupon_code', $coupon->code)
+                        ->first();
+                    if ($couponUsage) {
+                        $couponUsage->usage_count += $multiplier;
+                        if ($couponUsage->usage_count < 0) $couponUsage->usage_count = 0;
+                        $couponUsage->save();
+                    }
+                }
+            }
+        }
+
+        # 2. Adjust Product & Category Sale Counts + Stock
+        foreach ($order->orderItems as $orderItem) {
+            $product = $orderItem->product_variation->product;
+            $qty = $orderItem->qty * $multiplier;
+
+            // Sale counts
+            $product->total_sale_count += $qty;
+            if ($product->total_sale_count < 0) $product->total_sale_count = 0;
+            $product->save();
+
+            if ($product->categories()->count() > 0) {
+                foreach ($product->categories as $category) {
+                    $category->total_sale_count += $qty;
+                    if ($category->total_sale_count < 0) $category->total_sale_count = 0;
+                    $category->save();
+                }
+            }
+
+            // Stock restoration logic (Action DECREMENT means cancelling/failing -> restore stock)
+            $stockMultiplier = -1 * $multiplier;
+            $variationQtyAdj = $orderItem->qty * $stockMultiplier;
+
+            $productVariationStock = $orderItem->product_variation->product_variation_stock;
+            if ($productVariationStock) {
+                $productVariationStock->stock_qty += $variationQtyAdj;
+                $productVariationStock->save();
+            }
+            $product->stock_qty += $variationQtyAdj;
+            $product->save();
+        }
+    }
+}

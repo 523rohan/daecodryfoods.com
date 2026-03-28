@@ -113,7 +113,7 @@ class CartsController extends Controller
     # apply coupon
     public function applyCoupon(Request $request)
     {
-        $coupon = Coupon::where('code', $request->code)->first();
+        $coupon = Coupon::whereRaw('LOWER(code) = ?', [strtolower($request->code)])->first();
         if ($coupon) {
             $date = strtotime(date('d-m-Y H:i:s'));
 

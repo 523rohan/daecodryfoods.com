@@ -169,7 +169,7 @@
     </style>
 
     <!--campaign section start-->
-    <section class="tt-campaigns ptb-100 p-0" style="background: #f9fbff;">
+    <section class="tt-campaigns ptb-100" style="background: #f9fbff;">
         <div class="container">
             <div class="row g-4">
 

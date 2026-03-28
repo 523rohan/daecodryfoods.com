@@ -170,4 +170,12 @@ class CouponsController extends Controller
         flash(localize('Coupon has been deleted successfully'))->success();
         return back();
     }
+
+    # coupon usage history
+    public function usage($id)
+    {
+        $coupon = Coupon::findOrFail($id);
+        $orders = \App\Models\Order::where('applied_coupon_code', $coupon->code)->isPaid()->latest()->paginate(paginationNumber());
+        return view('backend.pages.coupons.usage', compact('coupon', 'orders'));
+    }
 }

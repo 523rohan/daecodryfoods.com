@@ -37,7 +37,7 @@
                                     <select class="form-control select2" name="theme_ids[]"
                                         data-placeholder="{{ localize('Select themes') }}" data-toggle="select2" multiple
                                         required>
-                                        @foreach ($themes as $theme)
+                                        @foreach ($themes->where('name', 'Grocery') as $theme)
                                             <option value="{{ $theme->id }}" {{ in_array($theme->id, active_themes_array()) ? 'selected':'' }}>
                                                 {{ $theme->name }}</option>
                                         @endforeach

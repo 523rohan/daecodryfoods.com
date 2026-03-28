@@ -42,9 +42,9 @@
                                     <select class="form-control select2" name="theme_ids[]"
                                         data-placeholder="{{ localize('Select themes') }}" data-toggle="select2" multiple
                                         required>
-                                        @foreach ($themes as $theme)
+                                        @foreach ($themes->where('name', 'Grocery') as $theme)
                                             <option value="{{ $theme->id }}"
-                                                {{ $couponThemes->contains($theme->id) ? 'selected' : '' }}>
+                                                {{ in_array($theme->id, $coupon->themes->pluck('id')->toArray()) ? 'selected' : '' }}>
                                                 {{ $theme->name }}</option>
                                         @endforeach
                                     </select>

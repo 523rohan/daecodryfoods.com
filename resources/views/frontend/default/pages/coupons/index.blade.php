@@ -176,7 +176,10 @@
                 @php
                     $coupons = \App\Models\Coupon::where('end_date', '>=', strtotime(date('Y-m-d')))
                         ->latest()
-                        ->get();
+                        ->get()
+                        ->filter(function ($coupon) {
+                            return $coupon->total_usage_count < $coupon->total_usage_limit;
+                        });
                 @endphp
 
                 @forelse ($coupons as $coupon)

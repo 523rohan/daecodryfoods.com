@@ -64,6 +64,7 @@
                                     <th data-breakpoints="xs sm">{{ localize('Discount Amount') }}</th>
                                     <th data-breakpoints="xs sm">{{ localize('Start Date') }}</th>
                                     <th data-breakpoints="xs sm">{{ localize('End Date') }}</th>
+                                    <th data-breakpoints="xs sm">{{ localize('Usage') }}</th>
                                     <th data-breakpoints="xs sm" class="text-end">{{ localize('Action') }}
                                     </th>
                                 </tr>
@@ -90,6 +91,25 @@
                                         <td>{{ date('d-m-Y', $coupon->start_date) }}</td>
                                         <td>{{ date('d-m-Y', $coupon->end_date) }}</td>
 
+                                        <td>
+                                            @php
+                                                $usagePercent = ($coupon->total_usage_count / $coupon->total_usage_limit) * 100;
+                                                $badgeColor = 'success';
+                                                if ($usagePercent >= 100) {
+                                                    $badgeColor = 'danger';
+                                                } elseif ($usagePercent >= 80) {
+                                                    $badgeColor = 'warning';
+                                                }
+                                            @endphp
+                                            <a href="{{ route('admin.coupons.usage', $coupon->id) }}" class="badge bg-{{ $badgeColor }} text-white">
+                                                {{ $coupon->total_usage_count }} / {{ $coupon->total_usage_limit }}
+                                            </a>
+                                            @if ($coupon->total_usage_count >= $coupon->total_usage_limit)
+                                                <div class="text-danger fs-xxs mt-1 fw-bold">{{ localize('Limit Reached') }}
+                                                </div>
+                                            @endif
+                                        </td>
+
 
                                         <td class="text-end">
                                             <div class="dropdown tt-tb-dropdown">
@@ -105,6 +125,11 @@
                                                             <i data-feather="edit-3" class="me-2"></i>{{ localize('Edit') }}
                                                         </a>
                                                     @endcan
+
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('admin.coupons.usage', $coupon->id) }}">
+                                                        <i data-feather="users" class="me-2"></i>{{ localize('Usage History') }}
+                                                    </a>
 
                                                     @can('delete_coupons')
                                                         <a href="#" class="dropdown-item confirm-delete"

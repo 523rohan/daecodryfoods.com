@@ -50,6 +50,13 @@ class CouponController extends Controller
 
                 # check min spend
                 $subTotal = (float) getSubTotal($carts, false);
+
+                # check usage limit
+                $usageResponse = checkCouponUsageLimit($coupon);
+                if ($usageResponse['status'] == false) {
+                    return $this->couponApplyFailed($usageResponse['message']);
+                }
+
                 if ($subTotal >= (float) $coupon->min_spend) {
 
                     # check if coupon is for categories or products
@@ -115,6 +122,7 @@ class CouponController extends Controller
             'cartCount'         => count($carts),
             'subTotal'           => formatPrice(getSubTotal($carts, false, "")),
             'couponDiscount'    => formatPrice(getCouponDiscount(getSubTotal($carts, false), $couponCode)),
+            'couponCode'        => $couponCode,
         ];
     }
 }

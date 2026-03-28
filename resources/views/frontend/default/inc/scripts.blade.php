@@ -390,6 +390,7 @@
                     $('.apply-coupon-btn').html(TT.localize.applyCoupon);
                 } else {
                     // append clear button 
+                    $('.coupon-input').val(data.couponCode);
                     $('.coupon-input').prop('disabled', false);
                     $('.apply-coupon-btn').addClass('d-none');
                     $('.clear-coupon-btn').removeClass('d-none');

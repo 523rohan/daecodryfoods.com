@@ -140,11 +140,11 @@ class OrdersController extends Controller
         $order = Order::findOrFail((int)$request->order_id);
 
         if ($order->delivery_status != orderCancelledStatus() && $request->status == orderCancelledStatus()) {
-            $this->addQtyToStock($order);
+            adjustOrderStockAndCounts($order, 'decrement');
         }
 
         if ($order->delivery_status == orderCancelledStatus() && $request->status != orderCancelledStatus()) {
-            $this->removeQtyFromStock($order);
+            adjustOrderStockAndCounts($order, 'increment');
         }
 
         $order->delivery_status = $request->status;
@@ -160,49 +160,7 @@ class OrdersController extends Controller
         return true;
     }
 
-    # add qty to stock 
-    private function addQtyToStock($order)
-    {
-        $orderItems = OrderItem::where('order_id', $order->id)->get();
-        foreach ($orderItems as $orderItem) {
-            $stock = $orderItem->product_variation->product_variation_stock;
-            $stock->stock_qty += $orderItem->qty;
-            $stock->save();
 
-            $product = $orderItem->product_variation->product;
-            $product->total_sale_count -= $orderItem->qty;
-            $product->save();
-
-            if ($product->categories()->count() > 0) {
-                foreach ($product->categories as $category) {
-                    $category->total_sale_count -= $orderItem->qty;
-                    $category->save();
-                }
-            }
-        }
-    }
-
-    # remove qty from stock  
-    private function removeQtyFromStock($order)
-    {
-        $orderItems = OrderItem::where('order_id', $order->id)->get();
-        foreach ($orderItems as $orderItem) {
-            $stock = $orderItem->product_variation->product_variation_stock;
-            $stock->stock_qty -= $orderItem->qty;
-            $stock->save();
-
-            $product = $orderItem->product_variation->product;
-            $product->total_sale_count += $orderItem->qty;
-            $product->save();
-
-            if ($product->categories()->count() > 0) {
-                foreach ($product->categories as $category) {
-                    $category->total_sale_count += $orderItem->qty;
-                    $category->save();
-                }
-            }
-        }
-    }
 
     # download invoice
     public function downloadInvoice($id)

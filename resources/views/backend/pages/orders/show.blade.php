@@ -296,7 +296,7 @@
 
                                     @if ($order->orderGroup->total_coupon_discount_amount > 0)
                                         <div class="col-auto ps-lg-5">
-                                            <h6 class="mb-1">{{ localize('Coupon Discount') }}</h6>
+                                            <h6 class="mb-1">{{ localize('Coupon Discount') }}{{ $order->applied_coupon_code ? ' (' . $order->applied_coupon_code . ')' : '' }}</h6>
                                             <strong>{{ formatPrice($order->orderGroup->total_coupon_discount_amount) }}</strong>
                                         </div>
                                     @endif

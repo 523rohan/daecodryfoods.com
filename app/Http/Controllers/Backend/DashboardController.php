@@ -142,7 +142,7 @@ class DashboardController extends Controller
         }
 
 
-        $orderGroupIds = Order::where('delivery_status', '!=', orderCancelledStatus())->where('created_at', '>=', Carbon::now()->subDays($timeline))->pluck('order_group_id');
+        $orderGroupIds = Order::isPaid()->where('delivery_status', '!=', orderCancelledStatus())->where('created_at', '>=', Carbon::now()->subDays($timeline))->pluck('order_group_id');
         $orderGroupsQuery = OrderGroup::whereIn('id', $orderGroupIds)->oldest();
         $totalSalesTimelineInString = '';
         $totalSalesAmountInString   = '';
@@ -235,7 +235,7 @@ class DashboardController extends Controller
     private function thisMonthSaleChart()
     {
         $monthStart = Carbon::now()->startOfMonth();
-        $orderGroupIds = Order::where('delivery_status', '!=', orderCancelledStatus())->where('created_at', '>=', $monthStart)->pluck('order_group_id');
+        $orderGroupIds = Order::isPaid()->where('delivery_status', '!=', orderCancelledStatus())->where('created_at', '>=', $monthStart)->pluck('order_group_id');
         $orderGroupsThisMonthQuery =  OrderGroup::whereIn('id', $orderGroupIds)->oldest();
         $thisMonthTimelineInString      = '';
         $thisMonthAmountInString        = '';

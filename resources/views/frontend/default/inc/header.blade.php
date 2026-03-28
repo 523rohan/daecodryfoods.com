@@ -256,8 +256,8 @@
                                     <li><a href="{{ route('products.index') }}">{{ localize('Products') }}</a></li>
                                     {{-- <li><a href="{{ route('home.campaigns') }}">{{ localize('Campaigns') }}</a>
                                     </li> --}}
-                                    <!-- <li><a href="{{ route('home.coupons') }}">{{ localize('Coupons') }}</a>
-                                    </li> -->
+                                    <li><a href="{{ route('home.coupons') }}">{{ localize('Coupons') }}</a>
+                                    </li>
                                 @endif
 
                                 @if (getSetting('show_navbar_pages') != 0 || getSetting('show_navbar_pages') == null)

@@ -161,7 +161,7 @@
                     @endif
                     <div class="total-item">{{ localize('Shipping') }} <span class="total-value">{{ formatPrice($order->orderGroup->total_shipping_cost) }}</span></div>
                     @if ($order->orderGroup->total_coupon_discount_amount > 0)
-                        <div class="total-item" style="color: #EF4444;">{{ localize('Coupon Discount') }} <span class="total-value">-{{ formatPrice($order->orderGroup->total_coupon_discount_amount) }}</span></div>
+                        <div class="total-item" style="color: #EF4444;">{{ localize('Coupon Discount') }}{{ $order->applied_coupon_code ? ' (' . $order->applied_coupon_code . ')' : '' }} <span class="total-value">-{{ formatPrice($order->orderGroup->total_coupon_discount_amount) }}</span></div>
                     @endif
                     @php
                         $isTaxInclusive = getSetting('taxes_inclusive') == '1';

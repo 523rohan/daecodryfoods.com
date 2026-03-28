@@ -1134,6 +1134,39 @@ if (!function_exists('validateCouponForProductsAndCategories')) {
     }
 }
 
+if (!function_exists('checkCouponUsageLimit')) {
+    // check coupon usage limit
+    function checkCouponUsageLimit($coupon)
+    {
+        # total coupon usage
+        $totalCouponUsage = \App\Models\CouponUsage::where('coupon_code', $coupon->code)->sum('usage_count');
+        if ($coupon->total_usage_limit > 0 && $totalCouponUsage >= $coupon->total_usage_limit) {
+            return [
+                'status' => false,
+                'message' => localize('Total usage limit has been reached for this coupon')
+            ];
+        }
+
+        # coupon usage by user
+        if (auth()->check()) {
+            $couponUsageByUser = \App\Models\CouponUsage::where('user_id', auth()->user()->id)->where('coupon_code', $coupon->code)->first();
+            if (!is_null($couponUsageByUser)) {
+                if ($coupon->customer_usage_limit > 0 && $couponUsageByUser->usage_count >= $coupon->customer_usage_limit) {
+                    return [
+                        'status' => false,
+                        'message' => localize('You have used this coupon for the maximum allowed times')
+                    ];
+                }
+            }
+        }
+
+        return [
+            'status' => true,
+            'message' => ''
+        ];
+    }
+}
+
 if (!function_exists('checkCouponValidityForCheckout')) {
     // check coupon validity For Checkout
     function checkCouponValidityForCheckout($carts)
@@ -1142,31 +1175,15 @@ if (!function_exists('checkCouponValidityForCheckout')) {
             $date = strtotime(date('d-m-Y H:i:s'));
             $coupon = Coupon::where('code', getCoupon())->first();
             if ($coupon) {
-                # total coupon usage
-                $totalCouponUsage = CouponUsage::where('coupon_code', $coupon->code)->sum('usage_count');
-                if ($totalCouponUsage == $coupon->total_usage_limit) {
-                    # coupon usage limit reached
-                    removeCoupon();
-                    return [
-                        'status' => false,
-                        'message' => localize('Total usage limit has been reached for the coupon')
-                    ];
-                }
-
-                # coupon usage by user
-                $couponUsageByUser = CouponUsage::where('user_id', auth()->user()->id)->where('coupon_code', $coupon->code)->first();
-                if (!is_null($couponUsageByUser)) {
-                    if ($couponUsageByUser->usage_count == $coupon->customer_usage_limit) {
-                        removeCoupon();
-                        return [
-                            'status' => false,
-                            'message' => localize('You have used this coupon for maximum time')
-                        ];
-                    }
-                }
-
                 # check if coupon is expired
                 if ($coupon->start_date <= $date && $coupon->end_date >= $date) {
+                    # check usage limit
+                    $usageResponse = checkCouponUsageLimit($coupon);
+                    if ($usageResponse['status'] == false) {
+                        removeCoupon();
+                        return $usageResponse;
+                    }
+
                     $subTotal = (float) getSubTotal($carts, false);
                     if ($subTotal >= (float) $coupon->min_spend) {
                         # check if coupon is for categories or products

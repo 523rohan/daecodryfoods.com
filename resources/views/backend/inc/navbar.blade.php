@@ -185,10 +185,8 @@
     <div class="offcanvas-header border-bottom">
         <div class="tt-brand">
             <a href="index.html" class="tt-brand-link">
-                <img src="{{ uploadedAsset(getSetting('favicon')) }}" class="tt-brand-favicon ms-1"
-                    alt="favicon" />
                 <img src="{{ uploadedAsset(getSetting('admin_panel_logo')) }}" class="tt-brand-logo ms-2"
-                    alt="logo" />
+                    alt="logo" style="max-height: 55px; max-width: 180px; width: auto;" />
             </a>
         </div>
         <button class="btn-close" type="button" data-bs-dismiss="offcanvas"></button>

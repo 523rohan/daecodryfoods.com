@@ -83,7 +83,7 @@
                                                   <p> {!! $reply->replied !!}</p>
                                                   @foreach ($reply->replyImages as $image)
                                                       <a href="{{ staticAsset($image->file_path) }}" class="d-block mt-3"
-                                                          download="">
+                                                          download="{{ basename($image->file_path) }}">
                                                           <i data-feather="paperclip"
                                                               class="icon-14 me-2"></i>{{ localize('download') }}</a>
                                                   @endforeach
@@ -114,7 +114,7 @@
                                               {!! $ticket->description !!}
                                               @foreach ($ticket->images as $item)
                                                   <a href="{{ staticAsset($item->file_path) }}" class="d-block mt-3"
-                                                      download="">
+                                                      download="{{ basename($item->file_path) }}">
                                                       <i data-feather="paperclip"
                                                           class="icon-14 me-2"></i>{{ localize('download') }}</a>
                                               @endforeach

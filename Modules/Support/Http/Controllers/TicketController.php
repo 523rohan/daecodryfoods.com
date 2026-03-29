@@ -90,7 +90,7 @@ class TicketController extends Controller
     private function storeImages($image, $modelId)
     {
         
-        $path = 'public/uploads/ticket/';
+        $path = 'uploads/ticket/';
 
         $storeImage = new TicketFile;
         $storeImage->ticket_id = $modelId;

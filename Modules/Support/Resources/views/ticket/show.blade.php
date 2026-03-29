@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="mb-3">
                                     @foreach ($ticket->images as $item)
-                                        <img src="{{ asset(str_replace('public/', '', $item->file_path)) }}" alt="">
+                                        <img src="{{ staticAsset($item->file_path) }}" alt="">
                                     @endforeach
                                 </div>
                                 <div class="mb-3">

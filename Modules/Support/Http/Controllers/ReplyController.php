@@ -76,7 +76,7 @@ class ReplyController extends Controller
     }
     private function storeImages($image, $modelId, $ticket_id = null)
     {
-        $path = 'public/uploads/ticket/reply/';
+        $path = 'uploads/ticket/reply/';
 
         $storeImage = new TicketFile();
         $storeImage->ticket_id = $ticket_id;

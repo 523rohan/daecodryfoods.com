@@ -44,8 +44,9 @@ return new class extends Migration
                             // Determine the base path relative to public/
                             $relativeDir = str_replace(public_path(''), '', $dir);
                             $relativeDir = trim($relativeDir, DIRECTORY_SEPARATOR);
-                            $newPath = 'public/' . $relativeDir . '/' . $fName;
+                            $newPath = $relativeDir . '/' . $fName;
                             $newPath = str_replace(['//', '\\'], ['/', '/'], $newPath);
+                            $newPath = trim($newPath, '/');
                             
                             DB::table('ticket_files')->where('id', $file->id)->update([
                                 'file_path' => $newPath

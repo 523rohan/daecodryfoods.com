@@ -619,13 +619,14 @@
         <span class="tt-nav-title-text">{{ localize('Support') }}</span>
     </li>
 
+{{-- 
     @can('contact_us_messages')
         <li class="side-nav-item nav-item {{ areActiveRoutes(['admin.queries.index'], 'tt-menu-item-active') }}">
             <a href="{{ route('admin.queries.index') }}"
                 class="side-nav-link {{ areActiveRoutes(['admin.queries.index']) }}">
                 <span class="tt-nav-link-icon"><i data-feather="hash"></i></span>
                 <span class="tt-nav-link-text">
-                    <span>{{ localize('Queries') }}</span>
+                    <span>{{ localize('Contact Messages') }}</span>
 
                     @php
                         $newMsgCount = \App\Models\ContactUsMessage::where('is_seen', 0)->count();
@@ -637,7 +638,7 @@
                 </span>
             </a>
         </li>
-    @endcan
+    @endcan --}}
     @if (isModuleActive('Support'))
         @include('support::sidebar.support_sidebar')
     @endif

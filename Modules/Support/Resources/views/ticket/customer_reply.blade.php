@@ -82,7 +82,7 @@
 
                                                   <p> {!! $reply->replied !!}</p>
                                                   @foreach ($reply->replyImages as $image)
-                                                      <a href="{{ asset($image->file_path) }}" class="d-block mt-3"
+                                                      <a href="{{ asset(str_replace('public/', '', $image->file_path)) }}" class="d-block mt-3"
                                                           download="">
                                                           <i data-feather="paperclip"
                                                               class="icon-14 me-2"></i>{{ localize('download') }}</a>
@@ -113,7 +113,7 @@
 
                                               {!! $ticket->description !!}
                                               @foreach ($ticket->images as $item)
-                                                  <a href="{{ asset($item->file_path) }}" class="d-block mt-3"
+                                                  <a href="{{ asset(str_replace('public/', '', $item->file_path)) }}" class="d-block mt-3"
                                                       download="">
                                                       <i data-feather="paperclip"
                                                           class="icon-14 me-2"></i>{{ localize('download') }}</a>

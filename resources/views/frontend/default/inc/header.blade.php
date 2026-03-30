@@ -245,8 +245,14 @@
                                     @endphp
 
                                     @foreach ($menus as $menuKey => $menuItem)
+                                        @php
+                                            $label = $labels[$menuKey];
+                                        @endphp
+                                        @if(trim(strtolower($label)) == 'coupons' || localize(trim($label)) == localize('Coupons'))
+                                            @continue
+                                        @endif
                                         <li>
-                                            <a href="{{ $menuItem }}">{{ localize($labels[$menuKey]) }}</a>
+                                            <a href="{{ $menuItem }}">{{ localize($label) }}</a>
                                         </li>
                                     @endforeach
                                 @else
@@ -256,7 +262,7 @@
                                     <li><a href="{{ route('products.index') }}">{{ localize('Products') }}</a></li>
                                     {{-- <li><a href="{{ route('home.campaigns') }}">{{ localize('Campaigns') }}</a>
                                     </li> --}}
-                                    <li><a href="{{ route('home.coupons') }}">{{ localize('Coupons') }}</a>
+                                    {{-- <li><a href="{{ route('home.coupons') }}">{{ localize('Coupons') }}</a></li> --}}
                                     </li>
                                 @endif
 

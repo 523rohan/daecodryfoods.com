@@ -112,7 +112,7 @@ Route::get('/campaigns', [HomeController::class, 'campaignIndex'])->name('home.c
 Route::get('/campaigns/{slug}', [HomeController::class, 'showCampaign'])->name('home.campaigns.show');
 
 # coupons
-Route::get('/coupons', [HomeController::class, 'allCoupons'])->name('home.coupons');
+// Route::get('/coupons', [HomeController::class, 'allCoupons'])->name('home.coupons');
 
 # pages
 Route::get('/pages/about-us', [HomeController::class, 'aboutUs'])->name('home.pages.aboutUs');

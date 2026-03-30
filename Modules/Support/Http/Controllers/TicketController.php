@@ -206,7 +206,7 @@ class TicketController extends Controller
     }
     public function updateStatus(Request $request)
     {
-        if(auth()->user()->user_type == 'admin') {
+        if(in_array(auth()->user()->user_type, ['admin', 'staff'])) {
             $ticket = Ticket::findOrFail($request->id);  
             $ticket->is_active = $request->is_active;
     

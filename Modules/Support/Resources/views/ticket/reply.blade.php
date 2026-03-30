@@ -169,7 +169,7 @@
         
                             <td class="text-muted pe-3"> {{$ticket->is_active == 1 ? 'active':'closed'}}</td>
                         </tr>
-                        @if(auth()->user()->user_type == 'admin')
+                        @if(in_array(auth()->user()->user_type, ['admin', 'staff']))
                           <tr>
                             <td class="fw-semibold ps-3">{{localize('Closed Ticket')}} </td>
         
@@ -186,7 +186,7 @@
         
                         </tbody>
                       </table>                     
-                           @if(auth()->user()->user_type == 'admin')               
+                           @if(in_array(auth()->user()->user_type, ['admin', 'staff']))               
                         <a href="#" class="btn-link text-danger px-3 confirm-delete"  data-href="{{ route('support.ticket.destroy', $ticket->id) }}"
                             title="{{ localize('Delete This Ticket') }}">
                             {{-- <i data-feather="trash-2" class="me-2"></i> --}}

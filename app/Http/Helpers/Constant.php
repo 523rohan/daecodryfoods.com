@@ -1139,7 +1139,7 @@ if (!function_exists('checkCouponUsageLimit')) {
     function checkCouponUsageLimit($coupon)
     {
         # total coupon usage
-        $totalCouponUsage = \App\Models\CouponUsage::where('coupon_code', $coupon->code)->sum('usage_count');
+        $totalCouponUsage = $coupon->total_usage_count;
         if ($coupon->total_usage_limit > 0 && $totalCouponUsage >= $coupon->total_usage_limit) {
             return [
                 'status' => false,

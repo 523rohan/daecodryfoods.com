@@ -1083,7 +1083,7 @@ if (!function_exists('getCouponDiscount')) {
         $amount = 0;
         $coupon = Coupon::where('code', $code)->first();
         if ($coupon) {
-            $date = strtotime(date('d-m-Y H:i:s'));
+            $date = strtotime(date('d-m-Y'));
             # check if coupon is not expired
             if ($coupon->start_date <= $date && $coupon->end_date >= $date) {
                 if ($coupon->discount_type == 'flat') {
@@ -1172,7 +1172,7 @@ if (!function_exists('checkCouponValidityForCheckout')) {
     function checkCouponValidityForCheckout($carts)
     {
         if (getCoupon() != '') {
-            $date = strtotime(date('d-m-Y H:i:s'));
+            $date = strtotime(date('d-m-Y'));
             $coupon = Coupon::where('code', getCoupon())->first();
             if ($coupon) {
                 # check if coupon is expired

@@ -169,14 +169,14 @@
                                             </div>
                                         </div>
                                          <div class="ms-3">
-                                             <h4 class="mb-1">{{ \App\Models\Order::whereHas('orderGroup', function($q) { $q->where('is_pos_order', 0); })->isPaid()->where('delivery_status', '!=', orderCancelledStatus())->count() }}</h4>
+                                             <h4 class="mb-1">{{ \App\Models\Order::whereHas('orderGroup', function($q) { $q->where('is_pos_order', 0); })->where('delivery_status', '!=', orderCancelledStatus())->count() }}</h4>
                                              <span class="text-muted">{{ localize('Total Orders') }}</span>
                                          </div>
                                     </div>
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderPlacedStatus() }},{{ orderPendingStatus() }}&payment_status={{ paidPaymentStatus() }}"
+                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderPlacedStatus() }},{{ orderPendingStatus() }}"
                             class="col-lg-3 col-sm-6">
                             <div class="card h-100 flex-column">
                                 <div class="card-body">
@@ -205,7 +205,7 @@
                                              </div>
                                          </div>
                                          <div class="ms-3">
-                                             <h4 class="mb-1">{{ \App\Models\Order::isProcessing()->isPaid()->count() }}</h4>
+                                             <h4 class="mb-1">{{ \App\Models\Order::isProcessing()->count() }}</h4>
                                              <span class="text-muted">{{ localize('Order Processing') }}</span>
                                          </div>
                                      </div>
@@ -223,7 +223,7 @@
                                              </div>
                                          </div>
                                          <div class="ms-3">
-                                             <h4 class="mb-1">{{ \App\Models\Order::isDelivered()->isPaid()->count() }}</h4>
+                                             <h4 class="mb-1">{{ \App\Models\Order::isDelivered()->count() }}</h4>
                                              <span class="text-muted">{{ localize('Total Delivered') }}</span>
                                          </div>
                                      </div>

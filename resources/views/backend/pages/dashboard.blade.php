@@ -200,8 +200,8 @@
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
                                         <div class="avatar avatar-lg">
-                                            <div class="text-center bg-soft-secondary rounded-circle">
-                                                <span class="text-secondary"> <i data-feather="check-square"></i></span>
+                                            <div class="text-center bg-soft-danger rounded-circle">
+                                                <span class="text-danger"> <i data-feather="package"></i></span>
                                             </div>
                                         </div>
                                         <div class="ms-3">

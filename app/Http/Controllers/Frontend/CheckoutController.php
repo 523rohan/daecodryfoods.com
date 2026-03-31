@@ -354,7 +354,6 @@ class CheckoutController extends Controller
 
                 $orderGroup->payment_method = $request->payment_method;
                 if ($request->payment_method != "cod" && $request->payment_method != "wallet" && $request->payment_method != "") {
-                    $orderGroup->delivery_status = orderPendingStatus();
                     $orderGroup->order->update(['delivery_status' => orderPendingStatus()]);
                 }
                 $orderGroup->save();
@@ -440,7 +439,6 @@ class CheckoutController extends Controller
         $payment_method = session('payment_method');
 
         $orderGroup->payment_status = paidPaymentStatus();
-        $orderGroup->delivery_status = orderPlacedStatus();
         $orderGroup->order->update([
             'payment_status' => paidPaymentStatus(),
             'delivery_status' => orderPlacedStatus()

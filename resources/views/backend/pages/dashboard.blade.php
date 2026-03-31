@@ -159,7 +159,7 @@
 
                 @can('manage_orders')
                     <div class="row g-3 mb-3">
-                        <a href="{{ route('admin.orders.index') }}" class="col-lg-3 col-sm-6">
+                        <a href="{{ route('admin.orders.index') }}" class="col-lg-2 col-sm-6">
                             <div class="card h-100 flex-column">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
@@ -176,8 +176,8 @@
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderPlacedStatus() }},{{ orderPendingStatus() }}"
-                            class="col-lg-3 col-sm-6">
+                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderPendingStatus() }}"
+                            class="col-lg-2 col-sm-6">
                             <div class="card h-100 flex-column">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
@@ -187,8 +187,26 @@
                                             </div>
                                         </div>
                                         <div class="ms-3">
-                                            <h4 class="mb-1">{{ \App\Models\Order::isPlacedOrPending()->count() }}</h4>
-                                            <span class="text-muted">{{ localize('Order Pending') }}</span>
+                                            <h4 class="mb-1">{{ \App\Models\Order::isPending()->count() }}</h4>
+                                            <span class="text-muted">{{ localize('Pending Payment') }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderPlacedStatus() }}"
+                            class="col-lg-2 col-sm-6">
+                            <div class="card h-100 flex-column">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-lg">
+                                            <div class="text-center bg-soft-secondary rounded-circle">
+                                                <span class="text-secondary"> <i data-feather="check-square"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="ms-3">
+                                            <h4 class="mb-1">{{ \App\Models\Order::isPlaced()->count() }}</h4>
+                                            <span class="text-muted">{{ localize('Confirmed Orders') }}</span>
                                         </div>
                                     </div>
                                 </div>

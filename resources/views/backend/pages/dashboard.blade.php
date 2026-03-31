@@ -169,7 +169,7 @@
                                             </div>
                                         </div>
                                          <div class="ms-3">
-                                             <h4 class="mb-1">{{ \App\Models\Order::whereHas('orderGroup', function($q) { $q->where('is_pos_order', 0); })->where('delivery_status', '!=', orderCancelledStatus())->count() }}</h4>
+                                             <h4 class="mb-1">{{ \App\Models\Order::whereHas('orderGroup', function($q) { $q->where('is_pos_order', 0); })->isPaid()->where('delivery_status', '!=', orderCancelledStatus())->count() }}</h4>
                                              <span class="text-muted">{{ localize('Total Orders') }}</span>
                                          </div>
                                     </div>
@@ -187,14 +187,14 @@
                                             </div>
                                         </div>
                                         <div class="ms-3">
-                                            <h4 class="mb-1">{{ \App\Models\Order::isPlacedOrPending()->isPaid()->count() }}</h4>
+                                            <h4 class="mb-1">{{ \App\Models\Order::isPlacedOrPending()->count() }}</h4>
                                             <span class="text-muted">{{ localize('Order Pending') }}</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </a>
-                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderProcessingStatus() }}&payment_status={{ paidPaymentStatus() }}"
+                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderProcessingStatus() }}"
                              class="col-lg-3 col-sm-6">
                              <div class="card h-100 flex-column">
                                  <div class="card-body">
@@ -212,7 +212,7 @@
                                  </div>
                              </div>
                          </a>
-                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderDeliveredStatus() }}&payment_status={{ paidPaymentStatus() }}"
+                        <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderDeliveredStatus() }}"
                              class="col-lg-3 col-sm-6">
                              <div class="card h-100 flex-column">
                                  <div class="card-body">

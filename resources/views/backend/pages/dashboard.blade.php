@@ -159,7 +159,7 @@
 
                 @can('manage_orders')
                     <div class="row g-3 mb-3">
-                        <a href="{{ route('admin.orders.index') }}" class="col-lg-2 col-sm-6">
+                        <a href="{{ route('admin.orders.index') }}" class="col-lg-3 col-sm-6">
                             <div class="card h-100 flex-column">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
@@ -177,7 +177,7 @@
                             </div>
                         </a>
                         <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderPendingStatus() }}"
-                            class="col-lg-2 col-sm-6">
+                            class="col-lg-3 col-sm-6">
                             <div class="card h-100 flex-column">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">
@@ -195,7 +195,7 @@
                             </div>
                         </a>
                         <a href="{{ route('admin.orders.index') }}?delivery_status={{ orderPlacedStatus() }}"
-                            class="col-lg-2 col-sm-6">
+                            class="col-lg-3 col-sm-6">
                             <div class="card h-100 flex-column">
                                 <div class="card-body">
                                     <div class="d-flex align-items-center">

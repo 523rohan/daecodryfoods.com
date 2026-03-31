@@ -203,7 +203,7 @@ class DashboardController extends Controller
         $timelineOrder                    = 30; // 7, 30 or 90 days   
         $totalOrdersTimelineInString      = '';
         $totalOrdersAmountInString        = '';
-        $ordersQuery = Order::where('created_at', '>=', Carbon::now()->subDays($timelineOrder))->oldest();
+        $ordersQuery = Order::isPaid()->where('delivery_status', '!=', orderCancelledStatus())->where('created_at', '>=', Carbon::now()->subDays($timelineOrder))->oldest();
 
         for ($j = $timelineOrder; $j >= 0; $j--) {
             $totalOrdersAmount = 0;

@@ -335,6 +335,8 @@ class PhonepeController extends Controller
             }
 
             Log::error('PhonePe Callback status not completed. MerchantOrderId=' . $merchantOrderId . ', State=' . ($statusState ?: 'UNKNOWN'));
+            session()->forget(['phonepe_merchant_order_id', 'phonepe_pg_order_id']);
+            return (new PaymentsController)->payment_failed();
         }
 
         if ($request->code == 'PAYMENT_SUCCESS') {

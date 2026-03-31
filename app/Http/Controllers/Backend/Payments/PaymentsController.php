@@ -75,8 +75,12 @@ class PaymentsController extends Controller
                 if ($orderGroup->order->delivery_status != orderCancelledStatus()) {
                     adjustOrderStockAndCounts($orderGroup->order, 'decrement');
                 }
-                $orderGroup->order->delivery_status = orderCancelledStatus();
-                $orderGroup->order->save();
+                $orderGroup->payment_status = failedPaymentStatus();
+                $orderGroup->order->update([
+                    'delivery_status' => orderCancelledStatus(),
+                    'payment_status'  => failedPaymentStatus()
+                ]);
+                $orderGroup->save();
 
                 # Record status change
                 try {

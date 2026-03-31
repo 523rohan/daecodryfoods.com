@@ -330,27 +330,33 @@ class CheckoutController extends Controller
 
                 # increase coupon usage
                 if (getCoupon() != '' && $orderGroup->total_coupon_discount_amount > 0) {
-                    $coupon = Coupon::where('code', getCoupon())->first();
-                    $coupon->total_usage_count += 1;
-                    $coupon->save();
+                    if ($request->payment_method == "cod" || $request->payment_method == "wallet") {
+                        $coupon = Coupon::where('code', getCoupon())->first();
+                        $coupon->total_usage_count += 1;
+                        $coupon->save();
 
-                    # coupon usage by user
-                    $couponUsageByUser = CouponUsage::where('user_id', auth()->user()->id)->where('coupon_code', $coupon->code)->first();
-                    if (!is_null($couponUsageByUser)) {
-                        $couponUsageByUser->usage_count += 1;
-                    } else {
-                        $couponUsageByUser = new CouponUsage;
-                        $couponUsageByUser->usage_count = 1;
-                        $couponUsageByUser->coupon_code = getCoupon();
-                        $couponUsageByUser->user_id = $userId;
+                        # coupon usage by user
+                        $couponUsageByUser = CouponUsage::where('user_id', auth()->user()->id)->where('coupon_code', $coupon->code)->first();
+                        if (!is_null($couponUsageByUser)) {
+                            $couponUsageByUser->usage_count += 1;
+                        } else {
+                            $couponUsageByUser = new CouponUsage;
+                            $couponUsageByUser->usage_count = 1;
+                            $couponUsageByUser->coupon_code = getCoupon();
+                            $couponUsageByUser->user_id = $userId;
+                        }
+                        $couponUsageByUser->save();
+                        removeCoupon();
                     }
-                    $couponUsageByUser->save();
-                    removeCoupon();
                 }
 
                 # payment gateway integration & redirection
 
                 $orderGroup->payment_method = $request->payment_method;
+                if ($request->payment_method != "cod" && $request->payment_method != "wallet" && $request->payment_method != "") {
+                    $orderGroup->delivery_status = orderPendingStatus();
+                    $orderGroup->order->update(['delivery_status' => orderPendingStatus()]);
+                }
                 $orderGroup->save();
 
                 if ($request->payment_method != "cod" && $request->payment_method != "wallet" && $request->payment_method != "") {
@@ -434,11 +440,36 @@ class CheckoutController extends Controller
         $payment_method = session('payment_method');
 
         $orderGroup->payment_status = paidPaymentStatus();
-        $orderGroup->order->update(['payment_status' => paidPaymentStatus()]); # for multi-vendor loop through each orders & update
+        $orderGroup->delivery_status = orderPlacedStatus();
+        $orderGroup->order->update([
+            'payment_status' => paidPaymentStatus(),
+            'delivery_status' => orderPlacedStatus()
+        ]); # for multi-vendor loop through each orders & update
 
         $orderGroup->payment_method = $payment_method;
         $orderGroup->payment_details = $payment_details;
         $orderGroup->save();
+
+        # increment coupon usage if not already done (for online payments)
+        if ($orderGroup->order->applied_coupon_code) {
+            $coupon = Coupon::where('code', $orderGroup->order->applied_coupon_code)->first();
+            if ($coupon) {
+                $coupon->total_usage_count += 1;
+                $coupon->save();
+
+                # coupon usage by user
+                $couponUsageByUser = CouponUsage::where('user_id', $orderGroup->user_id)->where('coupon_code', $coupon->code)->first();
+                if (!is_null($couponUsageByUser)) {
+                    $couponUsageByUser->usage_count += 1;
+                } else {
+                    $couponUsageByUser = new CouponUsage;
+                    $couponUsageByUser->usage_count = 1;
+                    $couponUsageByUser->coupon_code = $coupon->code;
+                    $couponUsageByUser->user_id = $orderGroup->user_id;
+                }
+                $couponUsageByUser->save();
+            }
+        }
 
         $this->sendOrderPlacedNotification($orderGroup, auth()->user());
 

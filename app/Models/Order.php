@@ -21,6 +21,11 @@ class Order extends Model
         return $query->where('payment_status', unpaidPaymentStatus());
     }
 
+    public function scopeIsFailed($query)
+    {
+        return $query->where('payment_status', failedPaymentStatus());
+    }
+
     public function scopeIsPlaced($query)
     {
         return $query->where('delivery_status', orderPlacedStatus());

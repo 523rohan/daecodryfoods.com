@@ -1282,6 +1282,13 @@ if (!function_exists('unpaidPaymentStatus')) {
         return "unpaid";
     }
 }
+if (!function_exists('failedPaymentStatus')) {
+    // failed Payment Status
+    function failedPaymentStatus()
+    {
+        return "failed";
+    }
+}
 
 if (!function_exists('orderPlacedStatus')) {
     // orderPlacedStatus

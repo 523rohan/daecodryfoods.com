@@ -169,7 +169,7 @@
                                             </div>
                                         </div>
                                          <div class="ms-3">
-                                             <h4 class="mb-1">{{ \App\Models\Order::whereHas('orderGroup', function($q) { $q->where('is_pos_order', 0); })->count() }}</h4>
+                                             <h4 class="mb-1">{{ \App\Models\Order::whereHas('orderGroup', function($q) { $q->where('is_pos_order', 0); })->isPaid()->where('delivery_status', '!=', orderCancelledStatus())->count() }}</h4>
                                              <span class="text-muted">{{ localize('Total Orders') }}</span>
                                          </div>
                                     </div>

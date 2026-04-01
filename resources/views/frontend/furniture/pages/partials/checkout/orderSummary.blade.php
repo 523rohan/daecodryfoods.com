@@ -14,21 +14,15 @@
             <td class="text-end">{{ formatPrice(getTotalTax($carts)) }}</td>
         </tr>
 
-        @if (isset($shippingAmount))
+        @if (isset($shippingAmount) && $shippingAmount > 0)
             <tr>
                 <td>(+) {{ localize('Shipping Charge') }}:</td>
-                <td class="text-end">{{ formatPrice($shippingAmount) }}</td>
+                <td class="text-end">{{ isFreeShippingActive($carts) ? localize('Free') : formatPrice($shippingAmount) }}</td>
             </tr>
         @endif
 
         @php
-            $is_free_shipping = false;
-            if (getCoupon() != '' && getCouponDiscount(getSubTotal($carts, false), getCoupon()) > 0) {
-                $coupon = \App\Models\Coupon::where('code', getCoupon())->first();
-                if (!is_null($coupon) && $coupon->is_free_shipping == 1) {
-                    $is_free_shipping = true;
-                }
-            }
+            $is_free_shipping = isFreeShippingActive($carts);
         @endphp
 
         @php
@@ -54,13 +48,7 @@
                 </tr>
             @endif
 
-            @if ($is_free_shipping && isset($shippingAmount))
-                <tr>
-                    <td>(-) {{ localize('Shipping Discount') }}:</td>
-                    <td class="text-end">{{ formatPrice($shippingAmount) }}
-                    </td>
-                </tr>
-            @endif
+
         @endif
     </table>
 

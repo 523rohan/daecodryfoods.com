@@ -90,7 +90,7 @@ class CheckoutController extends Controller
     {
         $carts              = Cart::where('user_id', auth()->user()->id)->where('location_id', session('stock_location_id'))->get();
         $logisticZone       = LogisticZone::find((int)$request->logistic_zone_id);
-        $shippingAmount     = $logisticZone->standard_delivery_charge;
+        $shippingAmount     = isFreeShippingActive($carts) ? 0 : $logisticZone->standard_delivery_charge;
         return getRender('pages.partials.checkout.orderSummary', ['carts' => $carts, 'shippingAmount' => $shippingAmount]);
     }
 
@@ -214,7 +214,7 @@ class CheckoutController extends Controller
                     return back();
                 }
                 # todo::[for eCommerce] handle exceptions for standard & express
-                $orderGroup->total_shipping_cost                = $logisticZone->standard_delivery_charge;
+                $orderGroup->total_shipping_cost                = isFreeShippingActive($carts) ? 0 : $logisticZone->standard_delivery_charge;
 
                 // to convert input price to base price
                 if (Session::has('currency_code')) {

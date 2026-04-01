@@ -54,13 +54,7 @@ class OrderController extends Controller
             }
         }
         $carts = Cart::where('user_id', auth()->user()->id)->where('location_id', $request->header('Stock-Location-Id'))->get();
-        $is_free_shipping = false;
-        if (getCoupon() != '' && getCouponDiscount(getSubTotal($carts, false), getCoupon()) > 0) {
-            $coupon = Coupon::where('code', getCoupon())->first();
-            if (!is_null($coupon) && $coupon->is_free_shipping == 1) {
-                $is_free_shipping = true;
-            }
-        }
+        $is_free_shipping = isFreeShippingActive($carts);
 
         $shipping = 0;
         if (isset($shippingAmount) && $is_free_shipping == false) {
@@ -125,7 +119,7 @@ class OrderController extends Controller
             }
             $logisticZone = LogisticZone::where('id', $request->chosen_logistic_zone_id)->first();
             # todo::[for eCommerce] handle exceptions for standard & express
-            $orderGroup->total_shipping_cost = $logisticZone->standard_delivery_charge;
+            $orderGroup->total_shipping_cost = isFreeShippingActive($carts) ? 0 : $logisticZone->standard_delivery_charge;
 
             // to convert input price to base price
             if ($request->hasHeader('Currency-Code')) {

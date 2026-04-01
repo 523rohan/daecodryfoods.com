@@ -1105,6 +1105,25 @@ if (!function_exists('getCouponDiscount')) {
     }
 }
 
+if (!function_exists('isFreeShippingActive')) {
+    // check if free shipping is active
+    function isFreeShippingActive($carts = null)
+    {
+        $is_free_shipping = false;
+        $couponCode = getCoupon();
+        if ($couponCode != '') {
+            $subTotal = (float) getSubTotal($carts, false);
+            if (getCouponDiscount($subTotal, $couponCode) >= 0) {
+                $coupon = Coupon::where('code', $couponCode)->first();
+                if (!is_null($coupon) && $coupon->is_free_shipping == 1) {
+                    $is_free_shipping = true;
+                }
+            }
+        }
+        return $is_free_shipping;
+    }
+}
+
 if (!function_exists('validateCouponForProductsAndCategories')) {
     # check coupon for products & categories
     function validateCouponForProductsAndCategories($cartItems, $coupon)

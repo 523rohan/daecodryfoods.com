@@ -56,8 +56,8 @@
                                   <div class="card-content text-center">
                                       <a href="product-details.html" class="card-title fw-bold d-block mb-2">Dried Onion Kinh Men</a>
                                       <div class="pricing mb-2 d-flex align-items-center justify-content-center gap-2">
-                                          <del class="mb-0 h6 text-gray">$240.00</del>
-                                          <h6 class="price text-danger mb-0">$140.00</h6>
+                                          <del class="mb-0 h6 text-gray">₹240.00</del>
+                                          <h6 class="price text-danger mb-0">₹140.00</h6>
                                       </div>
                                       <div class="d-flex align-items-center justify-content-center flex-nowrap star-rating fs-xxs mb-2">
                                           <ul class="d-flex align-items-center me-2">
@@ -90,8 +90,8 @@
                                   <div class="card-content text-center">
                                       <a href="product-details.html" class="card-title fw-bold d-block mb-2">Dried Onion Kinh Men</a>
                                       <div class="pricing mb-2 d-flex align-items-center justify-content-center gap-2">
-                                          <del class="mb-0 h6 text-gray">$240.00</del>
-                                          <h6 class="price text-danger mb-0">$140.00</h6>
+                                          <del class="mb-0 h6 text-gray">₹240.00</del>
+                                          <h6 class="price text-danger mb-0">₹140.00</h6>
                                       </div>
                                       <div class="d-flex align-items-center justify-content-center flex-nowrap star-rating fs-xxs mb-2">
                                           <ul class="d-flex align-items-center me-2">
@@ -125,8 +125,8 @@
                                   <div class="card-content text-center">
                                       <a href="product-details.html" class="card-title fw-bold d-block mb-2">Dried Onion Kinh Men</a>
                                       <div class="pricing mb-2 d-flex align-items-center justify-content-center gap-2">
-                                          <del class="mb-0 h6 text-gray">$240.00</del>
-                                          <h6 class="price text-danger mb-0">$140.00</h6>
+                                          <del class="mb-0 h6 text-gray">₹240.00</del>
+                                          <h6 class="price text-danger mb-0">₹140.00</h6>
                                       </div>
                                       <div class="d-flex align-items-center justify-content-center flex-nowrap star-rating fs-xxs mb-2">
                                           <ul class="d-flex align-items-center me-2">
@@ -159,8 +159,8 @@
                                   <div class="card-content text-center">
                                       <a href="product-details.html" class="card-title fw-bold d-block mb-2">Dried Onion Kinh Men</a>
                                       <div class="pricing mb-2 d-flex align-items-center justify-content-center gap-2">
-                                          <del class="mb-0 h6 text-gray">$240.00</del>
-                                          <h6 class="price text-danger mb-0">$140.00</h6>
+                                          <del class="mb-0 h6 text-gray">₹240.00</del>
+                                          <h6 class="price text-danger mb-0">₹140.00</h6>
                                       </div>
                                       <div class="d-flex align-items-center justify-content-center flex-nowrap star-rating fs-xxs mb-2">
                                           <ul class="d-flex align-items-center me-2">

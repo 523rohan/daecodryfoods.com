@@ -26,8 +26,8 @@
                 </div>
                 <a href="product-details.html" class="fw-bold text-heading title d-block fs-sm"><h6 class="mb-0">European Lemon Zest</h6></a>
                 <div class="pricing mt-2">
-                    <span class="fw-bold fs-xs deleted me-1">$240.00</span>
-                    <span class="fw-bold fs-xs text-danger">$140.00</span>
+                    <span class="fw-bold fs-xs deleted me-1">₹240.00</span>
+                    <span class="fw-bold fs-xs text-danger">₹140.00</span>
                 </div>
                 <a href="#" class="fs-xs fw-bold mt-10 d-inline-block explore-btn">Shop Now<span class="ms-1"><i class="fa-solid fa-arrow-right"></i></span></a>
             </div>

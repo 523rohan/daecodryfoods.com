@@ -242,7 +242,7 @@
 
                                 <td>
                                     <strong class="text-dark d-block text-nowrap">{{ localize('Shipping Cost') }}</strong>
-                                    <span>{{ formatPrice($orderGroup->total_shipping_cost) }}</span>
+                                    <span>{{ $orderGroup->total_shipping_cost > 0 ? formatPrice($orderGroup->total_shipping_cost) : localize('Free') }}</span>
                                 </td>
                                 @if ($orderGroup->total_coupon_discount_amount > 0)
                                     <td>

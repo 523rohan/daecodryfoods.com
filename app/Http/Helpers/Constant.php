@@ -1107,10 +1107,10 @@ if (!function_exists('getCouponDiscount')) {
 
 if (!function_exists('isFreeShippingActive')) {
     // check if free shipping is active
-    function isFreeShippingActive($carts = null)
+    function isFreeShippingActive($carts = null, $couponCode = null)
     {
         $is_free_shipping = false;
-        $couponCode = getCoupon();
+        $couponCode = $couponCode ?? getCoupon();
         if ($couponCode != '') {
             $subTotal = (float) getSubTotal($carts, false);
             if (getCouponDiscount($subTotal, $couponCode) >= 0) {

@@ -176,7 +176,7 @@
                     @if($order->orderGroup->total_tips_amount > 0)
                         <div class="total-item">{{ localize('Tips') }} <span class="total-value">{{ formatPrice($order->orderGroup->total_tips_amount) }}</span></div>
                     @endif
-                    <div class="total-item">{{ localize('Logistic Charge') }} <span class="total-value">{{ formatPrice($order->orderGroup->total_shipping_cost) }}</span></div>
+                    <div class="total-item">{{ localize('Logistic Charge') }} <span class="total-value">{{ $order->orderGroup->total_shipping_cost > 0 ? formatPrice($order->orderGroup->total_shipping_cost) : localize('Free') }}</span></div>
                     @if ($order->orderGroup->total_coupon_discount_amount > 0)
                         <div class="total-item" style="color: #EF4444;">{{ localize('Coupon Discount') }}{{ $order->applied_coupon_code ? ' (' . $order->applied_coupon_code . ')' : '' }} <span class="total-value">-{{ formatPrice($order->orderGroup->total_coupon_discount_amount) }}</span></div>
                     @endif

@@ -99,6 +99,18 @@
                                 </td>
                             </tr>
 
+                            @if (isFreeShippingActive($carts))
+                                <tr class="free-shipping-wrapper">
+                                    <td class="py-3">
+                                        <h5 class="mb-0 fw-medium">{{ localize('Free Shipping') }}</h5>
+                                    </td>
+                                    <td class="py-3">
+                                        <h5 class="mb-0 text-end text-success fw-bold">
+                                            {{ localize('Applied') }}</h5>
+                                    </td>
+                                </tr>
+                            @endif
+
                         </table>
                         <p class="mb-5 mt-2">{{ localize('Shipping options will be updated during checkout.') }}</p>
                         <div class="btns-group d-flex flex-wrap gap-3">

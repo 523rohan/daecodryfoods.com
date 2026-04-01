@@ -14,7 +14,7 @@
             <td class="text-end">{{ formatPrice(getTotalTax($carts)) }}</td>
         </tr>
 
-        @if (isset($shippingAmount) && $shippingAmount > 0)
+        @if (isset($shippingAmount))
             <tr>
                 <td>(+) {{ localize('Shipping Charge') }}:</td>
                 <td class="text-end">{{ isFreeShippingActive($carts) ? localize('Free') : formatPrice($shippingAmount) }}</td>

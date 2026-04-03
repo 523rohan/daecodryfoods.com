@@ -114,7 +114,15 @@
                             <div class="info-card">
                                 <div class="info-text">
                                     <strong>{{ localize('Method') }}:</strong> {{ Str::title(Str::replace('_', ' ', $order->orderGroup->payment_method)) }}<br>
-                                    <strong>{{ localize('Status') }}:</strong> <span style="display: inline-block; padding: 1px 6px; border-radius: 4px; background-color: #DCFCE7; color: #166534; font-size: 11px; font-weight: 700;">{{ Str::upper($order->payment_status) }}</span><br>
+                                     @php
+                                         $statusClass = 'background-color: #F1F5F9; color: #64748B;'; // Default
+                                         if ($order->payment_status == paidPaymentStatus()) {
+                                             $statusClass = 'background-color: #DCFCE7; color: #166534;'; // Green
+                                         } elseif ($order->payment_status == unpaidPaymentStatus() || $order->payment_status == failedPaymentStatus()) {
+                                             $statusClass = 'background-color: #FEE2E2; color: #991B1B;'; // Red
+                                         }
+                                     @endphp
+                                     <strong>{{ localize('Status') }}:</strong> <span style="display: inline-block; padding: 1px 6px; border-radius: 4px; {{ $statusClass }} font-size: 11px; font-weight: 700;">{{ Str::upper($order->payment_status) }}</span><br>
                                     @if($order->logistic_name)
                                         <strong>{{ localize('Logistic') }}:</strong> {{ $order->logistic_name }}
                                     @endif

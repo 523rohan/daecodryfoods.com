@@ -249,4 +249,28 @@ class OrdersController extends Controller
 
         return $data;
     }
+
+    # delete order
+    public function delete($id)
+    {
+        $order = Order::findOrFail($id);
+        $orderGroup = $order->orderGroup;
+
+        // delete order items
+        $order->orderItems()->delete();
+
+        // delete order updates
+        $order->orderUpdates()->delete();
+
+        // delete order
+        $order->delete();
+
+        // delete order group if no other orders exist
+        if ($orderGroup && $orderGroup->order()->count() == 0) {
+            $orderGroup->delete();
+        }
+
+        flash(localize('Order has been deleted successfully'))->success();
+        return back();
+    }
 }

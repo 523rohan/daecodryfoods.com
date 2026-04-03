@@ -82,12 +82,16 @@
                                         </td>
 
                                         <td>
-                                            @if ($refundRequest->orderGroup->payment_status == paidPaymentStatus())
+                                            @if ($refundRequest->orderGroup->payment_status == unpaidPaymentStatus() || $refundRequest->orderGroup->payment_status == failedPaymentStatus())
+                                                <span class="badge bg-soft-danger text-capitalize rounded-pill">
+                                                    {{ $refundRequest->orderGroup->payment_status }}
+                                                </span>
+                                            @elseif($refundRequest->orderGroup->payment_status == paidPaymentStatus())
                                                 <span class="badge bg-soft-primary text-capitalize rounded-pill">
                                                     {{ $refundRequest->orderGroup->payment_status }}
                                                 </span>
                                             @else
-                                                <span class="badge bg-soft-danger text-capitalize rounded-pill">
+                                                <span class="badge bg-soft-info text-capitalize rounded-pill">
                                                     {{ $refundRequest->orderGroup->payment_status }}
                                                 </span>
                                             @endif

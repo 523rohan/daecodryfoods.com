@@ -111,10 +111,18 @@
                             <div class="section-title">{{ localize('Payment Info') }}</div>
                             <div class="info-card">
                                 <span class="info-name">{{ localize('Method') }}</span>
-                                <div class="info-text">
-                                    {{ Str::title(Str::replace('_', ' ', $order->orderGroup->payment_method)) }}<br>
-                                    <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; background-color: #DCFCE7; color: #166534; font-size: 12px; font-weight: 700; margin-top: 4px;">{{ Str::upper($order->payment_status) }}</span>
-                                </div>
+                                 @php
+                                     $statusClass = 'background-color: #F1F5F9; color: #64748B;'; // Default
+                                     if ($order->payment_status == paidPaymentStatus()) {
+                                         $statusClass = 'background-color: #DCFCE7; color: #166534;'; // Green
+                                     } elseif ($order->payment_status == unpaidPaymentStatus() || $order->payment_status == failedPaymentStatus()) {
+                                         $statusClass = 'background-color: #FEE2E2; color: #991B1B;'; // Red
+                                     }
+                                 @endphp
+                                 <div class="info-text">
+                                     {{ Str::title(Str::replace('_', ' ', $order->orderGroup->payment_method)) }}<br>
+                                     <span style="display: inline-block; padding: 2px 8px; border-radius: 4px; {{ $statusClass }}; font-size: 12px; font-weight: 700; margin-top: 4px;">{{ Str::upper($order->payment_status) }}</span>
+                                 </div>
                                 @if($order->logistic_name)
                                     <div class="section-title" style="margin-top: 15px; margin-bottom: 4px;">{{ localize('Logistic') }}</div>
                                     <div class="info-text">{{ $order->logistic_name }}</div>

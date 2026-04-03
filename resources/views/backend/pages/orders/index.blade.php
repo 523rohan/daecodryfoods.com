@@ -182,12 +182,16 @@
                                         </td>
 
                                         <td>
-                                            @if ($order->payment_status == unpaidPaymentStatus())
+                                            @if ($order->payment_status == unpaidPaymentStatus() || $order->payment_status == failedPaymentStatus())
                                                 <span class="badge bg-soft-danger rounded-pill text-capitalize">
                                                     {{ $order->payment_status }}
                                                 </span>
-                                            @else
+                                            @elseif($order->payment_status == paidPaymentStatus())
                                                 <span class="badge bg-soft-primary rounded-pill text-capitalize">
+                                                    {{ $order->payment_status }}
+                                                </span>
+                                            @else
+                                                <span class="badge bg-soft-info rounded-pill text-capitalize">
                                                     {{ $order->payment_status }}
                                                 </span>
                                             @endif
@@ -248,6 +252,11 @@
                                                     class="btn btn-sm p-0 tt-priint-details" target="__blank" data-bs-toggle="tooltip"
                                                     data-bs-placement="top" title="{{ localize('Print Invoice') }}">
                                                     <i data-feather="printer"></i>
+                                                </a>
+                                                <a href="#" class="btn btn-sm p-0 tt-view-details confirm-delete"
+                                                    data-href="{{ route('admin.orders.delete', $order->id) }}"
+                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="{{ localize('Delete') }}">
+                                                    <i data-feather="trash-2"></i>
                                                 </a>
                                             @endcan
                                         </td>

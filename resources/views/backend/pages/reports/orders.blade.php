@@ -150,17 +150,21 @@
                                             </span>
                                         </td>
 
-                                        <td>
-                                            @if ($order->payment_status == unpaidPaymentStatus())
-                                                <span class="badge bg-soft-danger rounded-pill text-capitalize">
-                                                    {{ $order->payment_status }}
-                                                </span>
-                                            @else
-                                                <span class="badge bg-soft-primary rounded-pill text-capitalize">
-                                                    {{ $order->payment_status }}
-                                                </span>
-                                            @endif
-                                        </td>
+                                         <td>
+                                             @if ($order->payment_status == unpaidPaymentStatus() || $order->payment_status == failedPaymentStatus())
+                                                 <span class="badge bg-soft-danger rounded-pill text-capitalize">
+                                                     {{ $order->payment_status }}
+                                                 </span>
+                                             @elseif($order->payment_status == paidPaymentStatus())
+                                                 <span class="badge bg-soft-primary rounded-pill text-capitalize">
+                                                     {{ $order->payment_status }}
+                                                 </span>
+                                             @else
+                                                 <span class="badge bg-soft-info rounded-pill text-capitalize">
+                                                     {{ $order->payment_status }}
+                                                 </span>
+                                             @endif
+                                         </td>
 
 
                                         <td>

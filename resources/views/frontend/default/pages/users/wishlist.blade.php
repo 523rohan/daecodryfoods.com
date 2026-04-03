@@ -19,6 +19,51 @@
     <!--breadcrumb-->
 
     <!--wishlist section start-->
+    <style>
+        @media (max-width: 991.98px) {
+            .wishlist-table thead {
+                display: none;
+            }
+
+            .wishlist-table tbody tr {
+                display: block;
+                margin-bottom: 25px;
+                border: 1px solid #eee;
+                border-radius: 12px;
+                padding: 15px;
+                background: #fff;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            }
+
+            .wishlist-table tbody td {
+                display: block;
+                width: 100% !important;
+                text-align: center !important;
+                border: none;
+                padding: 10px 0 !important;
+                height: auto !important;
+            }
+
+            .wishlist-table tbody td.product-title {
+                padding-top: 0 !important;
+            }
+
+            .wishlist-table tbody td:not(:last-child) {
+                border-bottom: 1px solid #f8f9fa;
+                margin-bottom: 8px;
+            }
+
+            .wishlist-table .close-btn {
+                margin-left: 0 !important;
+                display: inline-block;
+                margin-top: 10px;
+            }
+
+            .wishlist-table .btn-secondary {
+                margin-left: 0 !important;
+            }
+        }
+    </style>
     <section class="wishlist-section ptb-120">
         <div class="container">
             <div class="rounded-2 overflow-hidden">
@@ -33,7 +78,7 @@
                         <!--wishlist listing-->
                         @forelse ($wishlist as $item)
                             <tr>
-                                <td class="h-100px">
+                                <td>
                                     <img src="{{ uploadedAsset($item->product->thumbnail_image) }}"
                                         alt="{{ $item->product->collectLocalization('name') }}" class="img-fluid"
                                         width="100">
@@ -53,7 +98,7 @@
                                 </td>
 
                                 <td>
-                                    <a href="javascript:void(0);" class="btn btn-secondary btn-sm ms-5 rounded-1"
+                                    <a href="javascript:void(0);" class="btn btn-secondary btn-sm rounded-1"
                                         onclick="showProductDetailsModal({{ $item->product->id }})">{{ localize('Add to Cart') }}</a>
                                     <a href="{{ route('customers.wishlist.delete', $item->id) }}" class="close-btn ms-3"><i
                                             class="fas fa-close"></i></a>

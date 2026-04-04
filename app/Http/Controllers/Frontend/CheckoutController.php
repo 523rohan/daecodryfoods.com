@@ -433,10 +433,11 @@ class CheckoutController extends Controller
     }
 
     # update payment status
-    public function updatePayments($payment_details)
+    public function updatePayments($payment_details, $order_code = null)
     {
-        $orderGroup = OrderGroup::where('order_code', session('order_code'))->first();
-        $payment_method = session('payment_method');
+        $order_code = $order_code ?: session('order_code');
+        $orderGroup = OrderGroup::where('order_code', $order_code)->first();
+        $payment_method = session('payment_method') ?: 'phonepe'; // Fallback if session lost
 
         $orderGroup->payment_status = paidPaymentStatus();
         $orderGroup->order->update([

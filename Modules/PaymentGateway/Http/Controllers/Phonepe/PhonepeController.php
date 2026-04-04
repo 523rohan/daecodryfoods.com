@@ -68,13 +68,15 @@ class PhonepeController extends Controller
         if ($merchantId && $saltKey && $saltIndex) {
             Log::info('PhonePe: Using V1 API Flow (Merchant ID + Salt Key)');
             
-            $transactionId = 'TXN' . time();
-            $callbackUrl = route('phonepe.callback');
+            $order_code = session('order_code');
+            $payment_type = session('payment_type');
+            $transactionId = $order_code ? ($order_code . '_' . time()) : ('TXN' . time());
+            $callbackUrl = route('phonepe.callback', ['order_code' => $order_code, 'payment_type' => $payment_type]);
             
             $data = array(
                 'merchantId' => $merchantId,
                 'merchantTransactionId' => $transactionId,
-                'merchantUserId' => 'MUID' . auth()->id(),
+                'merchantUserId' => 'MUID' . (auth()->id() ?: 'GUEST'),
                 'amount' => (int) round($amount * 100), // Amount in paise
                 'redirectUrl' => $callbackUrl,
                 'redirectMode' => 'POST',
@@ -129,9 +131,15 @@ class PhonepeController extends Controller
                 return (new PaymentsController)->payment_failed();
             }
 
+            $order_code = session('order_code');
+            $payment_type = session('payment_type');
             $merchantOrderId = $this->buildMerchantOrderId();
-            // Pass merchantOrderId in the URL to ensure it's available in the callback even if session is lost
-            $redirectUrl = route('phonepe.callback', ['merchantOrderId' => $merchantOrderId]);
+            // Pass merchantOrderId, order_code, and payment_type in the URL to ensure it's available in the callback even if session is lost
+            $redirectUrl = route('phonepe.callback', [
+                'merchantOrderId' => $merchantOrderId,
+                'order_code' => $order_code,
+                'payment_type' => $payment_type
+            ]);
             
             $data = array(
                 'amount' => (int) round($amount * 100), // Amount in paise
@@ -299,13 +307,38 @@ class PhonepeController extends Controller
     public function callback(Request $request)
     {
         Log::info('PhonePe Callback URL: ' . $request->fullUrl());
-        Log::info('PhonePe Callback Method: ' . $request->method());
-        Log::info('PhonePe Callback Params: ' . json_encode($request->all()));
         
-        // Also log raw body in case PhonePe sends JSON without correct Content-Type
         $rawBody = file_get_contents('php://input');
+        $callbackData = $request->all();
+        
+        // Handle PhonePe V1 S2S Callback (Base64 encoded)
+        if ($request->has('response')) {
+            $decodedResponse = json_decode(base64_decode($request->input('response')), true);
+            if ($decodedResponse) {
+                Log::info('PhonePe Decoded V1 Response: ' . json_encode($decodedResponse));
+                $callbackData = array_merge($callbackData, $decodedResponse);
+            }
+        }
+
         if ($rawBody) {
             Log::info('PhonePe Callback Raw Body: ' . $rawBody);
+            // If body is JSON, merge it
+            $jsonBody = json_decode($rawBody, true);
+            if ($jsonBody) {
+                $callbackData = array_merge($callbackData, $jsonBody);
+            }
+        }
+
+        $order_code = $request->input('order_code') ?: session('order_code');
+        $payment_type = $request->input('payment_type') ?: session('payment_type') ?: 'order_payment';
+        $merchantOrderId = $request->input('merchantOrderId') ?: ($callbackData['merchantTransactionId'] ?? null) ?: session('phonepe_merchant_order_id');
+
+        // If we still don't have order_code but have merchantOrderId, try to extract it
+        if (!$order_code && $merchantOrderId) {
+            $parts = explode('_', $merchantOrderId);
+            if (count($parts) > 0 && is_numeric($parts[0])) {
+                $order_code = $parts[0];
+            }
         }
 
         $gateway = \Modules\PaymentGateway\Entities\PaymentGateway::where('gateway', 'phonepe')->first();
@@ -316,36 +349,45 @@ class PhonepeController extends Controller
         $clientId = trim((string) $gatewayDetails->get('PHONEPE_CLIENT_ID', ''));
         $clientSecret = trim((string) $gatewayDetails->get('PHONEPE_CLIENT_SECRET', ''));
         $clientVersion = trim((string) $gatewayDetails->get('PHONEPE_CLIENT_VERSION', '')) ?: '1';
-        $merchantOrderId = $request->input('merchantOrderId') ?: session('phonepe_merchant_order_id');
+
+        $isSuccess = false;
+        $statusResponse = null;
 
         if ($merchantOrderId && $clientId && $clientSecret && $gateway) {
             $statusResponse = $this->getOrderStatus($merchantOrderId, $clientId, $clientSecret, $clientVersion, (bool) $gateway->sandbox);
             $statusState = strtoupper((string) data_get($statusResponse, 'state'));
 
-            Log::info('PhonePe Order Status Response: ' . json_encode($statusResponse));
+            Log::info('PhonePe V2 Order Status Response: ' . json_encode($statusResponse));
 
             if ($statusState === 'COMPLETED') {
-                session()->forget(['phonepe_merchant_order_id', 'phonepe_pg_order_id']);
-
-                $payment_details = json_encode([
-                    'callback' => $request->all(),
-                    'status' => $statusResponse,
-                ]);
-                return (new PaymentsController)->payment_success($payment_details);
+                $isSuccess = true;
             }
-
-            Log::error('PhonePe Callback status not completed. MerchantOrderId=' . $merchantOrderId . ', State=' . ($statusState ?: 'UNKNOWN'));
-            session()->forget(['phonepe_merchant_order_id', 'phonepe_pg_order_id']);
-            return (new PaymentsController)->payment_failed();
         }
 
-        if ($request->code == 'PAYMENT_SUCCESS') {
-            session()->forget(['phonepe_merchant_order_id', 'phonepe_pg_order_id']);
-            $payment_details = json_encode($request->all());
-            return (new PaymentsController)->payment_success($payment_details);
+        // Fallback for V1 Success Code
+        if (!$isSuccess && (($callbackData['code'] ?? '') == 'PAYMENT_SUCCESS' || ($callbackData['success'] ?? false) == true)) {
+            $isSuccess = true;
+            if (!isset($statusResponse['data'])) {
+                $statusResponse = ['data' => $callbackData];
+            }
         }
 
-        Log::error('PhonePe Callback failed with code: ' . $request->code);
+        if ($isSuccess && $order_code) {
+            session()->forget(['phonepe_merchant_order_id', 'phonepe_pg_order_id']);
+
+            $payment_details = json_encode([
+                'order_code' => $order_code,
+                'transaction_id' => $callbackData['providerReferenceId'] ?? ($statusResponse['data']['transactionId'] ?? ($callbackData['transactionId'] ?? 'N/A')),
+                'amount' => ($callbackData['amount'] ?? 0) / 100,
+                'phonepe_response' => $callbackData,
+                'status' => $statusResponse,
+            ]);
+
+            Log::info('PhonePe Payment Success identified for Order: ' . $order_code);
+            return (new PaymentsController)->payment_success($payment_details, $order_code, $payment_type);
+        }
+
+        Log::error('PhonePe Callback failed or unidentified. MerchantOrderId=' . $merchantOrderId . ', OrderCode=' . $order_code);
         session()->forget(['phonepe_merchant_order_id', 'phonepe_pg_order_id']);
         return (new PaymentsController)->payment_failed();
     }

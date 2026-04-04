@@ -56,10 +56,11 @@ class PaymentsController extends Controller
     }
 
     # payment successful
-    public function payment_success($payment_details = null)
+    public function payment_success($payment_details = null, $order_code = null, $payment_type = null)
     {
-        if (session('payment_type') == 'order_payment') {
-            return (new CheckoutController())->updatePayments(json_encode($payment_details));
+        $payment_type = $payment_type ?: session('payment_type');
+        if ($payment_type == 'order_payment') {
+            return (new CheckoutController())->updatePayments($payment_details, $order_code);
         }
         # else - other payments [update versions]
     }
